@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/views/notification/notification.dart';
 
 class Category extends StatelessWidget {
   const Category({Key? key}) : super(key: key);
@@ -24,7 +25,11 @@ class Category extends StatelessWidget {
           title: Image.asset("assets/icons/logo1.png"),
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  print('notification');
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => NotificationScreen()));
+                },
                 icon: Icon(Icons.notifications_none, color: Colors.black)),
             IconButton(
                 onPressed: () {},
@@ -50,24 +55,26 @@ class Category extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.only(top: 20),
         child: GridView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
             itemCount: 20,
-            gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4, mainAxisSpacing: 0, crossAxisSpacing: 0),
             itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 10, left: 18),
-                child: Column(
-                  children: [
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.asset("assets/images/carousal1.png",
-                            fit: BoxFit.cover, width: 65.w, height: 65.h)),
-                    SizedBox(height: 4.h),
-                    Text("Grills",
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500))
-                  ],
-                ),
+              return Column(
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: Image.asset("assets/images/carousal1.png",
+                          fit: BoxFit.cover, width: 70.w, height: 70.h)),
+                  SizedBox(height: 4.h),
+                  Text("Grills",
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500))
+                ],
               );
             }),
       ),

@@ -2,11 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fresh4delivery/views/cart/cart.dart';
-import 'package:fresh4delivery/views/notification/notification.dart';
 
-class Orders extends StatelessWidget {
-  const Orders({Key? key}) : super(key: key);
+class Cart extends StatelessWidget {
+  const Cart({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,49 +22,36 @@ class Orders extends StatelessWidget {
               ]))),
           automaticallyImplyLeading: false,
           title: Image.asset("assets/icons/logo1.png"),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  print('notification');
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => NotificationScreen()));
-                },
-                icon: Icon(Icons.notifications_none, color: Colors.black)),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => Cart()));
-                },
-                icon: Icon(Icons.local_grocery_store_outlined,
-                    color: Colors.black)),
-          ],
           bottom: PreferredSize(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: CupertinoSearchTextField(),
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(Icons.arrow_back)),
+                      Container(
+                          width: 320.w,
+                          padding: const EdgeInsets.all(10),
+                          child: CupertinoSearchTextField()),
+                    ],
                   ),
                   Container(
                       padding: const EdgeInsets.only(
                           left: 40, top: 5, bottom: 5, right: 30),
                       width: double.infinity,
                       color: Color.fromRGBO(201, 228, 125, 1),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Your Items",
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          Image.asset("assets/icons/filter.png")
-                        ],
+                      child: Text(
+                        "Supermarket near you",
+                        style: TextStyle(fontWeight: FontWeight.w500),
                       ))
                 ],
               ),
               preferredSize: Size.fromHeight(80.h))),
       body: ListView.builder(
-          itemCount: 2,
+          itemCount: 1,
           itemBuilder: ((context, index) {
             return Container(
                 margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
@@ -92,17 +77,27 @@ class Orders extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600)),
                         SizedBox(height: 5.h),
-                        Text("Delivery in 30 min",
-                            style: TextStyle(fontSize: 12)),
-                        SizedBox(height: 5.h),
-                        Text("04/02/2022 | 4:30",
-                            style: TextStyle(fontSize: 12)),
-                        SizedBox(height: 5.h),
-                        Text("Processing",
-                            style: TextStyle(fontSize: 12, color: Colors.red)),
+                        RichText(
+                            text: TextSpan(children: [
+                          TextSpan(
+                              text: "₹180",
+                              style: TextStyle(
+                                  decoration: TextDecoration.lineThrough,
+                                  color: Colors.grey.shade600,
+                                  fontSize: 12)),
+                          TextSpan(
+                              text: " ₹140",
+                              style: TextStyle(
+                                color: Colors.grey.shade600,
+                                // fontSize: 12
+                              ))
+                        ]))
                       ],
                     ),
-                    Text("140", style: TextStyle(color: Colors.green))
+                    IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.delete_forever_outlined,
+                            color: Colors.red))
                   ],
                 ));
           })),

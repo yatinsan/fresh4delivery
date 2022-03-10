@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/views/cart/cart.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
+import 'package:fresh4delivery/views/new_you/near_you.dart';
+import 'package:fresh4delivery/views/notification/notification.dart';
 import 'package:fresh4delivery/widgets/header.dart';
 
 class Home extends StatelessWidget {
@@ -26,10 +29,17 @@ class Home extends StatelessWidget {
           title: Image.asset("assets/icons/logo1.png"),
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  print('notification');
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => NotificationScreen()));
+                },
                 icon: Icon(Icons.notifications_none, color: Colors.black)),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => Cart()));
+                },
                 icon: Icon(Icons.local_grocery_store_outlined,
                     color: Colors.black)),
           ],
@@ -70,70 +80,87 @@ class Home extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  clipBehavior: Clip.hardEdge,
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                          // borderRadius: BorderRadius.circular(10),
-                          child: Image.asset("assets/images/carousal1.png",
-                              width: 180.w, height: 100.h, fit: BoxFit.cover)),
-                      Positioned(
-                        left: -10,
-                        bottom: -10,
-                        child: Container(
-                            padding: const EdgeInsets.only(
-                                top: 5, left: 15, right: 5, bottom: 15),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: <Color>[
-                                      Color.fromRGBO(166, 206, 57, 1),
-                                      Color.fromRGBO(72, 170, 152, 1)
-                                    ])),
-                            child: Text("SuperMarkets",
-                                style: TextStyle(
-                                    fontSize: 10, letterSpacing: .5))),
-                      )
-                    ],
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => NearYou()));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                            // borderRadius: BorderRadius.circular(10),
+                            child: Image.asset("assets/images/carousal1.png",
+                                width: 180.w,
+                                height: 100.h,
+                                fit: BoxFit.cover)),
+                        Positioned(
+                          left: -10,
+                          bottom: -10,
+                          child: Container(
+                              padding: const EdgeInsets.only(
+                                  top: 5, left: 15, right: 5, bottom: 15),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: <Color>[
+                                        Color.fromRGBO(166, 206, 57, 1),
+                                        Color.fromRGBO(72, 170, 152, 1)
+                                      ])),
+                              child: Text("SuperMarkets",
+                                  style: TextStyle(
+                                      fontSize: 10, letterSpacing: .5))),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  clipBehavior: Clip.hardEdge,
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                          // borderRadius: BorderRadius.circular(10),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => NearYou()));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          width: 2, color: Color.fromRGBO(166, 206, 57, 1)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
                           child: Image.asset("assets/images/carousal1.png",
-                              width: 180.w, height: 100.h, fit: BoxFit.cover)),
-                      Positioned(
-                        right: -10,
-                        bottom: -10,
-                        child: Container(
-                            padding: const EdgeInsets.only(
-                                top: 5, left: 5, right: 15, bottom: 15),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: <Color>[
-                                      Color.fromRGBO(166, 206, 57, 1),
-                                      Color.fromRGBO(72, 170, 152, 1)
-                                    ])),
-                            child: Text("Restaurants",
-                                style: TextStyle(
-                                    fontSize: 10, letterSpacing: .5))),
-                      )
-                    ],
+                              width: 180.w, height: 100.h, fit: BoxFit.fill),
+                        ),
+                        Positioned(
+                          right: -10,
+                          bottom: -10,
+                          child: Container(
+                              padding: const EdgeInsets.only(
+                                  top: 5, left: 5, right: 15, bottom: 15),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: <Color>[
+                                        Color.fromRGBO(166, 206, 57, 1),
+                                        Color.fromRGBO(72, 170, 152, 1)
+                                      ])),
+                              child: Text("Restaurants",
+                                  style: TextStyle(
+                                      fontSize: 10, letterSpacing: .5))),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],

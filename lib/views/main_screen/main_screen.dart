@@ -1,6 +1,4 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +6,6 @@ import 'package:fresh4delivery/views/category/category.dart';
 import 'package:fresh4delivery/views/home/home.dart';
 import 'package:fresh4delivery/views/orders/orders.dart';
 import 'package:fresh4delivery/views/profile/profile.dart';
-import 'package:fresh4delivery/widgets/header.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class MainScreen extends StatelessWidget {
@@ -38,26 +35,38 @@ Widget menu() {
       ))),
       labelColor: Colors.black,
       unselectedLabelColor: Colors.black,
-      labelStyle: TextStyle(color: Colors.black),
+      labelStyle: TextStyle(color: Colors.black, fontSize: 12),
       indicatorSize: TabBarIndicatorSize.tab,
       // indicatorPadding: EdgeInsets.only(bottom: 5),
       indicatorColor: Colors.black,
       tabs: [
         Tab(
           text: "Home",
-          icon: Icon(Icons.home_outlined),
+          icon: Icon(
+            Icons.home_outlined,
+            size: 22,
+          ),
         ),
         Tab(
           text: "Category",
-          icon: Icon(Icons.category_outlined),
+          icon: Icon(
+            Icons.category_outlined,
+            size: 22,
+          ),
         ),
         Tab(
           text: "Orders",
-          icon: Icon(Icons.local_grocery_store_outlined),
+          icon: Icon(
+            Icons.local_grocery_store_outlined,
+            size: 22,
+          ),
         ),
         Tab(
           text: "Account",
-          icon: Icon(Icons.person_outline_outlined),
+          icon: Icon(
+            Icons.person_outline_outlined,
+            size: 22,
+          ),
         ),
       ],
     ),
