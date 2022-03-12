@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/views/cart/cart.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
+import 'package:fresh4delivery/widgets/search_button.dart';
 
 class Orders extends StatelessWidget {
   const Orders({Key? key}) : super(key: key);
@@ -43,10 +44,7 @@ class Orders extends StatelessWidget {
           bottom: PreferredSize(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: CupertinoSearchTextField(),
-                  ),
+                  SearchButton(),
                   Container(
                       padding: const EdgeInsets.only(
                           left: 40, top: 5, bottom: 5, right: 30),
@@ -80,29 +78,58 @@ class Orders extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/images/chicken.png",
-                      fit: BoxFit.cover,
+                    Expanded(
+                      flex: 3,
+                      child: Image.asset(
+                        "assets/images/chicken.png",
+                        fit: BoxFit.contain,
+                        width: 60,
+                        height: 60,
+                      ),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Fresh chicken",
+                    Expanded(
+                      flex: 5,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Fresh chicken",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600)),
+                          SizedBox(height: 5.h),
+                          Text("Delivery in 30 min",
+                              style: TextStyle(fontSize: 12)),
+                          SizedBox(height: 5.h),
+                          Text("04/02/2022 | 4:30",
+                              style: TextStyle(fontSize: 12)),
+                          SizedBox(height: 5.h),
+                          Text("Processing",
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.red)),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                        flex: 2,
+                        child: Text("₹140",
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600)),
-                        SizedBox(height: 5.h),
-                        Text("Delivery in 30 min",
-                            style: TextStyle(fontSize: 12)),
-                        SizedBox(height: 5.h),
-                        Text("04/02/2022 | 4:30",
-                            style: TextStyle(fontSize: 12)),
-                        SizedBox(height: 5.h),
-                        Text("Processing",
-                            style: TextStyle(fontSize: 12, color: Colors.red)),
-                      ],
-                    ),
-                    Text("140", style: TextStyle(color: Colors.green))
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600))),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                print("close");
+                              },
+                              icon: Icon(Icons.cancel_rounded,
+                                  size: 20, color: Colors.grey.shade800)),
+                        ],
+                      ),
+                    )
                   ],
                 ));
           })),

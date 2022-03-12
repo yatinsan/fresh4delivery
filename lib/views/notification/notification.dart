@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/widgets/search_button.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -31,10 +32,7 @@ class NotificationScreen extends StatelessWidget {
                             Navigator.pop(context);
                           },
                           icon: Icon(Icons.arrow_back)),
-                      Container(
-                          width: 320.w,
-                          padding: const EdgeInsets.all(10),
-                          child: CupertinoSearchTextField()),
+                      SearchButton(width: 330)
                     ],
                   ),
                   Container(

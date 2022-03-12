@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/views/cart/cart.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
+import 'package:fresh4delivery/widgets/search_button.dart';
 
 class Category extends StatelessWidget {
   const Category({Key? key}) : super(key: key);
@@ -32,17 +34,17 @@ class Category extends StatelessWidget {
                 },
                 icon: Icon(Icons.notifications_none, color: Colors.black)),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => Cart()));
+                },
                 icon: Icon(Icons.local_grocery_store_outlined,
                     color: Colors.black)),
           ],
           bottom: PreferredSize(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: CupertinoSearchTextField(),
-                  ),
+                  SearchButton(),
                   Container(
                       padding:
                           const EdgeInsets.only(left: 40, top: 5, bottom: 5),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/views/cart/cart.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
+import 'package:fresh4delivery/views/profile/address/your_address.dart';
 import 'package:fresh4delivery/widgets/header.dart';
 
 class Profile extends StatelessWidget {
@@ -75,13 +76,33 @@ class Profile extends StatelessWidget {
                   child: Column(
                     children: [
                       ProfileButtons(
-                          title: "order history",
-                          icon: Icons.assignment_outlined),
+                          title: "your order",
+                          icon: Icons.assignment_outlined,
+                          function: () {
+                            print("your orders");
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (_) => Cart()));
+                          }),
                       ProfileButtons(
-                          title: "address book", icon: Icons.library_books),
+                          title: "address book",
+                          icon: Icons.library_books,
+                          function: () {
+                            print("address book");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => YourAddress()));
+                          }),
                       ProfileButtons(
                           title: "notification",
-                          icon: Icons.notifications_none_outlined),
+                          icon: Icons.notifications_none_outlined,
+                          function: () {
+                            print("notification");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => NotificationScreen()));
+                          }),
                     ],
                   ),
                 ),
@@ -92,14 +113,29 @@ class Profile extends StatelessWidget {
                   child: Column(
                     children: [
                       ProfileButtons(
-                          title: "support", icon: Icons.support_agent_outlined),
+                          title: "support",
+                          icon: Icons.support_agent_outlined,
+                          function: () {
+                            print("support");
+                          }),
                       ProfileButtons(
-                          title: "share the app", icon: Icons.share_outlined),
+                          title: "share the app",
+                          icon: Icons.share_outlined,
+                          function: () {
+                            print("share the app");
+                          }),
                       ProfileButtons(
-                          title: "about us", icon: Icons.quiz_rounded),
+                          title: "about us",
+                          icon: Icons.quiz_rounded,
+                          function: () {
+                            print("about us");
+                          }),
                       ProfileButtons(
                           title: "logout",
-                          icon: Icons.power_settings_new_outlined),
+                          icon: Icons.power_settings_new_outlined,
+                          function: () {
+                            print("logout");
+                          }),
                     ],
                   ),
                 )
@@ -113,23 +149,36 @@ class Profile extends StatelessWidget {
 class ProfileButtons extends StatelessWidget {
   final IconData icon;
   final String title;
-  const ProfileButtons({Key? key, required this.title, required this.icon})
+  final Function function;
+  const ProfileButtons(
+      {Key? key,
+      required this.title,
+      required this.icon,
+      required this.function})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-            margin: const EdgeInsets.only(bottom: 15),
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(5)),
-            child: Icon(icon, color: Colors.grey.shade700)),
-        SizedBox(width: 10),
-        Text(title, style: TextStyle(fontWeight: FontWeight.w600)),
-      ],
+    return GestureDetector(
+      onTap: () => function(),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(5)),
+                child: Icon(icon, color: Colors.grey.shade700)),
+            SizedBox(width: 10),
+            Container(
+                child:
+                    Text(title, style: TextStyle(fontWeight: FontWeight.w600))),
+          ],
+        ),
+      ),
     );
   }
 }

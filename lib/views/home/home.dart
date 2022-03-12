@@ -6,7 +6,9 @@ import 'package:fresh4delivery/views/cart/cart.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
 import 'package:fresh4delivery/views/new_you/near_you.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
+import 'package:fresh4delivery/views/search/search.dart';
 import 'package:fresh4delivery/widgets/header.dart';
+import 'package:fresh4delivery/widgets/search_button.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -46,10 +48,7 @@ class Home extends StatelessWidget {
           bottom: PreferredSize(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: CupertinoSearchTextField(),
-                  ),
+                  SearchButton(),
                   Container(
                       padding:
                           const EdgeInsets.only(left: 40, top: 5, bottom: 5),
@@ -65,6 +64,81 @@ class Home extends StatelessWidget {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 print('location select manually');
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Container(
+                                        height: 400,
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            children: [
+                                              SizedBox(height: 20),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 20),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text("Selected pincode",
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600)),
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                height: 65,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 10.0,
+                                                        horizontal: 20),
+                                                child:
+                                                    CupertinoSearchTextField(),
+                                              ),
+                                              ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount: 5,
+                                                  itemBuilder:
+                                                      ((context, index) {
+                                                    return Container(
+                                                        height: 50,
+                                                        margin: const EdgeInsets
+                                                                .only(
+                                                            left: 20,
+                                                            right: 20,
+                                                            top: 5),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 10,
+                                                                vertical: 5),
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                            border: Border.all(
+                                                                width: 2,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300)),
+                                                        child: Row(
+                                                          children: [
+                                                            Icon(Icons
+                                                                .location_on_outlined),
+                                                            SizedBox(width: 20),
+                                                            Text("pin code"),
+                                                          ],
+                                                        ));
+                                                  })),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
                               })
                       ])))
                 ],
@@ -87,13 +161,21 @@ class Home extends StatelessWidget {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                            width: 2, color: Color.fromRGBO(166, 206, 57, 1)),
+                        gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: <Color>[
+                              Color.fromRGBO(166, 206, 57, 1),
+                              Color.fromRGBO(72, 170, 152, 1)
+                            ])),
                     clipBehavior: Clip.hardEdge,
                     child: Stack(
                       children: [
                         ClipRRect(
-                            // borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(10),
                             child: Image.asset("assets/images/carousal1.png",
                                 width: 180.w,
                                 height: 100.h,
@@ -130,7 +212,7 @@ class Home extends StatelessWidget {
                     decoration: BoxDecoration(
                       border: Border.all(
                           width: 2, color: Color.fromRGBO(166, 206, 57, 1)),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     child: Stack(
