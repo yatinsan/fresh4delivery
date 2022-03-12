@@ -13,15 +13,17 @@ class MainScreen extends StatelessWidget {
   MainScreen({Key? key}) : super(key: key);
 
   Widget build(BuildContext context) {
-    TabController _tabController;
-    return Scaffold(
-        bottomNavigationBar: menu(),
-        body: TabBarView(children: [
-          Home(),
-          Category(),
-          Orders(),
-          Profile(),
-        ]));
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+          bottomNavigationBar: menu(),
+          body: TabBarView(children: [
+            Home(),
+            Category(),
+            Orders(),
+            Profile(),
+          ])),
+    );
   }
 }
 

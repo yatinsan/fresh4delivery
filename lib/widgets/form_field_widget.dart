@@ -17,11 +17,12 @@ class FormFieldWidget extends StatelessWidget {
     return SizedBox(
       height: 50,
       child: TextFormField(
+        textInputAction: TextInputAction.next,
         obscureText: obscureText,
         style: TextStyle(color: Colors.white),
         controller: controller,
         decoration: InputDecoration(
-          hintStyle: TextStyle(color: Colors.grey.shade900, fontSize: 14),
+          hintStyle: TextStyle(color: Colors.grey.shade800, fontSize: 14),
           hintText: hintText,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),

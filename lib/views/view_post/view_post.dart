@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/views/cart/cart.dart';
 
-class ViewPost extends StatelessWidget {
-  const ViewPost({Key? key}) : super(key: key);
+class ViewPost extends StatefulWidget {
+  List<String> categories = ["a", "b"];
 
+  @override
+  State<ViewPost> createState() => _ViewPostState();
+}
+
+class _ViewPostState extends State<ViewPost> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,23 +129,21 @@ class ViewPost extends StatelessWidget {
                         labelColor: Colors.black,
                         unselectedLabelColor: Colors.black,
                         tabs: [
-                          // ListView.builder(
-                          //   itemCount: 5,
-                          //   itemBuilder: (context, index) {
-                          //     return Tab(text: "Fresh chicken");
-                          //   },
-                          // )
-
-                          Tab(text: "Fresh chicken"),
+                          // FutureBuilder(
+                          //   future: ,
+                          //   builder: (context, index) {
+                          //   return ListView.builder(
+                          //       itemBuilder: ((context, index) {
+                          //     return Tab();
+                          //   }));
+                          // })
+                          Tab(text: "hello")
                         ]),
                   ),
                   SingleChildScrollView(
                     child: Container(
                       height: 450.h,
-                      child: TabBarView(children: [
-                        ViewPostsWidget()
-                        // ViewPostsWidget(),
-                      ]),
+                      child: const TabBarView(children: [ViewPostsWidget()]),
                     ),
                   )
                 ],

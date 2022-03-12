@@ -32,14 +32,24 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.2+1
+  flutter_native_splash: ^2.1.0
   flutter_screenutil: ^5.3.1
+  http: ^0.13.4
   provider: ^6.0.2
+  share: ^2.0.4
+  shared_preferences: ^2.0.13
   smooth_page_indicator: ^1.0.0+2
+  url_launcher: ^6.0.20
 
 dev_dependencies:
   flutter_lints: ^1.0.0
   flutter_test:
     sdk: flutter
+
+flutter_native_splash:
+  color: "#A6CE39"
+  image: assets/icons/logo.png
+  android: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -23,6 +23,6 @@ class AuthScreen extends StatelessWidget {
               child: Icon(Icons.arrow_back, color: Colors.white)),
           title: Text("login", style: TextStyle(color: Colors.white)),
         ),
-        body: ForgotPassword());
+        body: Phone());
   }
 }

@@ -6,6 +6,7 @@ class Api {
   static Cart cart = Cart();
   static Order order = Order();
   static Search search = Search();
+  static Review review = Review();
 }
 
 class User {
@@ -16,12 +17,14 @@ class User {
   String login = _baseUrl + "/login";
   String register = _baseUrl + "/register";
   String checkNumber = _baseUrl + "/check/number";
-  String sendotp = _baseUrl + "/sentregisterotp";
+  String sendregisterotp = _baseUrl + "/sendregisterotp";
   String profile = _baseUrl + "/profile";
   String update = _baseUrl + "/update";
   String home = _baseUrl + "/home";
   String notification = _baseUrl + "/notification";
   String checkPromocode = _baseUrl + "/check/promocode";
+  String forgotOtp = _baseUrl + "/sendforgototpmobile";
+  String changePassword = _baseUrl + "/change/number";
 }
 
 class Restaurant {
@@ -31,7 +34,7 @@ class Restaurant {
 
   String viewAll = _baseUrl + "/view/all";
   String viewOne(String id) => _baseUrl + "/${id}";
-  // String restaur
+  String restaurantOneCateogory(String id) => _baseUrl + "/${id}";
 }
 
 class SuperMarket {
@@ -83,6 +86,15 @@ class Search {
 
   static const String _baseUrl = Api._baseUrl + '/customer/search';
 
+  String allsearch = _baseUrl;
   String searchState = _baseUrl + "/state";
   String searchDistrict = _baseUrl + "/district";
+}
+
+class Review {
+  Review();
+
+  static const String _baseUrl = Api._baseUrl + '/customer';
+
+  String addReview = _baseUrl + "/addreview";
 }
