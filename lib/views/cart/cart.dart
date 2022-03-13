@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
 
 class Cart extends StatelessWidget {
+  static const routeName = '/cart';
   const Cart({Key? key}) : super(key: key);
 
   @override

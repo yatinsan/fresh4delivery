@@ -10,6 +10,7 @@ import 'package:fresh4delivery/views/view_post/view_post.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class MainScreen extends StatelessWidget {
+  static const routeName = '/main';
   MainScreen({Key? key}) : super(key: key);
 
   Widget build(BuildContext context) {

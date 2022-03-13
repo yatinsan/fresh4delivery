@@ -7,6 +7,7 @@ import 'package:fresh4delivery/views/authentication/phone.dart';
 import 'package:fresh4delivery/views/authentication/signup.dart';
 
 class AuthScreen extends StatelessWidget {
+  static const routeName = '/authScreen';
   const AuthScreen({Key? key}) : super(key: key);
 
   @override

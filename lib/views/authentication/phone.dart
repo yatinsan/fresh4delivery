@@ -6,12 +6,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/provider/phone_number_provider.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
+import 'package:fresh4delivery/utils/url_launcher.dart';
 import 'package:fresh4delivery/views/authentication/login.dart';
 import 'package:fresh4delivery/views/authentication/signup.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Phone extends StatelessWidget {
+  static const routeName = '/phone';
   Phone({Key? key}) : super(key: key);
 
   final _phoneController = TextEditingController();
@@ -89,7 +91,7 @@ class Phone extends StatelessWidget {
                 ),
                 SizedBox(height: 180.h),
                 SizedBox(
-                  width: 230,
+                  width: 235.w,
                   child: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
@@ -104,8 +106,8 @@ class Phone extends StatelessWidget {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () async {
                                 print("redirect to url");
-                                const url = "https://twitter.com";
-                                await launch(url);
+                                const url = 'https://twitter.com';
+                                UrlLauncher.launhcUrl(url);
                               })
                       ],
                     ),

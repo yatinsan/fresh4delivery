@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
 
 class NearYou extends StatelessWidget {
+  static const routeName = '/near-you';
   const NearYou({Key? key}) : super(key: key);
 
   @override

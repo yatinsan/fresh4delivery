@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
 
 class NotificationScreen extends StatelessWidget {
+  static const routeName = '/notification';
   const NotificationScreen({Key? key}) : super(key: key);
 
   @override

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/widgets/form_field_widget.dart';
 
 class AddNewAddress extends StatelessWidget {
+  static const routeName = '/add-new-address';
   AddNewAddress({Key? key}) : super(key: key);
 
   final _nameController = TextEditingController();

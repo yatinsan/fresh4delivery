@@ -11,6 +11,7 @@ import 'package:fresh4delivery/widgets/header.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
 
 class Home extends StatelessWidget {
+  static const routeName = '/home';
   const Home({Key? key}) : super(key: key);
 
   @override

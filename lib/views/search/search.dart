@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SearchScreen extends SearchDelegate {
+  static const routeName = '/search';
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(

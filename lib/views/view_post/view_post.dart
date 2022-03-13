@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/views/cart/cart.dart';
 
 class ViewPost extends StatefulWidget {
+  static const routeName = '/view-post';
   List<String> categories = ["a", "b"];
 
   @override

@@ -7,6 +7,7 @@ import 'package:fresh4delivery/views/notification/notification.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
 
 class Category extends StatelessWidget {
+  static const routeName = '/category';
   const Category({Key? key}) : super(key: key);
 
   @override

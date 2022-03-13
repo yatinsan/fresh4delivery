@@ -8,6 +8,7 @@ import 'package:fresh4delivery/views/profile/address/your_address.dart';
 import 'package:fresh4delivery/widgets/header.dart';
 
 class Profile extends StatelessWidget {
+  static const routeName = '/profile';
   const Profile({Key? key}) : super(key: key);
 
   @override

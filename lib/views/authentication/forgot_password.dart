@@ -7,6 +7,7 @@ import 'package:fresh4delivery/widgets/form_field_widget.dart';
 import 'package:fresh4delivery/widgets/named_button.dart';
 
 class ForgotPassword extends StatelessWidget {
+  static const routeName = '/forgot-password';
   ForgotPassword({Key? key}) : super(key: key);
 
   final _otpController = TextEditingController();

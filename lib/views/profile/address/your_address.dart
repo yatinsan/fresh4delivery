@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/views/profile/address/add_new_address.dart';
 
 class YourAddress extends StatelessWidget {
+  static const routeName = '/your-address';
   const YourAddress({Key? key}) : super(key: key);
 
   @override

@@ -1,15 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/provider/phone_number_provider.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
+import 'package:fresh4delivery/utils/url_launcher.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
 import 'package:fresh4delivery/widgets/form_field_widget.dart';
 import 'package:fresh4delivery/widgets/named_button.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatelessWidget {
+  static const routeName = '/login';
   Login({Key? key}) : super(key: key);
 
   final _passwordController = TextEditingController();
@@ -64,8 +67,17 @@ class Login extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text("Reset Password",
-                          style: TextStyle(color: Colors.grey.shade600)),
+                      RichText(
+                          text: TextSpan(children: [
+                        TextSpan(
+                            text: "reset password",
+                            style: TextStyle(
+                                color: Color.fromARGB(150, 139, 195, 74)),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                print('reset password');
+                              })
+                      ]))
                     ],
                   ),
                   SizedBox(height: 40.h),
@@ -73,9 +85,29 @@ class Login extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 160.h),
-              Text(
-                  "By continuing, you agree to our Terms of Services and Privacy Policy",
-                  style: TextStyle(color: Colors.grey.shade600))
+              SizedBox(
+                width: 235.w,
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                          text: "By continuing, you agree to our ",
+                          style: TextStyle(color: Colors.grey.shade600)),
+                      TextSpan(
+                          text: "Terms of Services and Privacy Policy",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 135, 167, 48)),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              print("redirect to url");
+                              const url = 'https://twitter.com';
+                              UrlLauncher.launhcUrl(url);
+                            })
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
         ),
