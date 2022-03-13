@@ -154,7 +154,7 @@ class PhoneButton extends HookWidget {
                   state.value = true;
                   Scaffold.of(context).showSnackBar(
                       SnackBar(content: Text('Enter your mobile number')));
-                } else if (phoneNumber.text.length < 9 ||
+                } else if (phoneNumber.text.length <= 9 ||
                     phoneNumber.text.length > 10) {
                   state.value = true;
                   Scaffold.of(context).showSnackBar(SnackBar(

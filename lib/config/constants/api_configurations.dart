@@ -89,6 +89,7 @@ class Search {
   String allsearch = _baseUrl;
   String searchState = _baseUrl + "/state";
   String searchDistrict = _baseUrl + "/district";
+  String pincodes = Api._baseUrl + "/search/pincode";
 }
 
 class Review {

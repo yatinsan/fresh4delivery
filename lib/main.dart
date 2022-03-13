@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         builder: () => MaterialApp(
               debugShowCheckedModeBanner: false,
               home: DefaultTabController(length: 4, child: Phone()),
-              initialRoute: '/phone',
+              initialRoute: '/mainScreen',
               onGenerateRoute: Routes.generateRoute,
             ));
   }

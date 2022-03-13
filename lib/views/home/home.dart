@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/config/constants/api_configurations.dart';
+import 'package:fresh4delivery/models/pincode_model.dart';
+import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/views/cart/cart.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
 import 'package:fresh4delivery/views/new_you/near_you.dart';
@@ -9,6 +12,7 @@ import 'package:fresh4delivery/views/notification/notification.dart';
 import 'package:fresh4delivery/views/search/search.dart';
 import 'package:fresh4delivery/widgets/header.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatelessWidget {
   static const routeName = '/home';
@@ -40,8 +44,7 @@ class Home extends StatelessWidget {
                 icon: Icon(Icons.notifications_none, color: Colors.black)),
             IconButton(
                 onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => Cart()));
+                  Navigator.pushNamed(context, '/cart');
                 },
                 icon: Icon(Icons.local_grocery_store_outlined,
                     color: Colors.black)),
@@ -55,93 +58,7 @@ class Home extends StatelessWidget {
                           const EdgeInsets.only(left: 40, top: 5, bottom: 5),
                       width: double.infinity,
                       color: Color.fromRGBO(201, 228, 125, 1),
-                      child: RichText(
-                          text: TextSpan(children: [
-                        TextSpan(
-                            text: "Delivery to :",
-                            style: TextStyle(color: Colors.grey.shade600)),
-                        TextSpan(
-                            text: " location",
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                print('location select manually');
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return Container(
-                                        height: 400,
-                                        child: SingleChildScrollView(
-                                          child: Column(
-                                            children: [
-                                              SizedBox(height: 20),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 20),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("Selected pincode",
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600)),
-                                                  ],
-                                                ),
-                                              ),
-                                              Container(
-                                                height: 65,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 10.0,
-                                                        horizontal: 20),
-                                                child:
-                                                    CupertinoSearchTextField(),
-                                              ),
-                                              ListView.builder(
-                                                  shrinkWrap: true,
-                                                  itemCount: 5,
-                                                  itemBuilder:
-                                                      ((context, index) {
-                                                    return Container(
-                                                        height: 50,
-                                                        margin: const EdgeInsets
-                                                                .only(
-                                                            left: 20,
-                                                            right: 20,
-                                                            top: 5),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal: 10,
-                                                                vertical: 5),
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                            border: Border.all(
-                                                                width: 2,
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300)),
-                                                        child: Row(
-                                                          children: [
-                                                            Icon(Icons
-                                                                .location_on_outlined),
-                                                            SizedBox(width: 20),
-                                                            Text("pin code"),
-                                                          ],
-                                                        ));
-                                                  })),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    });
-                              })
-                      ])))
+                      child: BottomPincodeSheet())
                 ],
               ),
               preferredSize: Size.fromHeight(80.h))),
@@ -282,5 +199,100 @@ class Home extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class BottomPincodeSheet extends StatelessWidget {
+  const BottomPincodeSheet({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+        text: TextSpan(children: [
+      TextSpan(
+          text: "Delivery to :", style: TextStyle(color: Colors.grey.shade600)),
+      TextSpan(
+          text: " location",
+          recognizer: TapGestureRecognizer()
+            ..onTap = () async {
+              SharedPreferences pref = await SharedPreferences.getInstance();
+              print(await pref.getString("id"));
+              print('location select manually');
+              showModalBottomSheet(
+                  context: context,
+                  builder: (context) => DraggableScrollableSheet(
+                      initialChildSize: 1,
+                      builder: (BuildContext context, scrollController) {
+                        return SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              SizedBox(height: 20),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Selected pincode",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600)),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 65,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 20),
+                                child: CupertinoSearchTextField(),
+                              ),
+                              FutureBuilder(
+                                  future: SearchApi.pincode(),
+                                  builder: ((context, AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData) {
+                                      List<PincodeModel> data = snapshot.data;
+                                      return ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: data.length,
+                                          itemBuilder: ((context, index) {
+                                            PincodeModel pincodes = data[index];
+                                            return Container(
+                                                height: 50,
+                                                margin: const EdgeInsets.only(
+                                                    left: 20,
+                                                    right: 20,
+                                                    top: 5),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 5),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    border: Border.all(
+                                                        width: 2,
+                                                        color: Colors
+                                                            .grey.shade300)),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons
+                                                        .location_on_outlined),
+                                                    SizedBox(width: 20),
+                                                    Text(pincodes.text
+                                                        .toString()),
+                                                  ],
+                                                ));
+                                          }));
+                                    } else {
+                                      return const Center(
+                                          child: CircularProgressIndicator());
+                                    }
+                                  }))
+                            ],
+                          ),
+                        );
+                      }));
+            })
+    ]));
   }
 }
