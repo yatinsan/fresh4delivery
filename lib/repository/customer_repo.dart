@@ -2,10 +2,30 @@ import 'dart:convert';
 
 import 'package:fresh4delivery/config/constants/api_configurations.dart';
 import 'package:fresh4delivery/models/pincode_model.dart';
+import 'package:fresh4delivery/models/restaurant_models.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 String cookie = '';
+
+class Preference {
+  static getPrefs(String data) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(data);
+  }
+}
+
+class Home {
+  static Future home() async {
+    try {
+      final pincode = await Preference.getPrefs("pincode");
+      final userId = await Preference.getPrefs("Id");
+      var response = http.post(Uri.parse(Api.user.home));
+    } catch (e) {
+      return "Error";
+    }
+  }
+}
 
 class AuthCustomer {
   static Future phoneCheck(phone) async {
@@ -36,8 +56,9 @@ class AuthCustomer {
       });
 
       var responseBody = json.decode(response.body);
-      _saveCooke("id", responseBody["id"]);
-      print(responseBody);
+      cookie = responseBody["user"]["id"];
+      _saveCooke();
+      print(responseBody["user"]["id"]);
 
       if (responseBody["sts"] == "01") {
         return true;
@@ -53,12 +74,13 @@ class AuthCustomer {
     try {
       print(emailormobile);
       print(password);
-      var response = await http.post(Uri.parse(Api.user.register),
+      var response = await http.post(Uri.parse(Api.user.login),
           body: {"emailormobile": emailormobile, "password": password});
 
       var responseBody = json.decode(response.body);
-      print(responseBody);
-      await _saveCooke("id", '${responseBody["id"].toString()}');
+      cookie = "${responseBody["user"]["id"]}";
+      await _saveCooke();
+      print(cookie);
 
       if (responseBody["sts"] == "01") {
         return true;
@@ -110,7 +132,28 @@ class SearchApi {
   }
 }
 
-_saveCooke(prefname, data) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString(prefname, data);
+class RestaurantApi {
+  static Future<List<RestaurantModel>?> viewAll() async {
+    try {
+      final pincode = await Preference.getPrefs("pincode");
+      final userId = await Preference.getPrefs("Id");
+      print(userId);
+      var response = await http.post(Uri.parse(Api.restaurant.viewAll),
+          body: {"user_id": userId, "pincode": pincode, "limit": "10"});
+      var responseBody = json.decode(response.body);
+      List<RestaurantModel> restaurants1 = [];
+      responseBody["restaurants"].map((data) => {responseBody.add(data)});
+      print("hello");
+      print(restaurants1);
+      // return restaurants1;
+    } catch (e) {
+      return null;
+    }
+  }
+}
+
+_saveCooke() async {
+  final prefs = await SharedPreferences.getInstance();
+  var result = prefs.setString('Id', cookie);
+  print(result);
 }

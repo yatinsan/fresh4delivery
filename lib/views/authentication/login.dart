@@ -11,11 +11,17 @@ import 'package:fresh4delivery/widgets/form_field_widget.dart';
 import 'package:fresh4delivery/widgets/named_button.dart';
 import 'package:provider/provider.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   static const routeName = '/login';
   Login({Key? key}) : super(key: key);
 
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final _emailormobileController =
@@ -142,10 +148,14 @@ class LoginButton extends HookWidget {
                     await AuthCustomer.login(emailormobile.text, password.text);
                 print(response);
                 if (emailormobile.text.isNotEmpty && password.text.isNotEmpty) {
-                  if (response) {
+                  if (response == true) {
                     state.value = true;
                     Navigator.push(context,
                         MaterialPageRoute(builder: (_) => MainScreen()));
+                  } else if (response == "Error") {
+                    state.value = true;
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text('Please check the information.')));
                   }
                 } else {
                   state.value = true;

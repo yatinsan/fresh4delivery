@@ -18,7 +18,7 @@ class MainScreen extends StatelessWidget {
       length: 4,
       child: Scaffold(
           bottomNavigationBar: menu(),
-          body: TabBarView(children: [
+          body: const TabBarView(children: [
             Home(),
             Category(),
             Orders(),
@@ -148,72 +148,6 @@ class CircleWidget extends StatelessWidget {
               ),
             );
           })),
-    );
-  }
-}
-
-class Cards extends StatelessWidget {
-  const Cards({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => ViewPost()));
-      },
-      child: Container(
-        margin: const EdgeInsets.only(right: 5, left: 5),
-        padding: const EdgeInsets.only(left: 2, right: 2, top: 4),
-        width: 120.w,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          children: [
-            Container(
-              height: 110,
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Image.asset(
-                "assets/images/carousal1.png",
-                fit: BoxFit.cover,
-              ),
-            ),
-            Column(
-              children: [
-                SizedBox(height: 10),
-                Text("Thaj Restuarant",
-                    style:
-                        TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-                Container(
-                  padding: const EdgeInsets.only(left: 2, right: 2),
-                  height: 20,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: 5,
-                          itemBuilder: ((context, index) {
-                            return Icon(Icons.star,
-                                size: 10, color: Colors.yellow);
-                          })),
-                      Text("12 min",
-                          style: TextStyle(
-                              fontSize: 8,
-                              color: Color.fromRGBO(100, 120, 47, 1)))
-                    ],
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
     );
   }
 }

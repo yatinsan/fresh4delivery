@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class PhoneProvider extends ChangeNotifier {
-  String _number = 'Enter your mobile number';
+  String _number = '';
 
   String get phone => _number;
 
