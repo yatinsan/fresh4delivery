@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/repository/customer_repo.dart';
+import 'package:fresh4delivery/utils/url_launcher.dart';
 import 'package:fresh4delivery/views/cart/cart.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
 import 'package:fresh4delivery/views/profile/address/your_address.dart';
 import 'package:fresh4delivery/widgets/header.dart';
+import 'package:share/share.dart';
 
 class Profile extends StatelessWidget {
   static const routeName = '/profile';
@@ -78,7 +81,7 @@ class Profile extends StatelessWidget {
                     children: [
                       ProfileButtons(
                           title: "your order",
-                          icon: Icons.assignment_outlined,
+                          image: 'assets/icons/order_history.png',
                           function: () {
                             print("your orders");
                             Navigator.push(context,
@@ -86,7 +89,7 @@ class Profile extends StatelessWidget {
                           }),
                       ProfileButtons(
                           title: "address book",
-                          icon: Icons.library_books,
+                          image: 'assets/icons/address.png',
                           function: () {
                             print("address book");
                             Navigator.push(
@@ -96,7 +99,7 @@ class Profile extends StatelessWidget {
                           }),
                       ProfileButtons(
                           title: "notification",
-                          icon: Icons.notifications_none_outlined,
+                          image: 'assets/icons/notification.png',
                           function: () {
                             print("notification");
                             Navigator.push(
@@ -115,26 +118,31 @@ class Profile extends StatelessWidget {
                     children: [
                       ProfileButtons(
                           title: "support",
-                          icon: Icons.support_agent_outlined,
+                          image: 'assets/icons/support.png',
                           function: () {
                             print("support");
                           }),
                       ProfileButtons(
                           title: "share the app",
-                          icon: Icons.share_outlined,
+                          image: 'assets/icons/share.png',
                           function: () {
+                            Share.share('how are you');
                             print("share the app");
                           }),
                       ProfileButtons(
                           title: "about us",
-                          icon: Icons.quiz_rounded,
+                          image: 'assets/icons/info.png',
                           function: () {
+                            var url = "https://twitter.com";
+                            UrlLauncher.launhcUrl(url);
                             print("about us");
                           }),
                       ProfileButtons(
                           title: "logout",
-                          icon: Icons.power_settings_new_outlined,
-                          function: () {
+                          image: 'assets/icons/logout.png',
+                          function: () async {
+                            await AuthCustomer.logout();
+                            Navigator.pushNamed(context, '/authScreen');
                             print("logout");
                           }),
                     ],
@@ -148,13 +156,13 @@ class Profile extends StatelessWidget {
 }
 
 class ProfileButtons extends StatelessWidget {
-  final IconData icon;
+  final String image;
   final String title;
   final Function function;
   const ProfileButtons(
       {Key? key,
       required this.title,
-      required this.icon,
+      required this.image,
       required this.function})
       : super(key: key);
 
@@ -172,7 +180,7 @@ class ProfileButtons extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: Colors.grey.shade200,
                     borderRadius: BorderRadius.circular(5)),
-                child: Icon(icon, color: Colors.grey.shade700)),
+                child: Image.asset(image, height: 25, width: 25)),
             SizedBox(width: 10),
             Container(
                 child:

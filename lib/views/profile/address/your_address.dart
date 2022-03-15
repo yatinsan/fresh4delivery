@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/models/address_model.dart';
+import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/views/profile/address/add_new_address.dart';
 
 class YourAddress extends StatelessWidget {
@@ -45,7 +47,25 @@ class YourAddress extends StatelessWidget {
         body: Stack(clipBehavior: Clip.none, children: [
           SizedBox(
               height: MediaQuery.of(context).size.height * .78,
-              child: SelectableAddressWidget()),
+              child: FutureBuilder(
+                  future: AddressApi.addressList(),
+                  builder: ((context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      List<AddressModel> data = snapshot.data;
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: data.length,
+                          itemBuilder: ((context, index) {
+                            AddressModel addressList = data[index];
+                            return SelectableAddressWidget(index: index);
+                          }));
+                    } else {
+                      return const Center(
+                          child: Text('No Address yet!!',
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w600)));
+                    }
+                  }))),
           Positioned(
             right: 30,
             bottom: -10,
@@ -75,87 +95,82 @@ class YourAddress extends StatelessWidget {
 }
 
 class SelectableAddressWidget extends HookWidget {
-  const SelectableAddressWidget({Key? key}) : super(key: key);
+  int index;
+  SelectableAddressWidget({Key? key, this.index = 0}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final state = useState(0);
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: 2,
-        itemBuilder: ((context, index) {
-          return Container(
-              margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
-              width: 300.w,
-              height: 100.h,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey.shade200, width: 2.w)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
+    return Container(
+        margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
+        width: 300.w,
+        height: 100.h,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade200, width: 2.w)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+                flex: 2,
+                child: Radio(
+                    value: index, //index
+                    groupValue: state.value, //state value
+                    onChanged: (val) {
+                      state.value = index; //index
+                    })),
+            Expanded(
+              flex: 5,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                      flex: 2,
-                      child: Radio(
-                          value: index,
-                          groupValue: state.value,
-                          onChanged: (val) {
-                            state.value = index;
-                          })),
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Sample Name",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600)),
-                        SizedBox(height: 5.h),
-                        Text("address address", style: TextStyle(fontSize: 12)),
-                        SizedBox(height: 5.h),
-                        Text("phone number", style: TextStyle(fontSize: 12)),
-                        SizedBox(height: 5.h),
-                        Text("pincode", style: TextStyle(fontSize: 12)),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                      flex: 2,
-                      child: GestureDetector(
-                        onTap: () {
-                          print('edit');
-                        },
-                        child: Container(
-                            height: 25,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 2, color: Colors.grey.shade400),
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Text("Edit",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600))),
-                      )),
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              print("close");
-                            },
-                            icon: Icon(Icons.cancel_rounded,
-                                size: 20, color: Colors.grey.shade800)),
-                      ],
-                    ),
-                  )
+                  Text("Sample Name",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  SizedBox(height: 5.h),
+                  Text("address address", style: TextStyle(fontSize: 12)),
+                  SizedBox(height: 5.h),
+                  Text("phone number", style: TextStyle(fontSize: 12)),
+                  SizedBox(height: 5.h),
+                  Text("pincode", style: TextStyle(fontSize: 12)),
                 ],
-              ));
-        }));
+              ),
+            ),
+            Expanded(
+                flex: 2,
+                child: GestureDetector(
+                  onTap: () {
+                    print('edit');
+                  },
+                  child: Container(
+                      height: 25,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border:
+                              Border.all(width: 2, color: Colors.grey.shade400),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Text("Edit",
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w600))),
+                )),
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        print("close");
+                      },
+                      icon: Icon(Icons.cancel_rounded,
+                          size: 20, color: Colors.grey.shade800)),
+                ],
+              ),
+            )
+          ],
+        ));
   }
 }

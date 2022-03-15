@@ -7,6 +7,7 @@ class Api {
   static Order order = Order();
   static Search search = Search();
   static Review review = Review();
+  static Address address = Address();
 }
 
 class User {
@@ -40,9 +41,9 @@ class Restaurant {
 class SuperMarket {
   SuperMarket();
 
-  static const String _baseUrl = Api._baseUrl + "/customer/restaurants";
+  static const String _baseUrl = Api._baseUrl + "/customer/supermarkets";
 
-  String viewAll = _baseUrl + "view/all";
+  String viewAll = _baseUrl + "/view/all";
   String viewOne(String id) => _baseUrl + "/${id}";
 }
 
@@ -65,7 +66,7 @@ class Order {
   static const String _baseUrl = Api._baseUrl + '/customer/order';
 
   String orderupdate = _baseUrl + "/update";
-  String orders = Api._baseUrl + "/orders";
+  String allorders = Api._baseUrl + "/customer/orders";
   String getoneorder(String id) => _baseUrl + "/${id}";
 }
 

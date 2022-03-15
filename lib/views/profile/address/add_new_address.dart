@@ -5,6 +5,7 @@ import 'package:fresh4delivery/widgets/form_field_widget.dart';
 
 class AddNewAddress extends StatelessWidget {
   static const routeName = '/add-new-address';
+  final state = ['kerala', "delhi", "maharashtra", "Rajasthan"];
   AddNewAddress({Key? key}) : super(key: key);
 
   final _nameController = TextEditingController();
@@ -41,7 +42,8 @@ class AddNewAddress extends StatelessWidget {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.save, color: Colors.black),
+                      Icon(Icons.save, color: Colors.grey.shade800, size: 20),
+                      SizedBox(width: 10),
                       Text("Save", style: TextStyle(color: Colors.black))
                     ],
                   ),
@@ -90,17 +92,18 @@ class AddNewAddress extends StatelessWidget {
                 AddAddressTextfield(
                     controller: _cityController, hintText: "city"),
                 SizedBox(height: 20.h),
-                AddAddressTextfield(
-                    controller: _stateController, hintText: "state"),
-                SizedBox(height: 20.h),
-                AddAddressTextfield(
-                    controller: _addresstypeController,
-                    hintText: "address type"),
+                DropdownButton(
+                  items: state.map(buildMenuItems).toList(),
+                  onChanged: (String? value) {},
+                )
               ],
             ),
           ),
         ));
   }
+
+  DropdownMenuItem<String> buildMenuItems(String item) =>
+      DropdownMenuItem(value: item, child: Text(item));
 }
 
 class AddAddressTextfield extends StatelessWidget {
