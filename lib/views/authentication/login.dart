@@ -21,10 +21,11 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final _emailormobileController =
+    final emailOrMobile =
         TextEditingController(text: "${context.watch<PhoneProvider>().phone}");
     return Scaffold(
       backgroundColor: Colors.black,
@@ -62,7 +63,13 @@ class _LoginState extends State<Login> {
                   ),
                   SizedBox(height: 47.h),
                   FormFieldWidget(
-                      controller: _emailormobileController,
+                      controller: context
+                              .watch<PhoneProvider>()
+                              .phone
+                              .toString()
+                              .isEmpty
+                          ? _emailController
+                          : emailOrMobile,
                       hintText: "Enter your mobile number"),
                   SizedBox(height: 20.h),
                   FormFieldWidget(
@@ -87,7 +94,11 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                   SizedBox(height: 40.h),
-                  LoginButton(_emailormobileController, _passwordController)
+                  LoginButton(
+                      context.watch<PhoneProvider>().phone.toString().isEmpty
+                          ? _emailController
+                          : emailOrMobile,
+                      _passwordController)
                 ],
               ),
               SizedBox(height: 160.h),

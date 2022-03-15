@@ -109,46 +109,61 @@ class _ViewPostState extends State<ViewPost> {
                   )),
             )
           ]),
-          DefaultTabController(
-              length: 1,
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(50),
-                        border:
-                            Border.all(color: Colors.grey.shade400, width: 0)),
-                    child: TabBar(
-                        indicator: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(color: Colors.grey.shade400)),
-                        isScrollable: true,
-                        labelColor: Colors.black,
-                        unselectedLabelColor: Colors.black,
-                        tabs: [
-                          // FutureBuilder(
-                          //   future: ,
-                          //   builder: (context, index) {
-                          //   return ListView.builder(
-                          //       itemBuilder: ((context, index) {
-                          //     return Tab();
-                          //   }));
-                          // })
-                          Tab(text: "hello")
-                        ]),
-                  ),
-                  SingleChildScrollView(
-                    child: Container(
-                      height: 450.h,
-                      child: const TabBarView(children: [ViewPostsWidget()]),
+          Builder(builder: (context) {
+            return DefaultTabController(
+                length: 10,
+                child: Column(
+                  children: [
+                    Container(
+                      margin:
+                          const EdgeInsets.only(top: 20, left: 20, right: 20),
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border.all(
+                              color: Colors.grey.shade400, width: 0)),
+                      child: TabBar(
+                          indicator: BoxDecoration(
+                              color: Colors.grey.shade400,
+                              borderRadius: BorderRadius.circular(50),
+                              border: Border.all(color: Colors.grey.shade400)),
+                          isScrollable: true,
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.black,
+                          tabs: [
+                            Tab(text: "hello"),
+                            Tab(text: "hello"),
+                            Tab(text: "hello"),
+                            Tab(text: "hello"),
+                            Tab(text: "hello"),
+                            Tab(text: "hello"),
+                            Tab(text: "hello"),
+                            Tab(text: "hello"),
+                            Tab(text: "hello"),
+                            Tab(text: "hello"),
+                          ]),
                     ),
-                  )
-                ],
-              ))
+                    SingleChildScrollView(
+                      child: Container(
+                        height: 450.h,
+                        child: const TabBarView(children: [
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                        ]),
+                      ),
+                    )
+                  ],
+                ));
+          })
         ],
       ),
     );

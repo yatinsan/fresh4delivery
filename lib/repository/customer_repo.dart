@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:fresh4delivery/config/constants/api_configurations.dart';
 import 'package:fresh4delivery/models/pincode_model.dart';
+import 'package:fresh4delivery/models/res_model.dart';
 import 'package:fresh4delivery/models/restaurant_models.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -133,20 +134,33 @@ class SearchApi {
 }
 
 class RestaurantApi {
-  static Future<List<RestaurantModel>?> viewAll() async {
+  static Future<List<Nrestaurants>?> viewAll() async {
     try {
       final pincode = await Preference.getPrefs("pincode");
       final userId = await Preference.getPrefs("Id");
-      print(userId);
+      print('userid  ' + userId);
+      print('pincode  ' + pincode);
       var response = await http.post(Uri.parse(Api.restaurant.viewAll),
           body: {"user_id": userId, "pincode": pincode, "limit": "10"});
+      print(response.body);
       var responseBody = json.decode(response.body);
-      List<RestaurantModel> restaurants1 = [];
-      responseBody["restaurants"].map((data) => {responseBody.add(data)});
-      print("hello");
-      print(restaurants1);
-      // return restaurants1;
+      print(responseBody);
+      List<Nrestaurants> resList1 = [];
+      print('start loop');
+      for (var i in responseBody['restaurants']) {
+        i['status'] = true;
+        resList1.add(Nrestaurants.fromJson(i));
+        print(i);
+      }
+      for (var i in responseBody['nrestaurants']) {
+        i['status'] = false;
+        resList1.add(Nrestaurants.fromJson(i));
+        print(i);
+      }
+      print(resList1);
+      return resList1;
     } catch (e) {
+      print('rest ' + e.toString());
       return null;
     }
   }

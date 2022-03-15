@@ -2,20 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fresh4delivery/config/constants/api_configurations.dart';
 import 'package:fresh4delivery/models/pincode_model.dart';
-import 'package:fresh4delivery/models/restaurant_models.dart';
+import 'package:fresh4delivery/models/res_model.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
-import 'package:fresh4delivery/views/cart/cart.dart';
+import 'package:fresh4delivery/utils/star_rating.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
 import 'package:fresh4delivery/views/new_you/near_you.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
-import 'package:fresh4delivery/views/search/search.dart';
 import 'package:fresh4delivery/views/view_post/view_post.dart';
 import 'package:fresh4delivery/widgets/header.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/home';
@@ -182,7 +179,7 @@ class _HomeState extends State<Home> {
               ],
             ),
             SizedBox(height: 20),
-            Headerwidget(),
+            Headerwidget(title: "Top Restaurants"),
             SizedBox(height: 20),
             SizedBox(
                 height: 160,
@@ -190,21 +187,26 @@ class _HomeState extends State<Home> {
                     future: RestaurantApi.viewAll(),
                     builder: (context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
-                        List data = snapshot.data;
+                        print(snapshot.data[1]);
+                        final data = snapshot.data;
                         return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
-                            itemCount: 5,
+                            itemCount: data.length,
                             itemBuilder: ((context, index) {
-                              RestaurantModel restaurant = data[index];
-                              return Cards();
+                              Nrestaurants restaurant = data[index];
+                              return Cards(
+                                title: restaurant.name ?? "",
+                                time: restaurant.deliveryTime ?? "",
+                                ratings: restaurant.rating ?? 0,
+                              );
                             }));
                       } else {
                         return Center(child: CircularProgressIndicator());
                       }
                     })),
             SizedBox(height: 20),
-            Headerwidget(),
+            Headerwidget(title: "Top Super Markets"),
             SizedBox(height: 20),
             SizedBox(
               height: 160,
@@ -213,7 +215,9 @@ class _HomeState extends State<Home> {
                   shrinkWrap: true,
                   itemCount: 5,
                   itemBuilder: ((context, index) {
-                    return Cards();
+                    return Cards(
+                      ratings: 4.5,
+                    );
                   })),
             ),
             AspectRatio(
@@ -230,7 +234,12 @@ class _HomeState extends State<Home> {
 class Cards extends StatelessWidget {
   final String title;
   final String time;
-  const Cards({Key? key, this.title = "not available", this.time = "!!"})
+  final double ratings;
+  const Cards(
+      {Key? key,
+      this.title = "not available",
+      this.time = "!!",
+      required this.ratings})
       : super(key: key);
 
   @override
@@ -272,14 +281,18 @@ class Cards extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: 5,
-                          itemBuilder: ((context, index) {
-                            return Icon(Icons.star,
-                                size: 10, color: Colors.yellow);
-                          })),
+                      StarRating(
+                        rating: ratings,
+                        iconsize: 12,
+                      ),
+                      // ListView.builder(
+                      //     scrollDirection: Axis.horizontal,
+                      //     shrinkWrap: true,
+                      //     itemCount: 5,
+                      //     itemBuilder: ((context, index) {
+                      //       return Icon(Icons.star,
+                      //           size: 10, color: Colors.yellow);
+                      //     })),
                       Text(time,
                           style: TextStyle(
                               fontSize: 8,
@@ -310,6 +323,8 @@ class BottomPincodeSheet extends StatelessWidget {
           recognizer: TapGestureRecognizer()
             ..onTap = () async {
               final response = await RestaurantApi.viewAll();
+              final pref = await SharedPreferences.getInstance();
+              print(pref.getString('pincode'));
               print(response);
               print('location select manually');
               showModalBottomSheet(
@@ -349,6 +364,7 @@ class BottomPincodeSheet extends StatelessWidget {
                                   future: SearchApi.pincode(),
                                   builder: ((context, AsyncSnapshot snapshot) {
                                     if (snapshot.hasData) {
+                                      print(snapshot.data);
                                       List<PincodeModel> data = snapshot.data;
                                       return ListView.builder(
                                           controller: scrollController,

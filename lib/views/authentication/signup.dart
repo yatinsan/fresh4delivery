@@ -23,10 +23,11 @@ class SignUp extends StatelessWidget {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmpassController = TextEditingController();
+  final _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final _phoneController =
+    final phoneController =
         TextEditingController(text: "${context.watch<PhoneProvider>().phone}");
     return Scaffold(
       backgroundColor: Colors.black,
@@ -72,7 +73,13 @@ class SignUp extends StatelessWidget {
                       hintText: "Enter your mail"),
                   SizedBox(height: 20.h),
                   FormFieldWidget(
-                      controller: _phoneController,
+                      controller: context
+                              .watch<PhoneProvider>()
+                              .phone
+                              .toString()
+                              .isEmpty
+                          ? _phoneController
+                          : phoneController,
                       hintText: "Enter your phone number"),
                   SizedBox(height: 20.h),
                   FormFieldWidget(
@@ -86,7 +93,9 @@ class SignUp extends StatelessWidget {
                   RegisterButton(
                       _nameController,
                       _emailController,
-                      _phoneController,
+                      context.watch<PhoneProvider>().phone.toString().isEmpty
+                          ? _phoneController
+                          : phoneController,
                       _passwordController,
                       _confirmpassController),
                   SizedBox(height: 20.h),

@@ -5,6 +5,7 @@ import 'package:fresh4delivery/views/authentication/login.dart';
 import 'package:fresh4delivery/views/authentication/otp_verify.dart';
 import 'package:fresh4delivery/views/authentication/phone.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
+import 'package:fresh4delivery/views/view_all/view_all.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -28,6 +29,10 @@ class Routes {
       case RoutePath.mainScreen:
         {
           return _route(routeSettings, MainScreen());
+        }
+      case RoutePath.viewall:
+        {
+          return _route(routeSettings, ViewAll());
         }
       default:
         {

@@ -5,4 +5,5 @@ class RoutePath {
   static const String login = '/login';
   static const String mainScreen = '/mainScreen';
   static const String cart = '/cart';
+  static const String viewall = '/viewall';
 }
