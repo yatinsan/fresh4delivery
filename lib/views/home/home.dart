@@ -13,6 +13,7 @@ import 'package:fresh4delivery/utils/star_rating.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
 import 'package:fresh4delivery/views/new_you/near_you.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
+import 'package:fresh4delivery/views/search/search.dart';
 import 'package:fresh4delivery/views/view_post/view_post.dart';
 import 'package:fresh4delivery/widgets/header.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
@@ -375,7 +376,7 @@ class CircleWidget extends StatelessWidget {
                   fit: BoxFit.cover, width: 50.w, height: 50.h)),
           SizedBox(height: 4.h),
           Text(title,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500))
+              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500))
         ],
       ),
     );
@@ -514,7 +515,7 @@ class BottomPincodeSheet extends StatelessWidget {
                                 height: 65,
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 10.0, horizontal: 20),
-                                child: CupertinoSearchTextField(),
+                                child: caatogoryseacrh(),
                               ),
                               FutureBuilder(
                                   future: SearchApi.pincode(),

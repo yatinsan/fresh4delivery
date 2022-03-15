@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/widgets/form_field_widget.dart';
 
 class AddNewAddress extends StatelessWidget {
   static const routeName = '/add-new-address';
-  final state = ['kerala', "delhi", "maharashtra", "Rajasthan"];
   AddNewAddress({Key? key}) : super(key: key);
 
   final _nameController = TextEditingController();
@@ -92,18 +92,50 @@ class AddNewAddress extends StatelessWidget {
                 AddAddressTextfield(
                     controller: _cityController, hintText: "city"),
                 SizedBox(height: 20.h),
-                DropdownButton(
-                  items: state.map(buildMenuItems).toList(),
-                  onChanged: (String? value) {},
-                )
+                DropDownWidget(),
               ],
             ),
           ),
         ));
   }
+}
 
-  DropdownMenuItem<String> buildMenuItems(String item) =>
-      DropdownMenuItem(value: item, child: Text(item));
+class DropDownWidget extends HookWidget {
+  DropDownWidget({
+    Key? key,
+  }) : super(key: key);
+
+  final state = ['Kerala', "Delhi", "Maharashtra", "Rajasthan"];
+
+  @override
+  Widget build(BuildContext context) {
+    final string = useState('');
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      height: 45,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(width: 1, color: Colors.grey.shade200)),
+      child: DropdownButtonHideUnderline(
+          child: DropdownButton(
+        elevation: 5,
+        hint: Text("Select State"),
+        isExpanded: true,
+        iconSize: 30,
+        value: string.value,
+        isDense: true,
+        onChanged: (val) {
+          string.value = val as String;
+        },
+        items: state.map((val) {
+          return DropdownMenuItem(
+            child: Text(val),
+            value: val,
+          );
+        }).toList(),
+      )),
+    );
+  }
 }
 
 class AddAddressTextfield extends StatelessWidget {
@@ -126,7 +158,7 @@ class AddAddressTextfield extends StatelessWidget {
         style: TextStyle(color: Colors.white),
         controller: controller,
         decoration: InputDecoration(
-          hintStyle: TextStyle(color: Colors.grey.shade900, fontSize: 14),
+          hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
           hintText: hintText,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),

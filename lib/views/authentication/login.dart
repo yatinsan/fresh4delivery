@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/provider/phone_number_provider.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
+import 'package:fresh4delivery/utils/shimmer_widget.dart';
 import 'package:fresh4delivery/utils/url_launcher.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
 import 'package:fresh4delivery/widgets/form_field_widget.dart';
@@ -162,7 +163,7 @@ class LoginButton extends HookWidget {
                   if (response == true) {
                     state.value = true;
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => MainScreen()));
+                        MaterialPageRoute(builder: (_) => ShimmerWidget()));
                   } else if (response == "Error") {
                     state.value = true;
                     Scaffold.of(context).showSnackBar(SnackBar(
