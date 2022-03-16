@@ -11,6 +11,7 @@ import 'package:fresh4delivery/views/main_screen/main_screen.dart';
 import 'package:fresh4delivery/widgets/form_field_widget.dart';
 import 'package:fresh4delivery/widgets/named_button.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   static const routeName = '/login';
@@ -155,6 +156,7 @@ class LoginButton extends HookWidget {
       child: state.value
           ? TextButton(
               onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
                 state.value = false;
                 var response =
                     await AuthCustomer.login(emailormobile.text, password.text);
@@ -162,8 +164,14 @@ class LoginButton extends HookWidget {
                 if (emailormobile.text.isNotEmpty && password.text.isNotEmpty) {
                   if (response == true) {
                     state.value = true;
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => ShimmerWidget()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                prefs.getString("pincode").toString().isEmpty ||
+                                        prefs.getString("pincode") == null
+                                    ? ShimmerWidget()
+                                    : MainScreen()));
                   } else if (response == "Error") {
                     state.value = true;
                     Scaffold.of(context).showSnackBar(SnackBar(

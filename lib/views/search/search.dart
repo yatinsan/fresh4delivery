@@ -29,7 +29,8 @@ class SearchScreen extends SearchDelegate {
   }
 }
 
-TypeAheadField<String> caatogoryseacrh() {
+TypeAheadField<String> caatogoryseacrh(labelText) {
+  final _textController = TextEditingController();
   return TypeAheadField(
       noItemsFoundBuilder: (context) => const ListTile(
             title: Text('Category not available'),
@@ -38,9 +39,9 @@ TypeAheadField<String> caatogoryseacrh() {
           SuggestionsBoxDecoration(borderRadius: BorderRadius.circular(10)),
       keepSuggestionsOnLoading: true,
       textFieldConfiguration: TextFieldConfiguration(
-        controller: TextEditingController(),
+        controller: _textController,
         decoration: InputDecoration(
-          labelText: "Category",
+          labelText: labelText,
           floatingLabelBehavior: FloatingLabelBehavior.auto,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -55,7 +56,7 @@ TypeAheadField<String> caatogoryseacrh() {
             title: Text(item),
           ),
       onSuggestionSelected: (selected) {
-        // selected;
+        _textController.text = selected;
       });
 }
 
@@ -68,7 +69,7 @@ List<String> searchcatogery(String catogery) {
     "pig",
     "fish",
     "squirel",
-    "birds"
+    "birds",
   ];
   return catogerys
       .where(

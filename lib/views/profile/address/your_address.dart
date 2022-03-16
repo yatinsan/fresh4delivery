@@ -51,13 +51,18 @@ class YourAddress extends StatelessWidget {
                   future: AddressApi.addressList(),
                   builder: ((context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
-                      List<AddressModel> data = snapshot.data;
+                      List<AddressListModel> data = snapshot.data;
                       return ListView.builder(
                           shrinkWrap: true,
                           itemCount: data.length,
                           itemBuilder: ((context, index) {
-                            AddressModel addressList = data[index];
-                            return SelectableAddressWidget(index: index);
+                            AddressListModel addressList = data[index];
+                            return SelectableAddressWidget(
+                                addresstype: addressList.type.toString(),
+                                address: addressList.address.toString(),
+                                phone: addressList.phone.toString(),
+                                pincode: addressList.pincode.toString(),
+                                index: data.length);
                           }));
                     } else {
                       return const Center(
@@ -95,8 +100,19 @@ class YourAddress extends StatelessWidget {
 }
 
 class SelectableAddressWidget extends HookWidget {
+  String addresstype;
+  String address;
+  String phone;
+  String pincode;
   int index;
-  SelectableAddressWidget({Key? key, this.index = 0}) : super(key: key);
+  SelectableAddressWidget(
+      {Key? key,
+      this.index = 0,
+      this.addresstype = 'Address type',
+      this.address = 'address',
+      this.phone = "phone",
+      this.pincode = "pincode"})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -126,15 +142,15 @@ class SelectableAddressWidget extends HookWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Sample Name",
+                  Text(addresstype,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   SizedBox(height: 5.h),
-                  Text("address address", style: TextStyle(fontSize: 12)),
+                  Text(address, style: TextStyle(fontSize: 12)),
                   SizedBox(height: 5.h),
-                  Text("phone number", style: TextStyle(fontSize: 12)),
+                  Text(phone, style: TextStyle(fontSize: 12)),
                   SizedBox(height: 5.h),
-                  Text("pincode", style: TextStyle(fontSize: 12)),
+                  Text(pincode, style: TextStyle(fontSize: 12)),
                 ],
               ),
             ),

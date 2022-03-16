@@ -30,14 +30,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      show(context);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -388,13 +380,15 @@ class Cards extends StatelessWidget {
   String time;
   double ratings;
   String image;
+  bool isRating;
   Cards(
       {Key? key,
       this.title = "not available",
       this.time = "!!",
       this.image =
           "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
-      this.ratings = 4.5})
+      this.ratings = 4.5,
+      this.isRating = true})
       : super(key: key);
 
   @override
@@ -446,10 +440,12 @@ class Cards extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      StarRating(
-                        rating: ratings,
-                        iconsize: 12,
-                      ),
+                      isRating
+                          ? StarRating(
+                              rating: ratings,
+                              iconsize: 12,
+                            )
+                          : SizedBox(),
                       Text(time,
                           style: TextStyle(
                               fontSize: 8,
@@ -515,7 +511,7 @@ class BottomPincodeSheet extends StatelessWidget {
                                 height: 65,
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 10.0, horizontal: 20),
-                                child: caatogoryseacrh(),
+                                child: caatogoryseacrh("Search here"),
                               ),
                               FutureBuilder(
                                   future: SearchApi.pincode(),
@@ -581,94 +577,4 @@ class BottomPincodeSheet extends StatelessWidget {
             })
     ]));
   }
-}
-
-void show(BuildContext context) async {
-  final pref = await SharedPreferences.getInstance();
-  pref.getString("pincode").toString().isEmpty ||
-          pref.getString("pincode") == null
-      ? showModalBottomSheet(
-          isDismissible: false,
-          isScrollControlled: true,
-          context: context,
-          builder: (context) => DraggableScrollableSheet(
-              expand: false,
-              initialChildSize: .5,
-              minChildSize: 0.5,
-              maxChildSize: 0.5,
-              builder:
-                  (BuildContext context, ScrollController scrollController) {
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Selected pincode",
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w600)),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 65,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 20),
-                        child: CupertinoSearchTextField(),
-                      ),
-                      FutureBuilder(
-                          future: SearchApi.pincode(),
-                          builder: ((context, AsyncSnapshot snapshot) {
-                            if (snapshot.hasData) {
-                              List<PincodeModel> data = snapshot.data;
-                              return ListView.builder(
-                                  controller: scrollController,
-                                  shrinkWrap: true,
-                                  itemCount: data.length,
-                                  itemBuilder: ((context, index) {
-                                    PincodeModel pincodes = data[index];
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        Navigator.pop(context);
-                                        final prefs = await SharedPreferences
-                                            .getInstance();
-                                        var pin = prefs.setString(
-                                            "pincode", pincodes.text);
-                                        print(await prefs.getString("pincode"));
-                                        print('pincode received');
-                                      },
-                                      child: Container(
-                                          height: 50,
-                                          margin: const EdgeInsets.only(
-                                              left: 20, right: 20, top: 5),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 5),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                  width: 2,
-                                                  color: Colors.grey.shade300)),
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.location_on_outlined),
-                                              SizedBox(width: 20),
-                                              Text(pincodes.text.toString()),
-                                            ],
-                                          )),
-                                    );
-                                  }));
-                            } else {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            }
-                          }))
-                    ],
-                  ),
-                );
-              }))
-      : null;
 }

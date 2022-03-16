@@ -2,20 +2,49 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/repository/customer_repo.dart';
+import 'package:fresh4delivery/views/search/search.dart';
 import 'package:fresh4delivery/widgets/form_field_widget.dart';
 
-class AddNewAddress extends StatelessWidget {
+class AddNewAddress extends StatefulWidget {
   static const routeName = '/add-new-address';
   AddNewAddress({Key? key}) : super(key: key);
 
+  @override
+  State<AddNewAddress> createState() => _AddNewAddressState();
+}
+
+class _AddNewAddressState extends State<AddNewAddress> {
   final _nameController = TextEditingController();
   final _mobileController = TextEditingController();
-  final _pincodeController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
   final _landmarkController = TextEditingController();
   final _cityController = TextEditingController();
+  final _districtController = TextEditingController();
   final _stateController = TextEditingController();
   final _addresstypeController = TextEditingController();
+  static const _dropDownitems1 = <String>[
+    "Kerala",
+    "Karnataka",
+    "Gujarat",
+    "Punjab"
+  ];
+
+  static const _dropDownitems2 = <String>["Home", "Work"];
+
+  final List<DropdownMenuItem<String>> _dropDownButtonItems1 = _dropDownitems1
+      .map((String value) =>
+          DropdownMenuItem<String>(child: Text(value), value: value))
+      .toList();
+
+  final List<DropdownMenuItem<String>> _dropDownButtonItems2 = _dropDownitems2
+      .map((String value) =>
+          DropdownMenuItem<String>(child: Text(value), value: value))
+      .toList();
+
+  String? _btnSelectVal1;
+  String? _btnSelectVal2;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +66,18 @@ class AddNewAddress extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    var response = await AddressApi.createAddress(
+                        _nameController.text,
+                        _phoneController.text,
+                        _mobileController.text,
+                        _landmarkController.text,
+                        _cityController.text,
+                        _addressController.text,
+                        _districtController.text,
+                        _stateController.text,
+                        _addresstypeController.text);
+                    print(response);
                     print('save');
                   },
                   child: Row(
@@ -81,7 +121,7 @@ class AddNewAddress extends StatelessWidget {
                     controller: _mobileController, hintText: "mobile"),
                 SizedBox(height: 20.h),
                 AddAddressTextfield(
-                    controller: _pincodeController, hintText: "pincode"),
+                    controller: _phoneController, hintText: "phone"),
                 SizedBox(height: 20.h),
                 AddAddressTextfield(
                     controller: _addressController, hintText: "address"),
@@ -92,49 +132,51 @@ class AddNewAddress extends StatelessWidget {
                 AddAddressTextfield(
                     controller: _cityController, hintText: "city"),
                 SizedBox(height: 20.h),
-                DropDownWidget(),
+                Container(
+                    height: 45,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border:
+                            Border.all(width: 1, color: Colors.grey.shade200)),
+                    child: caatogoryseacrh("District")),
+                SizedBox(height: 20.h),
+                Container(
+                    height: 45,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border:
+                            Border.all(width: 1, color: Colors.grey.shade200)),
+                    child: caatogoryseacrh("State")),
+                SizedBox(height: 20.h),
+                Container(
+                  height: 45,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border:
+                          Border.all(width: 1, color: Colors.grey.shade200)),
+                  child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                          hint: Text('Choose type'),
+                          isExpanded: true,
+                          value: _btnSelectVal2,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _btnSelectVal2 = newValue;
+                              _addresstypeController.text = newValue as String;
+                            });
+                          },
+                          items: _dropDownButtonItems2)),
+                ),
               ],
             ),
           ),
         ));
-  }
-}
-
-class DropDownWidget extends HookWidget {
-  DropDownWidget({
-    Key? key,
-  }) : super(key: key);
-
-  final state = ['Kerala', "Delhi", "Maharashtra", "Rajasthan"];
-
-  @override
-  Widget build(BuildContext context) {
-    final string = useState('');
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      height: 45,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(width: 1, color: Colors.grey.shade200)),
-      child: DropdownButtonHideUnderline(
-          child: DropdownButton(
-        elevation: 5,
-        hint: Text("Select State"),
-        isExpanded: true,
-        iconSize: 30,
-        value: string.value,
-        isDense: true,
-        onChanged: (val) {
-          string.value = val as String;
-        },
-        items: state.map((val) {
-          return DropdownMenuItem(
-            child: Text(val),
-            value: val,
-          );
-        }).toList(),
-      )),
-    );
   }
 }
 
@@ -155,7 +197,7 @@ class AddAddressTextfield extends StatelessWidget {
       height: 45,
       child: TextFormField(
         obscureText: obscureText,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.black),
         controller: controller,
         decoration: InputDecoration(
           hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),

@@ -6,6 +6,7 @@ import 'package:fresh4delivery/models/home_model.dart';
 import 'package:fresh4delivery/models/orders_model.dart';
 import 'package:fresh4delivery/models/pincode_model.dart';
 import 'package:fresh4delivery/models/res_model.dart';
+import 'package:fresh4delivery/models/search_state_model.dart';
 import 'package:fresh4delivery/models/supermarket_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -230,7 +231,6 @@ class SearchApi {
     try {
       var response = await http.get(Uri.parse(Api.search.pincodes));
       var responseBody = json.decode(response.body);
-      print(responseBody["results"].length);
 
       List<PincodeModel> pincodeList = [];
       for (var i = 0; i < responseBody["results"].length; i++) {
@@ -240,6 +240,26 @@ class SearchApi {
       return pincodeList;
 
       // return
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Future<List<StateModel>?> searchState() async {
+    try {
+      var response = await http.post(Uri.parse(Api.search.searchState));
+      var responseBody = json.decode(response.body);
+      print(responseBody['states']);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Future<List<StateModel>?> searchDistrict() async {
+    try {
+      var response = await http.post(Uri.parse(Api.search.searchDistrict));
+      var responseBody = json.decode(response.body);
+      print(responseBody['districts']);
     } catch (e) {
       return null;
     }
@@ -332,23 +352,75 @@ class OrderApi {
 }
 
 class AddressApi {
-  static Future<List<AddressModel>?> addressList() async {
+  static Future<List<AddressListModel>?> addressList() async {
     try {
       var userId = await Preference.getPrefs("Id");
       var response = await http
           .post(Uri.parse(Api.address.getAddress), body: {"user_id": userId});
       var responseBody = json.decode(response.body);
 
-      print(responseBody['address']);
-
-      List<AddressModel> addressList = [];
+      // print(responseBody['address']);
+      print("response : -");
+      List<AddressListModel> addressList = [];
       for (var i in responseBody['address']) {
-        addressList.add(AddressModel.fromJson(i));
+        addressList.add(AddressListModel.fromJson(i));
       }
+      print(addressList);
 
       return addressList;
     } catch (e) {
       return null;
+    }
+  }
+
+  static Future createAddress(
+      String name,
+      String phone,
+      String mobile,
+      String landmark,
+      String city,
+      String address,
+      String district,
+      String state,
+      String type) async {
+    try {
+      var userId = await Preference.getPrefs("Id");
+      var pincode = await Preference.getPrefs("pincode");
+      print(name);
+      print(phone);
+      print(mobile);
+      print(landmark);
+      print(city);
+      print(address);
+      print(district);
+      print(state);
+      print(type);
+      print("response : -");
+      // var response =
+      //     await http.post(Uri.parse(Api.address.createAddress), body: {
+      //   "user_id": userId,
+      //   "name": name,
+      //   "phone": phone,
+      //   "pincode": pincode,
+      //   "mobile": mobile,
+      //   "landmark": landmark,
+      //   "city": city,
+      //   "address": address,
+      //   "district": district,
+      //   "state": state,
+      //   "type": type
+      // });
+
+      // var responseBody = json.decode(response.body);
+      // print(responseBody);
+      // print("if and else");
+      // if (responseBody['sts'] == "01") {
+      //   return true;
+      // } else {
+      //   return false;
+      // }
+    } catch (e) {
+      return 'Error';
     }
   }
 }

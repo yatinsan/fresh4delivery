@@ -14,13 +14,13 @@ class AddressModel {
 
   String? sts;
   String? msg;
-  List<Address>? address;
+  List<AddressListModel>? address;
 
   factory AddressModel.fromJson(Map<String, dynamic> json) => AddressModel(
         sts: json["sts"],
         msg: json["msg"],
-        address:
-            List<Address>.from(json["address"].map((x) => Address.fromJson(x))),
+        address: List<AddressListModel>.from(
+            json["address"].map((x) => AddressListModel.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -30,8 +30,8 @@ class AddressModel {
       };
 }
 
-class Address {
-  Address({
+class AddressListModel {
+  AddressListModel({
     this.id,
     this.userId,
     this.addressDefault,
@@ -65,7 +65,8 @@ class Address {
   String? type;
   String? status;
 
-  factory Address.fromJson(Map<String, dynamic> json) => Address(
+  factory AddressListModel.fromJson(Map<String, dynamic> json) =>
+      AddressListModel(
         id: json["id"],
         userId: json["user_id"],
         addressDefault: json["default"],

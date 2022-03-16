@@ -90,7 +90,9 @@ class Profile extends StatelessWidget {
                       ProfileButtons(
                           title: "address book",
                           image: 'assets/icons/address.png',
-                          function: () {
+                          function: () async {
+                            var states = await SearchApi.searchState();
+                            var district = await SearchApi.searchDistrict();
                             print("address book");
                             Navigator.push(
                                 context,
