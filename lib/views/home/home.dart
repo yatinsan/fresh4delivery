@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fresh4delivery/models/home_model.dart';
 import 'package:fresh4delivery/models/pincode_model.dart';
 import 'package:fresh4delivery/models/res_model.dart';
@@ -63,13 +64,17 @@ class _HomeState extends State<Home> {
           bottom: PreferredSize(
               child: Column(
                 children: [
-                  SearchButton(),
+                  // SearchButton(),
+                  // TypeAheadField(
+                  //   suggestionsCallback: suggestionsCallback,
+                  //   itemBuilder: itemBuilder,
+                  //   onSuggestionSelected: onSuggestionSelected),
                   Container(
                       padding:
                           const EdgeInsets.only(left: 40, top: 5, bottom: 5),
                       width: double.infinity,
                       color: Color.fromRGBO(201, 228, 125, 1),
-                      child: BottomPincodeSheet())
+                      child: const BottomPincodeSheet())
                 ],
               ),
               preferredSize: Size.fromHeight(80.h))),
@@ -106,8 +111,7 @@ class _HomeState extends State<Home> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => NearYou()));
+                    Navigator.pushNamed(context, '/near-you', arguments: false);
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -155,8 +159,7 @@ class _HomeState extends State<Home> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => NearYou()));
+                    Navigator.pushNamed(context, '/near-you', arguments: true);
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -203,7 +206,7 @@ class _HomeState extends State<Home> {
             Container(
                 constraints: BoxConstraints(maxHeight: 175, minHeight: 160),
                 child: FutureBuilder(
-                    future: RestaurantApi.viewAll(),
+                    future: HomeApi.restaurants(),
                     builder: (context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         final data = snapshot.data;
@@ -214,11 +217,13 @@ class _HomeState extends State<Home> {
                             itemBuilder: ((context, index) {
                               Nrestaurants restaurant = data[index];
                               return Cards(
-                                  title: restaurant.name ?? "",
-                                  time: restaurant.deliveryTime ?? "",
+                                  itemId: restaurant.id.toString(),
+                                  title: restaurant.name.toString(),
+                                  time: restaurant.deliveryTime.toString(),
                                   ratings: restaurant.rating ?? 0,
-                                  image:
-                                      "https://ebshosting.co.in/${restaurant.logo}");
+                                  image: restaurant.logo.toString().isEmpty
+                                      ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
+                                      : "https://ebshosting.co.in/${restaurant.logo}");
                             }));
                       } else {
                         return Center(child: CircularProgressIndicator());
@@ -230,7 +235,7 @@ class _HomeState extends State<Home> {
             Container(
                 constraints: BoxConstraints(maxHeight: 175, minHeight: 160),
                 child: FutureBuilder(
-                    future: SupermarketApi.viewAll(),
+                    future: HomeApi.supermarket(),
                     builder: (context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         final data = snapshot.data;
@@ -239,7 +244,7 @@ class _HomeState extends State<Home> {
                             shrinkWrap: true,
                             itemCount: data.length,
                             itemBuilder: ((context, index) {
-                              Supermarket restaurant = data[index];
+                              Nrestaurants restaurant = data[index];
                               return Cards(
                                   title: restaurant.name ?? "",
                                   time: restaurant.deliveryTime ?? "",
@@ -376,6 +381,7 @@ class CircleWidget extends StatelessWidget {
 }
 
 class Cards extends StatelessWidget {
+  String? itemId;
   String title;
   String time;
   double ratings;
@@ -383,6 +389,7 @@ class Cards extends StatelessWidget {
   bool isRating;
   Cards(
       {Key? key,
+      this.itemId,
       this.title = "not available",
       this.time = "!!",
       this.image =
@@ -395,7 +402,7 @@ class Cards extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => ViewPost()));
+        Navigator.pushNamed(context, '/view-post', arguments: itemId);
       },
       child: Container(
         margin: const EdgeInsets.only(right: 5, left: 5),
@@ -426,7 +433,7 @@ class Cards extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.only(left: 5),
-                      constraints: BoxConstraints(maxHeight: 30, minHeight: 20),
+                      constraints: BoxConstraints(maxHeight: 30, minHeight: 10),
                       width: 110,
                       child: Text(title,
                           style: TextStyle(
@@ -500,7 +507,7 @@ class BottomPincodeSheet extends StatelessWidget {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("Selected pincode",
+                                    Text("Select pincode",
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600)),
@@ -511,7 +518,18 @@ class BottomPincodeSheet extends StatelessWidget {
                                 height: 65,
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 10.0, horizontal: 20),
-                                child: caatogoryseacrh("Search here"),
+                                child: TypeAheadField<PincodeModel?>(
+                                    suggestionsCallback: SearchApi.pincodeList,
+                                    itemBuilder:
+                                        (context, PincodeModel? suggestion) {
+                                      final pincodes = suggestion;
+
+                                      return ListTile(
+                                        title: Text(pincodes!.text),
+                                      );
+                                    },
+                                    onSuggestionSelected:
+                                        (PincodeModel? suggestion) {}),
                               ),
                               FutureBuilder(
                                   future: SearchApi.pincode(),

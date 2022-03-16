@@ -35,7 +35,7 @@ class Restaurant {
 
   String viewAll = _baseUrl + "/view/all";
   String viewOne(String id) => _baseUrl + "/${id}";
-  String restaurantOneCateogory(String id) => _baseUrl + "/${id}";
+  String restaurantOne(String id) => _baseUrl + "/${id}";
 }
 
 class SuperMarket {

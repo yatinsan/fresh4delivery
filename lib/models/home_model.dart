@@ -154,14 +154,14 @@ class BannerModel {
 }
 
 class Nrestaurant {
-  Nrestaurant({
-    this.id,
-    this.name,
-    this.logo,
-    this.deliveryTime,
-    this.promoted,
-    this.rating,
-  });
+  Nrestaurant(
+      {this.id,
+      this.name,
+      this.logo,
+      this.deliveryTime,
+      this.promoted,
+      this.rating,
+      this.status});
 
   int? id;
   String? name;
@@ -169,15 +169,16 @@ class Nrestaurant {
   DeliveryTime? deliveryTime;
   String? promoted;
   int? rating;
+  bool? status;
 
   factory Nrestaurant.fromJson(Map<String, dynamic> json) => Nrestaurant(
-        id: json["id"],
-        name: json["name"],
-        logo: json["logo"],
-        deliveryTime: deliveryTimeValues.map[json["delivery_time"]],
-        promoted: json["promoted"],
-        rating: json["rating"],
-      );
+      id: json["id"],
+      name: json["name"],
+      logo: json["logo"],
+      deliveryTime: deliveryTimeValues.map[json["delivery_time"]],
+      promoted: json["promoted"],
+      rating: json["rating"],
+      status: false);
 
   Map<String, dynamic> toJson() => {
         "id": id,

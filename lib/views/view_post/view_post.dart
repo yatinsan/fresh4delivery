@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/views/cart/cart.dart';
 
 class ViewPost extends StatefulWidget {
   static const routeName = '/view-post';
-  List<String> categories = ["a", "b"];
 
   @override
   State<ViewPost> createState() => _ViewPostState();
 }
 
-class _ViewPostState extends State<ViewPost> {
+class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
+  List myList = ["a", "b", "c"];
+
+  // myList.add(DynamicTabContent.name("Javas Restaurant","12 minutes","4:30", "available"));
+
   @override
   Widget build(BuildContext context) {
+    final arguments = ModalRoute.of(context)?.settings.arguments;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -23,19 +28,19 @@ class _ViewPostState extends State<ViewPost> {
           GestureDetector(
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => Cart()));
+                  context, MaterialPageRoute(builder: (_) => const Cart()));
             },
             child: Container(
               width: 30.w,
               margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
+                image: const DecorationImage(
+                  image: const AssetImage(
                     "assets/icons/cart.png",
                   ),
                 ),
                 borderRadius: BorderRadius.circular(8),
-                color: Color.fromARGB(171, 255, 255, 255),
+                color: const Color.fromARGB(171, 255, 255, 255),
               ),
             ),
           )
@@ -49,9 +54,9 @@ class _ViewPostState extends State<ViewPost> {
               height: 30.h,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: Color.fromARGB(171, 255, 255, 255),
+                color: const Color.fromARGB(171, 255, 255, 255),
               ),
-              child: Icon(Icons.keyboard_arrow_left_rounded,
+              child: const Icon(Icons.keyboard_arrow_left_rounded,
                   color: Colors.black, size: 28)),
         ),
       ),
@@ -76,21 +81,22 @@ class _ViewPostState extends State<ViewPost> {
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
                   width: MediaQuery.of(context).size.width,
                   height: 50,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: <Color>[
-                        Color.fromARGB(218, 166, 206, 57),
+                        const Color.fromARGB(218, 166, 206, 57),
                         Color.fromARGB(195, 72, 170, 152)
                       ])),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(children: [
-                        Text(
+                        const Text(
                           "Meat & fish",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
                         ),
                         Expanded(
                           child: ListView.builder(
@@ -98,71 +104,66 @@ class _ViewPostState extends State<ViewPost> {
                               shrinkWrap: true,
                               itemCount: 5,
                               itemBuilder: ((context, index) {
-                                return Icon(Icons.star,
+                                return const Icon(Icons.star,
                                     color: Colors.yellow, size: 14);
                               })),
                         )
                       ]),
-                      Text("30 minutes",
-                          style: TextStyle(color: Colors.white, fontSize: 12))
+                      const Text("30 minutes",
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 12))
                     ],
                   )),
             )
           ]),
           Builder(builder: (context) {
-            return DefaultTabController(
-                length: 10,
-                child: Column(
-                  children: [
-                    Container(
-                      margin:
-                          const EdgeInsets.only(top: 20, left: 20, right: 20),
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(
-                              color: Colors.grey.shade400, width: 0)),
-                      child: TabBar(
-                          indicator: BoxDecoration(
-                              color: Colors.grey.shade400,
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(color: Colors.grey.shade400)),
-                          isScrollable: true,
-                          labelColor: Colors.black,
-                          unselectedLabelColor: Colors.black,
-                          tabs: [
-                            Tab(text: "hello"),
-                            Tab(text: "hello"),
-                            Tab(text: "hello"),
-                            Tab(text: "hello"),
-                            Tab(text: "hello"),
-                            Tab(text: "hello"),
-                            Tab(text: "hello"),
-                            Tab(text: "hello"),
-                            Tab(text: "hello"),
-                            Tab(text: "hello"),
-                          ]),
-                    ),
-                    SingleChildScrollView(
-                      child: Container(
-                        height: 450.h,
-                        child: const TabBarView(children: [
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                        ]),
-                      ),
-                    )
-                  ],
-                ));
+            return FutureBuilder(
+                future: RestaurantApi.getOneRestaurant(arguments),
+                builder: ((context, snapshot) {
+                  return DefaultTabController(
+                      length: myList.length,
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(
+                                top: 20, left: 20, right: 20),
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(50),
+                                border: Border.all(
+                                    color: Colors.grey.shade400, width: 0)),
+                            child: TabBar(
+                              indicator: BoxDecoration(
+                                  color: Colors.grey.shade400,
+                                  borderRadius: BorderRadius.circular(50),
+                                  border:
+                                      Border.all(color: Colors.grey.shade400)),
+                              isScrollable: true,
+                              labelColor: Colors.black,
+                              unselectedLabelColor: Colors.black,
+                              tabs:
+                                  //*********//
+                                  //it worked
+                                  //********//
+                                  myList.map((e) {
+                                return Tab(text: e);
+                              }).toList(),
+                            ),
+                          ),
+                          SingleChildScrollView(
+                            child: Container(
+                              height: 450.h,
+                              child: const TabBarView(children: [
+                                ViewPostsWidget(),
+                                ViewPostsWidget(),
+                                ViewPostsWidget(),
+                              ]),
+                            ),
+                          )
+                        ],
+                      ));
+                }));
           })
         ],
       ),
@@ -209,17 +210,17 @@ class ViewPostsWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Fresh chicken",
-                            style: TextStyle(
+                        const Text("Fresh chicken",
+                            style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600)),
                         SizedBox(height: 5.h),
-                        Text("Delivery in 30 min",
-                            style: TextStyle(fontSize: 12)),
+                        const Text("Delivery in 30 min",
+                            style: const TextStyle(fontSize: 12)),
                         SizedBox(height: 5.h),
-                        Text("04/02/2022 | 4:30",
-                            style: TextStyle(fontSize: 12)),
+                        const Text("04/02/2022 | 4:30",
+                            style: const TextStyle(fontSize: 12)),
                         SizedBox(height: 5.h),
-                        Text("Processing",
+                        const Text("Processing",
                             style: TextStyle(fontSize: 12, color: Colors.red)),
                       ],
                     ),
@@ -233,17 +234,17 @@ class ViewPostsWidget extends StatelessWidget {
                             height: 30.h,
                             width: 80.w,
                             decoration: BoxDecoration(
-                                gradient: LinearGradient(
+                                gradient: const LinearGradient(
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: <Color>[
-                                      Color.fromRGBO(166, 206, 57, 1),
-                                      Color.fromRGBO(72, 170, 152, 1)
+                                      const Color.fromRGBO(166, 206, 57, 1),
+                                      const Color.fromRGBO(72, 170, 152, 1)
                                     ]),
                                 borderRadius: BorderRadius.circular(8)),
-                            child: Center(
+                            child: const Center(
                                 child: Text("Add Address",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 10,
                                         fontWeight: FontWeight.w500)))),

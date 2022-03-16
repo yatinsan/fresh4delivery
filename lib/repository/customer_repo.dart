@@ -5,6 +5,7 @@ import 'package:fresh4delivery/models/address_model.dart';
 import 'package:fresh4delivery/models/home_model.dart';
 import 'package:fresh4delivery/models/orders_model.dart';
 import 'package:fresh4delivery/models/pincode_model.dart';
+import 'package:fresh4delivery/models/post_model.dart';
 import 'package:fresh4delivery/models/res_model.dart';
 import 'package:fresh4delivery/models/search_state_model.dart';
 import 'package:fresh4delivery/models/supermarket_model.dart';
@@ -61,14 +62,11 @@ class HomeApi {
       });
 
       var responseBody = json.decode(response.body);
-      print('starts here');
-      print(responseBody);
 
       List<BannerModel> bannerList = [];
       for (var i in responseBody['fbanners']) {
         bannerList.add(BannerModel.fromJson(i));
       }
-      print(bannerList);
 
       return bannerList;
     } catch (e) {
@@ -87,14 +85,11 @@ class HomeApi {
       });
 
       var responseBody = json.decode(response.body);
-      print('starts here');
-      print(responseBody);
 
       List<BannerModel> bannerList = [];
       for (var i in responseBody['sbanners']) {
         bannerList.add(BannerModel.fromJson(i));
       }
-      print(bannerList);
 
       return bannerList;
     } catch (e) {
@@ -113,8 +108,6 @@ class HomeApi {
       });
 
       var responseBody = json.decode(response.body);
-      print('starts here');
-      print(responseBody);
 
       List<RestproductModel> productsList = [];
       for (var i in responseBody['restproducts']) {
@@ -125,15 +118,68 @@ class HomeApi {
         i["status"] = false;
         productsList.add(RestproductModel.fromJson(i));
       }
-      print(productsList);
 
       return productsList;
     } catch (e) {
       return null;
     }
   }
+
+  static Future<List<Nrestaurants>?> restaurants() async {
+    try {
+      final pincode = await Preference.getPrefs("pincode");
+      final userId = await Preference.getPrefs("Id");
+      var response = await http.post(Uri.parse(Api.user.home), body: {
+        "user_id": userId,
+        "pincode": pincode.toString().isEmpty ? "679577" : pincode,
+      });
+
+      var responseBody = json.decode(response.body);
+      List<Nrestaurants> restaurantList = [];
+      for (var i in responseBody['restaurants']) {
+        i["status"] = true;
+        restaurantList.add(Nrestaurants.fromJson(i));
+      }
+      for (var i in responseBody['nrestaurants']) {
+        i["status"] = false;
+        restaurantList.add(Nrestaurants.fromJson(i));
+      }
+
+      return restaurantList;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Future<List<Nrestaurants>?> supermarket() async {
+    try {
+      final pincode = await Preference.getPrefs("pincode");
+      final userId = await Preference.getPrefs("Id");
+      var response = await http.post(Uri.parse(Api.user.home), body: {
+        "user_id": userId,
+        "pincode": pincode.toString().isEmpty ? "679577" : pincode,
+      });
+
+      var responseBody = json.decode(response.body);
+      List<Nrestaurants> supermarketList = [];
+      for (var i in responseBody['supermarkets']) {
+        i["status"] = true;
+        supermarketList.add(Nrestaurants.fromJson(i));
+      }
+      for (var i in responseBody['nsupermarkets']) {
+        i["status"] = false;
+        supermarketList.add(Nrestaurants.fromJson(i));
+      }
+
+      return supermarketList;
+    } catch (e) {
+      return null;
+    }
+  }
 }
 
+//**************//
+//Authentication api
 class AuthCustomer {
   static Future phoneCheck(phone) async {
     try {
@@ -226,6 +272,8 @@ class AuthCustomer {
   }
 }
 
+//**************//
+//Search api
 class SearchApi {
   static Future<List<PincodeModel>?> pincode() async {
     try {
@@ -242,6 +290,26 @@ class SearchApi {
       // return
     } catch (e) {
       return null;
+    }
+  }
+
+  static Future<List<PincodeModel>> pincodeList(String query) async {
+    var response = await http.get(Uri.parse(Api.search.pincodes));
+    final responseBody = json.decode(response.body);
+
+    print(responseBody['results']);
+
+    if (response.statusCode == 200) {
+      return responseBody['results']
+          .map((e) => PincodeModel.fromJson(e))
+          .where((pincode) {
+        final nameLower = pincode.toLowerCase();
+        final queryLower = query.toLowerCase();
+
+        return nameLower.contains(queryLower);
+      }).toList();
+    } else {
+      throw Exception();
     }
   }
 
@@ -266,6 +334,8 @@ class SearchApi {
   }
 }
 
+//**************//
+//Restaurant api
 class RestaurantApi {
   static Future<List<Nrestaurants>?> viewAll() async {
     try {
@@ -274,7 +344,6 @@ class RestaurantApi {
       var response = await http.post(Uri.parse(Api.restaurant.viewAll), body: {
         "user_id": userId,
         "pincode": pincode.toString().isEmpty ? "679577" : pincode,
-        "limit": "10"
       });
       var responseBody = json.decode(response.body);
       List<Nrestaurants> resList1 = [];
@@ -293,32 +362,50 @@ class RestaurantApi {
       return null;
     }
   }
+
+  static Future<List<ShopModal>?> getOneRestaurant(id) async {
+    try {
+      print(id);
+      final pincode = await Preference.getPrefs("pincode");
+      final userId = await Preference.getPrefs("Id");
+      print(pincode);
+      var response = await http.post(
+          Uri.parse(Api.restaurant.restaurantOne(id)),
+          body: {"user_id": userId, "pincode": pincode});
+      var responseBody = json.decode(response.body);
+
+      // List<ShopModal> shopList =
+      print(responseBody);
+    } catch (e) {
+      return null;
+    }
+  }
 }
 
+//**************//
+//Supermarket api
 class SupermarketApi {
-  static Future<List<Supermarket>?> viewAll() async {
+  static Future<List<Nrestaurants>?> viewAll() async {
     try {
       final pincode = await Preference.getPrefs("pincode");
       final userId = await Preference.getPrefs("Id");
       print('userid  ' + userId);
       print('pincode  ' + pincode);
-      print(Api.supermarket.viewAll);
       var response = await http.post(Uri.parse(Api.supermarket.viewAll), body: {
         "user_id": userId,
         "pincode": pincode.toString().isEmpty ? "679577" : pincode,
-        "limit": "10"
       });
       var responseBody = json.decode(response.body);
 
-      List<Supermarket> supermarketList = [];
+      List<Nrestaurants> supermarketList = [];
       print('start loop');
       for (var i in responseBody['supermarkets']) {
         i['status'] = true;
-        supermarketList.add(Supermarket.fromJson(i));
+        supermarketList.add(Nrestaurants.fromJson(i));
       }
       for (var i in responseBody['nsupermarkets']) {
         i['status'] = false;
-        supermarketList.add(Supermarket.fromJson(i));
+        supermarketList.add(Nrestaurants.fromJson(i));
       }
 
       return supermarketList;
@@ -342,7 +429,6 @@ class OrderApi {
       for (var i in responseBody["orders"]) {
         shopList.add(OrderObjectModel.fromJson(i));
       }
-      print(shopList);
 
       return shopList;
     } catch (e) {
@@ -365,7 +451,6 @@ class AddressApi {
       for (var i in responseBody['address']) {
         addressList.add(AddressListModel.fromJson(i));
       }
-      print(addressList);
 
       return addressList;
     } catch (e) {

@@ -4,8 +4,12 @@ import 'package:fresh4delivery/views/authentication/auth_screen.dart';
 import 'package:fresh4delivery/views/authentication/login.dart';
 import 'package:fresh4delivery/views/authentication/otp_verify.dart';
 import 'package:fresh4delivery/views/authentication/phone.dart';
+import 'package:fresh4delivery/views/cart/cart.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
+import 'package:fresh4delivery/views/new_you/near_you.dart';
+import 'package:fresh4delivery/views/notification/notification.dart';
 import 'package:fresh4delivery/views/view_all/view_all.dart';
+import 'package:fresh4delivery/views/view_post/view_post.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -22,6 +26,10 @@ class Routes {
         {
           return _route(routeSettings, OTPVerify());
         }
+      case RoutePath.nearYou:
+        {
+          return _route(routeSettings, NearYou());
+        }
       case RoutePath.login:
         {
           return _route(routeSettings, Login());
@@ -33,6 +41,18 @@ class Routes {
       case RoutePath.viewall:
         {
           return _route(routeSettings, ViewAll());
+        }
+      case RoutePath.cart:
+        {
+          return _route(routeSettings, Cart());
+        }
+      case RoutePath.notification:
+        {
+          return _route(routeSettings, NotificationScreen());
+        }
+      case RoutePath.viewPost:
+        {
+          return _route(routeSettings, ViewPost());
         }
       default:
         {

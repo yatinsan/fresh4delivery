@@ -7,7 +7,7 @@ class PincodeModel {
 
   String text;
 
-  factory PincodeModel.fromJson(Map<String, dynamic> json) => PincodeModel(
+  static PincodeModel fromJson(Map<String, dynamic> json) => PincodeModel(
         text: json["text"],
       );
 }

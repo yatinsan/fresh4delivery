@@ -6,4 +6,7 @@ class RoutePath {
   static const String mainScreen = '/mainScreen';
   static const String cart = '/cart';
   static const String viewall = '/viewall';
+  static const String nearYou = '/near-you';
+  static const String notification = '/notification';
+  static const String viewPost = '/view-post';
 }

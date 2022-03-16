@@ -38,8 +38,7 @@ class Category extends StatelessWidget {
                 icon: Icon(Icons.notifications_none, color: Colors.black)),
             IconButton(
                 onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => Cart()));
+                  Navigator.pushNamed(context, '/cart');
                 },
                 icon: Icon(Icons.local_grocery_store_outlined,
                     color: Colors.black)),
