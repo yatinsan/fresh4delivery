@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Headerwidget extends StatelessWidget {
+  String? route;
+  String? type;
+  String? id;
   final String title;
-  const Headerwidget({Key? key, required this.title}) : super(key: key);
+  Headerwidget({Key? key, this.route, this.type, this.id, required this.title})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +19,7 @@ class Headerwidget extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/viewall');
+              Navigator.pushNamed(context, route!, arguments: type);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -1,6 +1,10 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:fresh4delivery/config/constants/api_configurations.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:fresh4delivery/models/search_state_model.dart';
 
 class SearchScreen extends SearchDelegate {
   static const routeName = '/search';

@@ -3,7 +3,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/models/cart_modal.dart';
+import 'package:fresh4delivery/provider/cart_charges.dart';
+import 'package:fresh4delivery/provider/pincode_provider.dart';
+import 'package:fresh4delivery/repository/customer_repo.dart';
+import 'package:fresh4delivery/widgets/named_button.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
+import 'package:provider/provider.dart';
 
 class Cart extends StatelessWidget {
   static const routeName = '/cart';
@@ -11,6 +17,7 @@ class Cart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final watchProvider = context.watch<CartExtraCharges>();
     return Scaffold(
         appBar: AppBar(
             elevation: 0,
@@ -47,8 +54,7 @@ class Cart extends StatelessWidget {
                           children: [
                             Text("Delivery to :"),
                             Icon(Icons.location_on_outlined, size: 15),
-                            Text("Ollur Thrissur"),
-                            Text("(673482)")
+                            Text("${context.watch<pincodeProvider>().pincode}"),
                           ],
                         ))
                   ],
@@ -56,94 +62,165 @@ class Cart extends StatelessWidget {
                 preferredSize: Size.fromHeight(80.h))),
         body: Column(
           children: [
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: 2,
-                itemBuilder: ((context, index) {
-                  return Container(
-                      margin:
-                          const EdgeInsets.only(top: 15, left: 20, right: 20),
-                      width: 300.w,
-                      height: 100.h,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: Colors.grey.shade200, width: 2.w)),
-                      child: CalculateTheTotal());
-                })),
-            Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border:
-                        Border.all(color: Colors.grey.shade200, width: 2.w)),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Delivery charges"),
-                        Text("₹150"),
-                      ],
-                    ),
-                    SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Taxes and Charges"),
-                        Text("₹0"),
-                      ],
-                    ),
-                    SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Total Amount",
-                            style: TextStyle(fontWeight: FontWeight.w600)),
-                        Text("₹150", style: TextStyle(color: Colors.green))
-                      ],
-                    ),
-                  ],
-                ))
+            FutureBuilder(
+                future: CartApi.getCart(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  print(snapshot.hasData);
+                  if (snapshot.hasData) {
+                    final data = snapshot.data;
+                    return SizedBox(
+                      height: 600.h,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SingleChildScrollView(
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: data.length,
+                                itemBuilder: ((context, index) {
+                                  CartListModal cartList = data[index];
+                                  return Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 15, left: 20, right: 20),
+                                      width: 300.w,
+                                      height: 100.h,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: Colors.grey.shade200,
+                                              width: 2.w)),
+                                      child: CalculateTheTotal(
+                                        cartId: cartList.id.toString(),
+                                        image:
+                                            "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
+                                        title: cartList.productname.toString(),
+                                        discountprice:
+                                            cartList.price.toString(),
+                                        price: cartList.offerprice.toString(),
+                                      ));
+                                })),
+                          ),
+                          Column(
+                            children: [
+                              Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 20),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 5),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                          color: Colors.grey.shade200,
+                                          width: 2.w)),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Delivery charges"),
+                                          Text(
+                                              "₹${watchProvider.deliveryCharges}"),
+                                        ],
+                                      ),
+                                      SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Taxes and Charges"),
+                                          Text(
+                                              "₹${watchProvider.othercharges}"),
+                                        ],
+                                      ),
+                                      SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Total Amount",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600)),
+                                          Text(
+                                              "₹${watchProvider.deliveryCharges + watchProvider.othercharges + watchProvider.productTotal}",
+                                              style: TextStyle(
+                                                  color: Colors.green))
+                                        ],
+                                      ),
+                                    ],
+                                  )),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: NamedButton(
+                                  title: "Place Order",
+                                  function: () {
+                                    print('order placed');
+                                  },
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  } else {
+                    return SizedBox(
+                        height: 600.h,
+                        child: Center(child: CircularProgressIndicator()));
+                  }
+                }),
           ],
         ));
   }
 }
 
 class CalculateTheTotal extends HookWidget {
-  const CalculateTheTotal({Key? key}) : super(key: key);
+  String? cartId;
+  String image;
+  String title;
+  String discountprice;
+  String price;
+  CalculateTheTotal(
+      {Key? key,
+      this.cartId,
+      this.image =
+          "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
+      this.title = "productName",
+      this.discountprice = "discountPrice",
+      this.price = "realPrice"})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final readProvider = context.read<CartExtraCharges>();
     final currentNumber = useState(1);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset(
-          "assets/images/chicken.png",
+        Image.network(
+          image,
           fit: BoxFit.cover,
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Fresh chicken",
+            Text(title,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             SizedBox(height: 5.h),
             RichText(
                 text: TextSpan(children: [
               TextSpan(
-                  text: "₹180",
+                  text: "₹${discountprice}",
                   style: TextStyle(
                       decoration: TextDecoration.lineThrough,
                       color: Colors.grey.shade600,
                       fontSize: 12)),
               TextSpan(
-                  text: " ₹140",
+                  text: " ₹${double.parse(price) * currentNumber.value}",
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     // fontSize: 12
@@ -201,7 +278,13 @@ class CalculateTheTotal extends HookWidget {
           ],
         ),
         IconButton(
-            onPressed: () {
+            onPressed: () async {
+              var response = await CartApi.removeCart(cartId);
+              if (response == true) {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/cart');
+              }
+              print(response);
               print("delete");
             },
             icon: Icon(Icons.delete_forever_outlined,

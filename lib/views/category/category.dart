@@ -74,6 +74,7 @@ class Category extends StatelessWidget {
                       itemBuilder: (context, index) {
                         CategoryModel categories = data[index];
                         return Circlewidget(
+                            id: categories.id.toString(),
                             title: categories.name ?? '',
                             image:
                                 'https://ebshosting.co.in/${categories.image}');
@@ -87,10 +88,12 @@ class Category extends StatelessWidget {
 }
 
 class Circlewidget extends StatelessWidget {
+  String? id;
   String image;
   String title;
   Circlewidget(
       {Key? key,
+      this.id,
       this.image =
           "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
       this.title = 'not availabel'})
@@ -98,18 +101,25 @@ class Circlewidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-            ),
-            clipBehavior: Clip.hardEdge,
-            child: Image.network(image,
-                fit: BoxFit.cover, width: 70.w, height: 70.h)),
-        SizedBox(height: 4.h),
-        Text(title, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500))
-      ],
+    return GestureDetector(
+      onTap: () {
+        print('category-One');
+        Navigator.pushNamed(context, '/viewall', arguments: id);
+      },
+      child: Column(
+        children: [
+          Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+              ),
+              clipBehavior: Clip.hardEdge,
+              child: Image.network(image,
+                  fit: BoxFit.cover, width: 70.w, height: 70.h)),
+          SizedBox(height: 4.h),
+          Text(title,
+              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500))
+        ],
+      ),
     );
   }
 }

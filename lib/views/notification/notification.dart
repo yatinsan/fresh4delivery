@@ -48,7 +48,7 @@ class NotificationScreen extends StatelessWidget {
                             "Your Notifications",
                             style: TextStyle(fontWeight: FontWeight.w500),
                           ),
-                          Image.asset("assets/icons/filter.png")
+                          // Image.asset("assets/icons/filter.png")
                         ],
                       ))
                 ],

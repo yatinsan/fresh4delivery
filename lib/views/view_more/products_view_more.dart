@@ -6,9 +6,9 @@ import 'package:fresh4delivery/views/home/home.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
 
-class ViewAll extends StatelessWidget {
-  static const routeName = '/viewall';
-  const ViewAll({Key? key}) : super(key: key);
+class ProductsViewMore extends StatelessWidget {
+  static const routeName = '/productsviewmore';
+  const ProductsViewMore({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class ViewAll extends StatelessWidget {
               ),
               preferredSize: Size.fromHeight(80.h))),
       body: FutureBuilder(
-          future: RestaurantApi.restaurantCategory(arguments),
+          future: RestaurantApi.viewAll(),
           builder: ((context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               List<ProductModal> data = snapshot.data;
@@ -112,6 +112,8 @@ class ViewAll extends StatelessWidget {
                           ],
                         ));
                   }));
+            } else if (snapshot.data == null) {
+              return const Center(child: Text(" Not Available"));
             } else {
               return const Center(child: CircularProgressIndicator());
             }

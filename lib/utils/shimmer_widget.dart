@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/models/pincode_model.dart';
+import 'package:fresh4delivery/provider/pincode_provider.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/views/home/home.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
 import 'package:fresh4delivery/widgets/header.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -215,6 +217,9 @@ void show(BuildContext context) async {
                                             .getInstance();
                                         var pin = prefs.setString(
                                             "pincode", pincodes.text);
+                                        context
+                                            .read<pincodeProvider>()
+                                            .getPincode(pincodes.text);
                                         print(await prefs.getString("pincode"));
                                         print('pincode received');
                                       },

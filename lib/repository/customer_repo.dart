@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:fresh4delivery/config/constants/api_configurations.dart';
 import 'package:fresh4delivery/models/address_model.dart';
+import 'package:fresh4delivery/models/cart_modal.dart';
 import 'package:fresh4delivery/models/home_model.dart';
 import 'package:fresh4delivery/models/orders_model.dart';
 import 'package:fresh4delivery/models/pincode_model.dart';
 import 'package:fresh4delivery/models/post_model.dart';
 import 'package:fresh4delivery/models/res_model.dart';
+import 'package:fresh4delivery/models/restaurant_category_modal.dart';
 import 'package:fresh4delivery/models/search_state_model.dart';
 import 'package:fresh4delivery/models/supermarket_model.dart';
 import 'package:http/http.dart' as http;
@@ -318,6 +320,11 @@ class SearchApi {
       var response = await http.post(Uri.parse(Api.search.searchState));
       var responseBody = json.decode(response.body);
       print(responseBody['states']);
+      List<StateModel> stateList = [];
+      for (var i in responseBody['states']) {
+        stateList.add(StateModel.fromJson(i));
+      }
+      return stateList;
     } catch (e) {
       return null;
     }
@@ -359,6 +366,31 @@ class RestaurantApi {
       return resList1;
     } catch (e) {
       print('rest ' + e.toString());
+      return null;
+    }
+  }
+
+  static Future<List<ProductModal>?> restaurantCategory(id) async {
+    try {
+      print(id);
+      final pincode = await Preference.getPrefs("pincode");
+      final userId = await Preference.getPrefs("Id");
+      var response = await http
+          .post(Uri.parse(Api.restaurant.restaurantCagegory(id)), body: {
+        "user_id": userId,
+        "pincode": pincode.toString().isEmpty ? "679577" : pincode,
+        "limit": "10"
+      });
+
+      var responseBody = json.decode(response.body);
+
+      List<ProductModal> categoriesList = [];
+      for (var i in responseBody['products']) {
+        categoriesList.add(ProductModal.fromJson(i));
+      }
+
+      return categoriesList;
+    } catch (e) {
       return null;
     }
   }
@@ -415,6 +447,46 @@ class SupermarketApi {
   }
 }
 
+class CartApi {
+  static Future<List<CartListModal>?> getCart() async {
+    final userId = await Preference.getPrefs("Id");
+    try {
+      var response = await http
+          .post(Uri.parse(Api.cart.getcart), body: {"user_id": userId});
+      var responseBody = json.decode(response.body);
+      print('cart api');
+      print(responseBody['cart']);
+
+      List<CartListModal> cartList = [];
+      for (var i in responseBody['cart']) {
+        cartList.add(CartListModal.fromJson(i));
+      }
+
+      return cartList;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Future removeCart(cartId) async {
+    try {
+      var response =
+          await http.post(Uri.parse(Api.cart.remove), body: {"cartid": cartId});
+      var responseBody = json.decode(response.body);
+      print(responseBody);
+      if (responseBody['sts'] == "00") {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return 'Error';
+    }
+  }
+}
+
+//**************//
+//Order api
 class OrderApi {
   static Future<dynamic> allOrder() async {
     try {
@@ -433,6 +505,18 @@ class OrderApi {
       return shopList;
     } catch (e) {
       return null;
+    }
+  }
+
+  static Future addOrder() async {
+    try {
+      var userId = await Preference.getPrefs('Id');
+      var response = await http
+          .post(Uri.parse(Api.cart.placeorder), body: {"user_id": userId});
+      var responseBody = json.decode(response.body);
+      print(responseBody);
+    } catch (e) {
+      return 'Error';
     }
   }
 }

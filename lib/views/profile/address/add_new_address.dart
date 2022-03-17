@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/config/constants/api_configurations.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/views/search/search.dart';
 import 'package:fresh4delivery/widgets/form_field_widget.dart';
@@ -171,12 +175,28 @@ class _AddNewAddressState extends State<AddNewAddress> {
                               _addresstypeController.text = newValue as String;
                             });
                           },
-                          items: _dropDownButtonItems2)),
+                          items: statesList.map((e) {
+                            return new DropdownMenuItem(
+                              child: new Text(e['name']),
+                              value: e['id'].toString(),
+                            );
+                          }).toList())),
                 ),
               ],
             ),
           ),
         ));
+  }
+
+  List statesList = [];
+  Future<String?> searchcatogery() async {
+    List<String> catogerys = [];
+    var data = await http.post(Uri.parse(Api.search.searchState)).then((value) {
+      catogerys = json.decode(value.body);
+    });
+    setState(() {
+      statesList = data['states'];
+    });
   }
 }
 

@@ -9,6 +9,7 @@ import 'package:fresh4delivery/models/home_model.dart';
 import 'package:fresh4delivery/models/pincode_model.dart';
 import 'package:fresh4delivery/models/res_model.dart';
 import 'package:fresh4delivery/models/supermarket_model.dart';
+import 'package:fresh4delivery/provider/pincode_provider.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/utils/star_rating.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
@@ -18,6 +19,7 @@ import 'package:fresh4delivery/views/search/search.dart';
 import 'package:fresh4delivery/views/view_post/view_post.dart';
 import 'package:fresh4delivery/widgets/header.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -97,6 +99,7 @@ class _HomeState extends State<Home> {
                             itemBuilder: ((context, index) {
                               CategoryModel category = data[index];
                               return CircleWidget(
+                                  id: category.id.toString(),
                                   title: category.name ?? '',
                                   image:
                                       "https://ebshosting.co.in/${category.image}");
@@ -201,7 +204,10 @@ class _HomeState extends State<Home> {
               ],
             ),
             SizedBox(height: 20),
-            Headerwidget(title: "Top Restaurants"),
+            Headerwidget(
+                title: "Top Restaurants",
+                route: '/resturantsviewmore',
+                type: "Restaurants"),
             SizedBox(height: 20),
             Container(
                 constraints: BoxConstraints(maxHeight: 175, minHeight: 160),
@@ -230,7 +236,10 @@ class _HomeState extends State<Home> {
                       }
                     })),
             SizedBox(height: 20),
-            Headerwidget(title: "Top Super Markets"),
+            Headerwidget(
+                title: "Top Super Markets",
+                route: '/supermarketsviewmore',
+                type: "Supermarkets"),
             SizedBox(height: 20),
             Container(
                 constraints: BoxConstraints(maxHeight: 175, minHeight: 160),
@@ -256,7 +265,10 @@ class _HomeState extends State<Home> {
                       }
                     })),
             SizedBox(height: 20),
-            Headerwidget(title: "Top Products"),
+            Headerwidget(
+                title: "Top Products",
+                route: '/productsviewmore',
+                type: "Products"),
             SizedBox(height: 20),
             Container(
                 constraints: BoxConstraints(maxHeight: 175, minHeight: 160),
@@ -352,29 +364,37 @@ class ImageCarousel extends HookWidget {
 }
 
 class CircleWidget extends StatelessWidget {
+  String? id;
   String title;
   String image;
   CircleWidget(
       {Key? key,
       this.title = 'not available',
+      this.id,
       this.image =
           "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10, left: 18),
-      child: Column(
-        children: [
-          ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: Image.network(image,
-                  fit: BoxFit.cover, width: 50.w, height: 50.h)),
-          SizedBox(height: 4.h),
-          Text(title,
-              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500))
-        ],
+    return GestureDetector(
+      onTap: () {
+        print('category-One');
+        Navigator.pushNamed(context, '/viewall', arguments: id);
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(right: 10, left: 18),
+        child: Column(
+          children: [
+            ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image.network(image,
+                    fit: BoxFit.cover, width: 50.w, height: 50.h)),
+            SizedBox(height: 4.h),
+            Text(title,
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500))
+          ],
+        ),
       ),
     );
   }
@@ -479,7 +499,8 @@ class BottomPincodeSheet extends StatelessWidget {
       TextSpan(
           text: "Delivery to :", style: TextStyle(color: Colors.grey.shade600)),
       TextSpan(
-          text: " location",
+          text: " ${context.watch<pincodeProvider>().pincode}",
+          style: TextStyle(color: Colors.grey.shade600),
           recognizer: TapGestureRecognizer()
             ..onTap = () async {
               final response = await RestaurantApi.viewAll();
@@ -550,6 +571,9 @@ class BottomPincodeSheet extends StatelessWidget {
                                                         .getInstance();
                                                 var pin = prefs.setString(
                                                     "pincode", pincodes.text);
+                                                context
+                                                    .read<pincodeProvider>()
+                                                    .getPincode(pincodes.text);
                                                 print(await prefs
                                                     .getString("pincode"));
                                                 print('pincode received');

@@ -74,7 +74,6 @@ class Orders extends StatelessWidget {
           future: OrderApi.allOrder(),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
-              print(snapshot.data);
               List<OrderModel> data = snapshot.data;
               return ListView.builder(
                   itemCount: 2,

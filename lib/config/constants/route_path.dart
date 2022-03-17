@@ -9,4 +9,7 @@ class RoutePath {
   static const String nearYou = '/near-you';
   static const String notification = '/notification';
   static const String viewPost = '/view-post';
+  static const String productsViewMore = '/productsviewmore';
+  static const String restaurantsViewMore = '/restaurantsviewmore';
+  static const String supermarketsViewMore = '/supermarketsviewmore';
 }

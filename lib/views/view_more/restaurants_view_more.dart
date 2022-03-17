@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/models/res_model.dart';
 import 'package:fresh4delivery/models/restaurant_category_modal.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/views/home/home.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
 
-class ViewAll extends StatelessWidget {
-  static const routeName = '/viewall';
-  const ViewAll({Key? key}) : super(key: key);
+class RestuarantsViewMore extends StatelessWidget {
+  static const routeName = '/restaurantsviewmore';
+  const RestuarantsViewMore({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,14 +60,14 @@ class ViewAll extends StatelessWidget {
               ),
               preferredSize: Size.fromHeight(80.h))),
       body: FutureBuilder(
-          future: RestaurantApi.restaurantCategory(arguments),
+          future: RestaurantApi.viewAll(),
           builder: ((context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
-              List<ProductModal> data = snapshot.data;
+              List<Nrestaurants> data = snapshot.data;
               return ListView.builder(
                   itemCount: data.length,
                   itemBuilder: ((context, index) {
-                    ProductModal categoryProducts = data[index];
+                    Nrestaurants categoryProducts = data[index];
                     return Container(
                         margin:
                             const EdgeInsets.only(top: 15, left: 20, right: 20),
@@ -82,10 +83,10 @@ class ViewAll extends StatelessWidget {
                           children: [
                             SizedBox(width: 20),
                             Image.network(
-                              categoryProducts.image.toString().isEmpty ||
-                                      categoryProducts.image == null
+                              categoryProducts.logo.toString().isEmpty ||
+                                      categoryProducts.logo == null
                                   ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
-                                  : "https://ebshosting.co.in${categoryProducts.image}",
+                                  : "https://ebshosting.co.in${categoryProducts.logo}",
                               fit: BoxFit.cover,
                             ),
                             SizedBox(width: 20),
@@ -112,6 +113,8 @@ class ViewAll extends StatelessWidget {
                           ],
                         ));
                   }));
+            } else if (snapshot.data == null) {
+              return const Center(child: Text(" Not Available"));
             } else {
               return const Center(child: CircularProgressIndicator());
             }
