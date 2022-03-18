@@ -447,6 +447,8 @@ class SupermarketApi {
   }
 }
 
+//**************//
+//Cart api
 class CartApi {
   static Future<List<CartListModal>?> getCart() async {
     final userId = await Preference.getPrefs("Id");
@@ -454,8 +456,8 @@ class CartApi {
       var response = await http
           .post(Uri.parse(Api.cart.getcart), body: {"user_id": userId});
       var responseBody = json.decode(response.body);
-      print('cart api');
-      print(responseBody['cart']);
+      // print('cart api');
+      // print(responseBody['cart']);
 
       List<CartListModal> cartList = [];
       for (var i in responseBody['cart']) {
@@ -475,6 +477,25 @@ class CartApi {
       var responseBody = json.decode(response.body);
       print(responseBody);
       if (responseBody['sts'] == "00") {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return 'Error';
+    }
+  }
+
+  static Future updateCart(String cartId, int quantity) async {
+    try {
+      print(cartId);
+      print(quantity);
+      var response = await http.post(Uri.parse(Api.cart.changeQuantity),
+          body: {"cartid": cartId, "quantity": quantity});
+      print('working0');
+      var responseBody = json.decode(response.body);
+      print(responseBody);
+      if (responseBody['sts'] == "01") {
         return true;
       } else {
         return false;

@@ -6,12 +6,13 @@ import 'package:fresh4delivery/models/address_model.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/views/profile/address/add_new_address.dart';
 
-class YourAddress extends StatelessWidget {
+class YourAddress extends HookWidget {
   static const routeName = '/your-address';
   const YourAddress({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final state = useState(0);
     return Scaffold(
         appBar: AppBar(
             elevation: 0,
@@ -57,12 +58,18 @@ class YourAddress extends StatelessWidget {
                           itemCount: data.length,
                           itemBuilder: ((context, index) {
                             AddressListModel addressList = data[index];
-                            return SelectableAddressWidget(
-                                addresstype: addressList.type.toString(),
-                                address: addressList.address.toString(),
-                                phone: addressList.phone.toString(),
-                                pincode: addressList.pincode.toString(),
-                                index: data.length);
+                            return GestureDetector(
+                              onTap: () {
+                                state.value = index;
+                              },
+                              child: SelectableAddressWidget(
+                                  addresstype: addressList.type.toString(),
+                                  address: addressList.address.toString(),
+                                  phone: addressList.phone.toString(),
+                                  pincode: addressList.pincode.toString(),
+                                  isSelected: state.value == index,
+                                  index: data.length),
+                            );
                           }));
                     } else {
                       return const Center(
@@ -99,14 +106,17 @@ class YourAddress extends StatelessWidget {
   }
 }
 
-class SelectableAddressWidget extends HookWidget {
+class SelectableAddressWidget extends StatelessWidget {
+  bool isSelected;
   String addresstype;
   String address;
   String phone;
   String pincode;
   int index;
+
   SelectableAddressWidget(
       {Key? key,
+      this.isSelected = false,
       this.index = 0,
       this.addresstype = 'Address type',
       this.address = 'address',
@@ -116,7 +126,6 @@ class SelectableAddressWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = useState(0);
     return Container(
         margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
         width: 300.w,
@@ -130,12 +139,9 @@ class SelectableAddressWidget extends HookWidget {
           children: [
             Expanded(
                 flex: 2,
-                child: Radio(
-                    value: state.value, //index
-                    groupValue: index, //state value
-                    onChanged: (val) {
-                      state.value = index; //index
-                    })),
+                child: isSelected
+                    ? Icon(Icons.radio_button_checked)
+                    : Icon(Icons.radio_button_unchecked)),
             Expanded(
               flex: 5,
               child: Column(

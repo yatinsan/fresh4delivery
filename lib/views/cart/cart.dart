@@ -91,6 +91,9 @@ class Cart extends StatelessWidget {
                                               color: Colors.grey.shade200,
                                               width: 2.w)),
                                       child: CalculateTheTotal(
+                                        quantity: cartList.quantity ?? 1,
+                                        unitText:
+                                            ' (${cartList.unitname.toString()})',
                                         cartId: cartList.id.toString(),
                                         image:
                                             "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
@@ -177,6 +180,8 @@ class Cart extends StatelessWidget {
 }
 
 class CalculateTheTotal extends HookWidget {
+  int quantity;
+  String unitText;
   String? cartId;
   String image;
   String title;
@@ -184,7 +189,9 @@ class CalculateTheTotal extends HookWidget {
   String price;
   CalculateTheTotal(
       {Key? key,
+      this.quantity = 1,
       this.cartId,
+      this.unitText = '',
       this.image =
           "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
       this.title = "productName",
@@ -195,7 +202,7 @@ class CalculateTheTotal extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final readProvider = context.read<CartExtraCharges>();
-    final currentNumber = useState(1);
+    final currentNumber = useState(quantity);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -208,8 +215,11 @@ class CalculateTheTotal extends HookWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            RichText(
+                text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [TextSpan(text: title), TextSpan(text: unitText)],
+            )),
             SizedBox(height: 5.h),
             RichText(
                 text: TextSpan(children: [
@@ -220,7 +230,8 @@ class CalculateTheTotal extends HookWidget {
                       color: Colors.grey.shade600,
                       fontSize: 12)),
               TextSpan(
-                  text: " ₹${double.parse(price) * currentNumber.value}",
+                  text:
+                      " ₹${double.parse(price) * (quantity == 0 ? 1 : quantity)}",
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     // fontSize: 12
@@ -237,9 +248,18 @@ class CalculateTheTotal extends HookWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
-                      onTap: () {
-                        var number = currentNumber.value--;
-                        if (number <= 1) currentNumber.value = 1;
+                      onTap: () async {
+                        var number = quantity == 0 ? quantity + 1 : quantity--;
+                        if (number <= 1) quantity = 1;
+                        currentNumber.value = number;
+                        var response = await CartApi.updateCart(
+                            cartId.toString(), number.toInt());
+                        print(response);
+                        if (response == true) {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/cart');
+                          print('minus' + response);
+                        }
                         print('minus');
                       },
                       child: Container(
@@ -259,8 +279,17 @@ class CalculateTheTotal extends HookWidget {
                   Text("${currentNumber.value}"),
                   SizedBox(width: 10),
                   GestureDetector(
-                      onTap: () {
-                        currentNumber.value++;
+                      onTap: () async {
+                        var number = quantity == 0 ? quantity + 1 : quantity++;
+                        if (number >= 10) quantity = 10;
+                        currentNumber.value = number;
+                        var response = await CartApi.updateCart(
+                            cartId.toString(), currentNumber.value);
+                        if (response == true) {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/cart');
+                          print('add' + response);
+                        }
                         print('add');
                       },
                       child: Container(

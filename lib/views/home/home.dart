@@ -67,7 +67,7 @@ class _HomeState extends State<Home> {
           bottom: PreferredSize(
               child: Column(
                 children: [
-                  // SearchButton(),
+                  SearchButton(),
                   // TypeAheadField(
                   //   suggestionsCallback: suggestionsCallback,
                   //   itemBuilder: itemBuilder,

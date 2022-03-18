@@ -10,7 +10,7 @@ class SearchButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showSearch(context: context, delegate: SearchScreen());
+        Navigator.pushNamed(context, '/searchView');
       },
       child: Container(
           margin: const EdgeInsets.symmetric(vertical: 10),

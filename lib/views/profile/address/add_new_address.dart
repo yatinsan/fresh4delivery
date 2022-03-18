@@ -36,6 +36,16 @@ class _AddNewAddressState extends State<AddNewAddress> {
   ];
 
   static const _dropDownitems2 = <String>["Home", "Work"];
+  List statesList = <String>[];
+
+  Future<String?> searchcatogery() async {
+    List<String> catogerys = [];
+    var data = await http.post(Uri.parse(Api.search.searchState));
+    setState(() {
+      // statesList = data['states'];
+      print(statesList);
+    });
+  }
 
   final List<DropdownMenuItem<String>> _dropDownButtonItems1 = _dropDownitems1
       .map((String value) =>
@@ -175,28 +185,12 @@ class _AddNewAddressState extends State<AddNewAddress> {
                               _addresstypeController.text = newValue as String;
                             });
                           },
-                          items: statesList.map((e) {
-                            return new DropdownMenuItem(
-                              child: new Text(e['name']),
-                              value: e['id'].toString(),
-                            );
-                          }).toList())),
+                          items: _dropDownButtonItems2)),
                 ),
               ],
             ),
           ),
         ));
-  }
-
-  List statesList = [];
-  Future<String?> searchcatogery() async {
-    List<String> catogerys = [];
-    var data = await http.post(Uri.parse(Api.search.searchState)).then((value) {
-      catogerys = json.decode(value.body);
-    });
-    setState(() {
-      statesList = data['states'];
-    });
   }
 }
 

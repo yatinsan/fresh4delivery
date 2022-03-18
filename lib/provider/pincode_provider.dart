@@ -10,7 +10,7 @@ class pincodeProvider extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     _pincode =
-        pincode.isEmpty ? await prefs.getString('pincode').toString() : pincode;
+        pincode.toString().isEmpty ? await prefs.getString('pincode') : pincode;
     notifyListeners();
   }
 }

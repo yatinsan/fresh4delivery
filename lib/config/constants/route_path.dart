@@ -11,5 +11,7 @@ class RoutePath {
   static const String viewPost = '/view-post';
   static const String productsViewMore = '/productsviewmore';
   static const String restaurantsViewMore = '/restaurantsviewmore';
-  static const String supermarketsViewMore = '/supermarketsviewmore';
+  static const String supermarketsViewMore =
+      '/supermarketsviewmore'; //searchView
+  static const String searchView = '/searchView';
 }
