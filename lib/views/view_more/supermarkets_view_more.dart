@@ -50,7 +50,7 @@ class SupermarketsViewMore extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Products List",
+                            "SuperMarkets List",
                             style: TextStyle(fontWeight: FontWeight.w500),
                           ),
                           // Image.asset("assets/icons/filter.png")
@@ -60,7 +60,7 @@ class SupermarketsViewMore extends StatelessWidget {
               ),
               preferredSize: Size.fromHeight(80.h))),
       body: FutureBuilder(
-          future: RestaurantApi.viewAll(),
+          future: SupermarketApi.viewAll(),
           builder: ((context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               List<Nrestaurants> data = snapshot.data;

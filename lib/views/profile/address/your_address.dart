@@ -131,8 +131,8 @@ class SelectableAddressWidget extends HookWidget {
             Expanded(
                 flex: 2,
                 child: Radio(
-                    value: index, //index
-                    groupValue: state.value, //state value
+                    value: state.value, //index
+                    groupValue: index, //state value
                     onChanged: (val) {
                       state.value = index; //index
                     })),

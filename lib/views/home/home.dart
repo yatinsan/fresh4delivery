@@ -10,6 +10,7 @@ import 'package:fresh4delivery/models/pincode_model.dart';
 import 'package:fresh4delivery/models/res_model.dart';
 import 'package:fresh4delivery/models/supermarket_model.dart';
 import 'package:fresh4delivery/provider/pincode_provider.dart';
+import 'package:fresh4delivery/provider/pincode_search_provider.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/utils/star_rating.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
@@ -206,7 +207,7 @@ class _HomeState extends State<Home> {
             SizedBox(height: 20),
             Headerwidget(
                 title: "Top Restaurants",
-                route: '/resturantsviewmore',
+                route: '/restaurantsviewmore',
                 type: "Restaurants"),
             SizedBox(height: 20),
             Container(
@@ -536,33 +537,30 @@ class BottomPincodeSheet extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                height: 65,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 20),
-                                child: TypeAheadField<PincodeModel?>(
-                                    suggestionsCallback: SearchApi.pincodeList,
-                                    itemBuilder:
-                                        (context, PincodeModel? suggestion) {
-                                      final pincodes = suggestion;
-
-                                      return ListTile(
-                                        title: Text(pincodes!.text),
-                                      );
+                                  height: 65,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0, horizontal: 20),
+                                  child: TextField(
+                                    keyboardType: TextInputType.number,
+                                    onChanged: (val) {
+                                      context
+                                          .read<PincodeSearchProvider>()
+                                          .getPincode(val);
                                     },
-                                    onSuggestionSelected:
-                                        (PincodeModel? suggestion) {}),
-                              ),
+                                  )),
                               FutureBuilder(
-                                  future: SearchApi.pincode(),
+                                  future: context
+                                      .watch<PincodeSearchProvider>()
+                                      .searchResults(),
                                   builder: ((context, AsyncSnapshot snapshot) {
                                     if (snapshot.hasData) {
-                                      List<PincodeModel> data = snapshot.data;
+                                      List<String> data = snapshot.data;
                                       return ListView.builder(
                                           controller: scrollController,
                                           shrinkWrap: true,
                                           itemCount: data.length,
                                           itemBuilder: ((context, index) {
-                                            PincodeModel pincodes = data[index];
+                                            String pincodes = data[index];
                                             return GestureDetector(
                                               onTap: () async {
                                                 Navigator.pop(context);
@@ -570,10 +568,10 @@ class BottomPincodeSheet extends StatelessWidget {
                                                     await SharedPreferences
                                                         .getInstance();
                                                 var pin = prefs.setString(
-                                                    "pincode", pincodes.text);
+                                                    "pincode", pincodes);
                                                 context
                                                     .read<pincodeProvider>()
-                                                    .getPincode(pincodes.text);
+                                                    .getPincode(pincodes);
                                                 print(await prefs
                                                     .getString("pincode"));
                                                 print('pincode received');
@@ -601,8 +599,7 @@ class BottomPincodeSheet extends StatelessWidget {
                                                       Icon(Icons
                                                           .location_on_outlined),
                                                       SizedBox(width: 20),
-                                                      Text(pincodes.text
-                                                          .toString()),
+                                                      Text(pincodes.toString()),
                                                     ],
                                                   )),
                                             );

@@ -50,7 +50,7 @@ class RestuarantsViewMore extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Products List",
+                            "Restaurants List",
                             style: TextStyle(fontWeight: FontWeight.w500),
                           ),
                           // Image.asset("assets/icons/filter.png")
