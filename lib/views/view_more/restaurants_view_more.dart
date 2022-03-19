@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/models/res_model.dart';
 import 'package:fresh4delivery/models/restaurant_category_modal.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
+import 'package:fresh4delivery/utils/star_rating.dart';
 import 'package:fresh4delivery/views/home/home.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
@@ -102,12 +103,12 @@ class RestuarantsViewMore extends StatelessWidget {
                                           fontWeight: FontWeight.w600)),
                                 ),
                                 SizedBox(height: 5.h),
-                                Text(categoryProducts.status.toString(),
-                                    style: TextStyle(fontSize: 12)),
+                                // Text(categoryProducts..toString(),
+                                //     style: TextStyle(fontSize: 12)),
                                 SizedBox(height: 5.h),
-                                // StarRating(
-                                //   rating: resturants.rating!.toDouble(),
-                                // )
+                                StarRating(
+                                  rating: categoryProducts.rating ?? 0,
+                                )
                               ],
                             ),
                           ],

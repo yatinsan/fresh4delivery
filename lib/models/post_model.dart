@@ -1,94 +1,82 @@
 // To parse this JSON data, do
 //
-//     final postModal = postModalFromJson(jsonString);
+//     final postModal = postModalfromJson
+// (jsonString);
 
+import 'package:meta/meta.dart';
 import 'dart:convert';
 
-PostModal postModalFromJson(String str) => PostModal.fromJson(json.decode(str));
+PostModal postModalfromJson(String str) => PostModal.fromJson(json.decode(str));
 
-String postModalToJson(PostModal data) => json.encode(data.toJson());
+String postModalToMap(PostModal data) => json.encode(data.toMap());
 
 class PostModal {
   PostModal({
-    this.sts,
-    this.msg,
-    this.cartcount,
-    this.shop,
-    this.category,
-    this.products,
+    required this.sts,
+    required this.msg,
+    required this.cartcount,
+    required this.shop,
+    required this.category,
+    required this.products,
   });
 
-  String? sts;
-  String? msg;
-  int? cartcount;
-  ShopModal? shop;
-  Category? category;
-  List<Product>? products;
+  String sts;
+  String msg;
+  int cartcount;
+  Shop shop;
+  Map<String, String> category;
+  List<Product> products;
 
   factory PostModal.fromJson(Map<String, dynamic> json) => PostModal(
         sts: json["sts"],
         msg: json["msg"],
         cartcount: json["cartcount"],
-        shop: ShopModal.fromJson(json["shop"]),
-        category: Category.fromJson(json["category"]),
+        shop: Shop.fromJson(json["shop"]),
+        category: Map.from(json["category"])
+            .map((k, v) => MapEntry<String, String>(k, v)),
         products: List<Product>.from(
             json["products"].map((x) => Product.fromJson(x))),
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "sts": sts,
         "msg": msg,
         "cartcount": cartcount,
-        "shop": shop!.toJson(),
-        "category": category!.toJson(),
-        "products": List<dynamic>.from(products!.map((x) => x.toJson())),
-      };
-}
-
-class Category {
-  Category({
-    required this.the5,
-  });
-
-  String the5;
-
-  factory Category.fromJson(Map<String, dynamic> json) => Category(
-        the5: json["5"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "5": the5,
+        "shop": shop.toMap(),
+        "category":
+            Map.from(category).map((k, v) => MapEntry<String, dynamic>(k, v)),
+        "products": List<dynamic>.from(products.map((x) => x.toMap())),
       };
 }
 
 class Product {
   Product({
-    this.id,
-    this.catId,
-    this.shopType,
-    this.shopId,
-    this.type,
-    this.name,
-    this.price,
-    this.offerprice,
-    this.status,
-    this.image,
-    this.hasUnits,
-    this.units,
+    required this.id,
+    required this.catId,
+    required this.shopType,
+    required this.shopId,
+    required this.type,
+    required this.name,
+    required this.price,
+    required this.offerprice,
+    required this.status,
+    required this.image,
+    required this.hasUnits,
+    required this.units,
   });
 
-  int? id;
-  int? catId;
-  String? shopType;
-  int? shopId;
-  String? type;
-  String? name;
-  int? price;
-  int? offerprice;
-  String? status;
-  String? image;
-  String? hasUnits;
-  List<Unit>? units;
+  int id;
+  int catId;
+  String shopType;
+  int shopId;
+  String type;
+  String name;
+  int price;
+  int offerprice;
+  String status;
+  String image;
+  String hasUnits;
+  List<Unit> units;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
         id: json["id"],
@@ -105,7 +93,7 @@ class Product {
         units: List<Unit>.from(json["units"].map((x) => Unit.fromJson(x))),
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "id": id,
         "cat_id": catId,
         "shop_type": shopType,
@@ -117,156 +105,148 @@ class Product {
         "status": status,
         "image": image,
         "has_units": hasUnits,
-        "units": List<dynamic>.from(units!.map((x) => x.toJson())),
+        "units": List<dynamic>.from(units.map((x) => x.toMap())),
       };
 }
 
 class Unit {
   Unit({
-    this.id,
-    this.productId,
-    this.name,
-    this.price,
-    this.offerprice,
-    this.dispOrder,
-    this.status,
+    required this.id,
+    required this.productId,
+    required this.name,
+    required this.price,
+    required this.offerprice,
+    required this.dispOrder,
+    required this.status,
   });
 
-  int? id;
-  int? productId;
-  Name? name;
-  int? price;
-  int? offerprice;
-  int? dispOrder;
-  Status? status;
+  int id;
+  int productId;
+  String name;
+  int price;
+  int offerprice;
+  int dispOrder;
+  String status;
 
   factory Unit.fromJson(Map<String, dynamic> json) => Unit(
         id: json["id"],
         productId: json["product_id"],
-        name: nameValues.map![json["name"]],
+        name: json["name"],
         price: json["price"],
         offerprice: json["offerprice"],
         dispOrder: json["disp_order"],
-        status: statusValues.map![json["status"]],
+        status: json["status"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "id": id,
         "product_id": productId,
-        "name": nameValues.reverse![name],
+        "name": name,
         "price": price,
         "offerprice": offerprice,
         "disp_order": dispOrder,
-        "status": statusValues.reverse![status],
+        "status": status,
       };
 }
 
-enum Name { ROLL, PLATE }
-
-final nameValues = EnumValues({"Plate": Name.PLATE, "Roll": Name.ROLL});
-
-enum Status { ENABLED }
-
-final statusValues = EnumValues({"Enabled": Status.ENABLED});
-
-class ShopModal {
-  ShopModal({
-    this.id,
-    this.name,
-    this.ownerName,
-    this.slugName,
-    this.type,
-    this.serviceType,
-    this.rating,
-    this.email,
-    this.mobile,
-    this.phone,
-    this.password,
-    this.desc,
-    this.notes,
-    this.gstNo,
-    this.licence,
-    this.aadhar,
-    this.openTime,
-    this.closeTime,
-    this.hours,
-    this.deliveryTime,
-    this.deliveryCharge,
-    this.payoutOptions,
-    this.verifiedStore,
-    this.promoted,
-    this.paymentDetails,
-    this.address,
-    this.pincode,
-    this.city,
-    this.district,
-    this.state,
-    this.country,
-    this.agentId,
-    this.franchiseId,
-    this.franchiseCommession,
-    this.adminCommession,
-    this.status,
-    this.hasTax,
-    this.taxValue,
-    this.logo,
-    this.banner,
-    this.photo,
-    this.sign,
-    this.latitude,
-    this.longitude,
-    this.createdAt,
-    this.updatedAt,
+class Shop {
+  Shop({
+    required this.id,
+    required this.name,
+    required this.ownerName,
+    required this.slugName,
+    required this.type,
+    required this.serviceType,
+    required this.rating,
+    required this.email,
+    required this.mobile,
+    required this.phone,
+    required this.password,
+    required this.desc,
+    required this.notes,
+    required this.gstNo,
+    required this.licence,
+    required this.aadhar,
+    required this.openTime,
+    required this.closeTime,
+    required this.hours,
+    required this.deliveryTime,
+    required this.deliveryCharge,
+    required this.payoutOptions,
+    required this.verifiedStore,
+    required this.promoted,
+    required this.paymentDetails,
+    required this.address,
+    required this.pincode,
+    required this.city,
+    required this.district,
+    required this.state,
+    required this.country,
+    required this.agentId,
+    required this.franchiseId,
+    required this.franchiseCommession,
+    required this.adminCommession,
+    required this.status,
+    required this.hasTax,
+    required this.taxValue,
+    required this.logo,
+    required this.banner,
+    required this.photo,
+    required this.sign,
+    required this.latitude,
+    required this.longitude,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
-  int? id;
-  String? name;
-  String? ownerName;
-  String? slugName;
-  String? type;
-  int? serviceType;
-  int? rating;
-  String? email;
-  String? mobile;
-  String? phone;
-  String? password;
-  String? desc;
-  String? notes;
-  String? gstNo;
-  String? licence;
-  String? aadhar;
-  int? openTime;
-  int? closeTime;
-  String? hours;
-  String? deliveryTime;
-  int? deliveryCharge;
-  String? payoutOptions;
-  String? verifiedStore;
-  String? promoted;
-  String? paymentDetails;
-  String? address;
-  String? pincode;
-  String? city;
-  int? district;
-  int? state;
-  int? country;
-  int? agentId;
-  int? franchiseId;
-  int? franchiseCommession;
-  int? adminCommession;
-  String? status;
-  String? hasTax;
-  int? taxValue;
-  String? logo;
-  String? banner;
-  String? photo;
-  String? sign;
-  String? latitude;
-  String? longitude;
-  DateTime? createdAt;
-  DateTime? updatedAt;
+  int id;
+  String name;
+  String ownerName;
+  String slugName;
+  String type;
+  int serviceType;
+  int rating;
+  String email;
+  String mobile;
+  String phone;
+  String password;
+  String desc;
+  String notes;
+  String gstNo;
+  String licence;
+  String aadhar;
+  int openTime;
+  int closeTime;
+  String hours;
+  String deliveryTime;
+  int deliveryCharge;
+  String payoutOptions;
+  String verifiedStore;
+  String promoted;
+  String paymentDetails;
+  String address;
+  String pincode;
+  String city;
+  int district;
+  int state;
+  int country;
+  int agentId;
+  int franchiseId;
+  int franchiseCommession;
+  int adminCommession;
+  String status;
+  String hasTax;
+  int taxValue;
+  String logo;
+  String banner;
+  String photo;
+  String sign;
+  String latitude;
+  String longitude;
+  DateTime createdAt;
+  DateTime updatedAt;
 
-  factory ShopModal.fromJson(Map<String, dynamic> json) => ShopModal(
+  factory Shop.fromJson(Map<String, dynamic> json) => Shop(
         id: json["id"],
         name: json["name"],
         ownerName: json["owner_name"],
@@ -315,7 +295,7 @@ class ShopModal {
         updatedAt: DateTime.parse(json["updated_at"]),
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "id": id,
         "name": name,
         "owner_name": ownerName,
@@ -360,21 +340,32 @@ class ShopModal {
         "sign": sign,
         "latitude": latitude,
         "longitude": longitude,
-        "created_at": createdAt!.toIso8601String(),
-        "updated_at": updatedAt!.toIso8601String(),
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
       };
 }
 
-class EnumValues<T> {
-  Map<String, T>? map;
-  Map<T, String>? reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String>? get reverse {
-    if (reverseMap == null) {
-      reverseMap = map!.map((k, v) => new MapEntry(v, k));
+class PostModalResponse {
+  late final List<PostModal>? postModal;
+  late final String? error;
+  PostModalResponse({
+    this.postModal,
+    this.error,
+  });
+  factory PostModalResponse.fromJson(Map<String, dynamic> json) {
+    try {
+      return PostModalResponse(
+        postModal: json["post_modal"] == null
+            ? null
+            : List<PostModal>.from(
+                json["post_modal"].map((x) => PostModal.fromJson(x))),
+        error: json["error"],
+      );
+    } catch (e) {
+      return PostModalResponse(
+        postModal: null,
+        error: "Something went wrong",
+      );
     }
-    return reverseMap;
   }
 }

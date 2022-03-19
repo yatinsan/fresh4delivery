@@ -395,7 +395,7 @@ class RestaurantApi {
     }
   }
 
-  static Future<List<ShopModal>?> getOneRestaurant(id) async {
+  static Future<PostModal?> getOneRestaurant(id) async {
     try {
       print(id);
       final pincode = await Preference.getPrefs("pincode");
@@ -404,11 +404,10 @@ class RestaurantApi {
       var response = await http.post(
           Uri.parse(Api.restaurant.restaurantOne(id)),
           body: {"user_id": userId, "pincode": pincode});
-      var responseBody = json.decode(response.body);
-
-      // List<ShopModal> shopList =
-      print(responseBody);
+      Map<String, dynamic> data = json.decode(response.body);
+      return PostModal.fromJson(data);
     } catch (e) {
+      print(e);
       return null;
     }
   }

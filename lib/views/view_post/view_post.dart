@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/config/constants/api_configurations.dart';
+import 'package:fresh4delivery/models/post_model.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/views/cart/cart.dart';
 import 'package:http/http.dart' as http;
@@ -117,64 +118,51 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
                   )),
             )
           ]),
-          Builder(builder: (context) {
-            return DefaultTabController(
-                length: myList.length,
-                child: Column(children: [
-                  FutureBuilder(
-                    future: RestaurantApi.getOneRestaurant(arguments),
-                    builder: ((context, snapshot) {
-                      return Container(
-                        margin:
-                            const EdgeInsets.only(top: 20, left: 20, right: 20),
-                        height: 40,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
+          FutureBuilder<PostModal?>(
+            future: RestaurantApi.getOneRestaurant(arguments),
+            builder: ((context, snapshot) {
+              final data = snapshot.data;
+              return DefaultTabController(
+                  length: data!.category.length,
+                  child: Column(children: [
+                    Container(
+                      margin:
+                          const EdgeInsets.only(top: 20, left: 20, right: 20),
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border.all(
+                              color: Colors.grey.shade400, width: 0)),
+                      child: TabBar(
+                        indicator: BoxDecoration(
+                            color: Colors.grey.shade400,
                             borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                                color: Colors.grey.shade400, width: 0)),
-                        child: TabBar(
-                          indicator: BoxDecoration(
-                              color: Colors.grey.shade400,
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(color: Colors.grey.shade400)),
-                          isScrollable: true,
-                          labelColor: Colors.black,
-                          unselectedLabelColor: Colors.black,
-                          tabs:
-                              // FutureBuilder(
-                              //   future:
-                              //       RestaurantApi.getOneRestaurant(arguments),
-                              //   builder: (context, AsyncSnapshot snapshot) {
-                              //     return myList.map((e) {
-                              //       return Tab(text: e);
-                              //     }).toList(),
-                              //   },
-                              // )
-                              //*********//
-                              //it worked
-                              //********//
-                              myList.map((e) {
-                            return Tab(text: e);
-                          }).toList(),
-                        ),
-                      );
-                    }),
-                  ),
-                  SingleChildScrollView(
-                    child: Container(
-                      height: 450.h,
-                      child: const TabBarView(children: []
-                          // [
-                          //   ViewPostsWidget(),
-                          //   ViewPostsWidget(),
-                          //   ViewPostsWidget(),
-                          // ]
-                          ),
+                            border: Border.all(color: Colors.grey.shade400)),
+                        isScrollable: true,
+                        labelColor: Colors.black,
+                        unselectedLabelColor: Colors.black,
+                        tabs: data!.category.values.map((e) {
+                          return Tab(text: e);
+                        }).toList(),
+                      ),
                     ),
-                  )
-                ]));
-          })
+                    SingleChildScrollView(
+                      child: Container(
+                        height: 450.h,
+                        child: const TabBarView(children: [
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                          ViewPostsWidget(),
+                        ]),
+                      ),
+                    ),
+                  ]));
+            }),
+          ),
         ],
       ),
     );

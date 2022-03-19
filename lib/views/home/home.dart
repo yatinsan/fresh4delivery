@@ -197,6 +197,7 @@ class _HomeState extends State<Home> {
                               child: Text("Restaurants",
                                   style: TextStyle(
                                       fontSize: 10, letterSpacing: .5))),
+                                      
                         )
                       ],
                     ),
