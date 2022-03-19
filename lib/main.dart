@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         builder: () => MaterialApp(
               debugShowCheckedModeBanner: false,
               home: DefaultTabController(length: 4, child: Phone()),
-              initialRoute: '/authScreen',
+              initialRoute: '/login',
               onGenerateRoute: Routes.generateRoute,
             ));
   }

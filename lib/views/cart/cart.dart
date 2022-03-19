@@ -249,18 +249,19 @@ class CalculateTheTotal extends HookWidget {
                 children: [
                   GestureDetector(
                       onTap: () async {
-                        var number = quantity == 0 ? quantity + 1 : quantity--;
-                        if (number <= 1) quantity = 1;
-                        currentNumber.value = number;
+                        currentNumber.value =
+                            currentNumber == 0 ? 1 : currentNumber.value - 1;
+                        if (currentNumber.value <= 0) currentNumber.value = 1;
+
                         var response = await CartApi.updateCart(
-                            cartId.toString(), number.toInt());
+                            cartId.toString(), currentNumber.value.toString());
                         print(response);
-                        if (response == true) {
-                          Navigator.pop(context);
-                          Navigator.pushNamed(context, '/cart');
-                          print('minus' + response);
-                        }
-                        print('minus');
+                        // if (response == true) {
+                        //   Navigator.pop(context);
+                        //   Navigator.pushNamed(context, '/cart');
+                        //   print('minus' + response);
+                        // }
+                        // print('minus');
                       },
                       child: Container(
                           // padding: const EdgeInsets.symmetric(horizontal: 1),
@@ -280,17 +281,18 @@ class CalculateTheTotal extends HookWidget {
                   SizedBox(width: 10),
                   GestureDetector(
                       onTap: () async {
-                        var number = quantity == 0 ? quantity + 1 : quantity++;
-                        if (number >= 10) quantity = 10;
-                        currentNumber.value = number;
+                        currentNumber.value =
+                            currentNumber == 0 ? 1 : currentNumber.value + 1;
+                        if (currentNumber.value >= 10) currentNumber.value = 10;
                         var response = await CartApi.updateCart(
-                            cartId.toString(), currentNumber.value);
-                        if (response == true) {
-                          Navigator.pop(context);
-                          Navigator.pushNamed(context, '/cart');
-                          print('add' + response);
-                        }
-                        print('add');
+                            cartId.toString(), currentNumber.value.toString());
+                        print(response);
+                        // if (response == true) {
+                        //   Navigator.pop(context);
+                        //   Navigator.pushNamed(context, '/cart');
+                        //   print('add' + response);
+                        // }
+                        // print('add');
                       },
                       child: Container(
                           width: 15,

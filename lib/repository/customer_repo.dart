@@ -485,22 +485,18 @@ class CartApi {
     }
   }
 
-  static Future updateCart(String cartId, int quantity) async {
-    try {
-      print(cartId);
-      print(quantity);
-      var response = await http.post(Uri.parse(Api.cart.changeQuantity),
-          body: {"cartid": cartId, "quantity": quantity});
-      print('working0');
-      var responseBody = json.decode(response.body);
-      print(responseBody);
-      if (responseBody['sts'] == "01") {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return 'Error';
+  static Future updateCart(cartId, quantity) async {
+    print(cartId);
+    print(quantity);
+    var response = await http.post(Uri.parse(Api.cart.changeQuantity),
+        body: {"cartid": cartId, "quantity": quantity});
+    print('working0');
+    var responseBody = json.decode(response.body);
+    print(responseBody);
+    if (responseBody['sts'] == "01") {
+      return true;
+    } else {
+      return false;
     }
   }
 }

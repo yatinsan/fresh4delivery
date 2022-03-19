@@ -121,46 +121,64 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
           FutureBuilder<PostModal?>(
             future: RestaurantApi.getOneRestaurant(arguments),
             builder: ((context, snapshot) {
-              final data = snapshot.data;
-              return DefaultTabController(
-                  length: data!.category.length,
-                  child: Column(children: [
-                    Container(
-                      margin:
-                          const EdgeInsets.only(top: 20, left: 20, right: 20),
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(
-                              color: Colors.grey.shade400, width: 0)),
-                      child: TabBar(
-                        indicator: BoxDecoration(
-                            color: Colors.grey.shade400,
+              if (snapshot.hasData) {
+                final data = snapshot.data;
+                print(snapshot.data!.products);
+                int categoryLength = data?.category.values.length ?? 0;
+                return DefaultTabController(
+                    length: categoryLength,
+                    child: Column(children: [
+                      Container(
+                        margin:
+                            const EdgeInsets.only(top: 20, left: 20, right: 20),
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
                             borderRadius: BorderRadius.circular(50),
-                            border: Border.all(color: Colors.grey.shade400)),
-                        isScrollable: true,
-                        labelColor: Colors.black,
-                        unselectedLabelColor: Colors.black,
-                        tabs: data!.category.values.map((e) {
-                          return Tab(text: e);
-                        }).toList(),
+                            border: Border.all(
+                                color: Colors.grey.shade400, width: 0)),
+                        child: TabBar(
+                          indicator: BoxDecoration(
+                              color: Colors.grey.shade400,
+                              borderRadius: BorderRadius.circular(50),
+                              border: Border.all(color: Colors.grey.shade400)),
+                          isScrollable: true,
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.black,
+                          tabs: data!.category.values.map((e) {
+                            return Tab(text: e);
+                          }).toList(),
+                        ),
                       ),
-                    ),
-                    SingleChildScrollView(
-                      child: Container(
-                        height: 450.h,
-                        child: const TabBarView(children: [
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                          ViewPostsWidget(),
-                        ]),
+                      SingleChildScrollView(
+                        child: Container(
+                          height: 450.h,
+                          child: TabBarView(
+                              children: List<Widget>.generate(categoryLength,
+                                  (index) {
+                            final productList = data.products[index];
+                            print(productList.image);
+                            return ViewPostsWidget(
+                              image: productList.image,
+                              name: productList.name,
+                              price: productList.price.toString(),
+                              status: productList.status,
+                            );
+                          })),
+                        ),
+                        // ViewPostsWidget(),
                       ),
-                    ),
-                  ]));
+                    ]));
+              } else if (snapshot.data!.products.length == 0 ||
+                  snapshot.data!.products == null) {
+                return Container(
+                    height: 500.h,
+                    child: Center(child: Text('Not Products Available')));
+              } else {
+                return Container(
+                    height: 500.h,
+                    child: Center(child: CircularProgressIndicator()));
+              }
             }),
           ),
         ],
@@ -170,7 +188,17 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
 }
 
 class ViewPostsWidget extends StatelessWidget {
-  const ViewPostsWidget({Key? key}) : super(key: key);
+  String? image;
+  String name;
+  String price;
+  String status;
+  ViewPostsWidget(
+      {Key? key,
+      this.image,
+      required this.price,
+      required this.name,
+      required this.status})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +208,7 @@ class ViewPostsWidget extends StatelessWidget {
           return Container(
               margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
               width: 300.w,
-              height: 100.h,
+              height: 120.h,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.grey.shade200, width: 2.w)),
@@ -189,12 +217,14 @@ class ViewPostsWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    flex: 4,
+                    flex: 3,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          "assets/images/chicken.png",
+                        Image.network(
+                          image!.isEmpty || image == null
+                              ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
+                              : "https://ebshosting.co.in/${image.toString()}",
                           fit: BoxFit.contain,
                           width: 60,
                           height: 60,
@@ -208,17 +238,13 @@ class ViewPostsWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Fresh chicken",
-                            style: const TextStyle(
+                        Text(name,
+                            style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600)),
                         SizedBox(height: 5.h),
-                        const Text("Delivery in 30 min",
-                            style: const TextStyle(fontSize: 12)),
+                        Text("₹$price", style: TextStyle(fontSize: 12)),
                         SizedBox(height: 5.h),
-                        const Text("04/02/2022 | 4:30",
-                            style: const TextStyle(fontSize: 12)),
-                        SizedBox(height: 5.h),
-                        const Text("Processing",
+                        Text(status,
                             style: TextStyle(fontSize: 12, color: Colors.red)),
                       ],
                     ),
