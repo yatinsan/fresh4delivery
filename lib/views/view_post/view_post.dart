@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/config/constants/api_configurations.dart';
@@ -131,7 +132,7 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
                       Container(
                         margin:
                             const EdgeInsets.only(top: 20, left: 20, right: 20),
-                        height: 40,
+                        // height: 40,
                         decoration: BoxDecoration(
                             color: Colors.grey.shade300,
                             borderRadius: BorderRadius.circular(50),
@@ -150,23 +151,34 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
                           }).toList(),
                         ),
                       ),
-                      SingleChildScrollView(
-                        child: Container(
-                          height: 450.h,
-                          child: TabBarView(
-                              children: List<Widget>.generate(categoryLength,
-                                  (index) {
-                            final productList = data.products[index];
-                            print(productList.image);
-                            return ViewPostsWidget(
-                              image: productList.image,
-                              name: productList.name,
-                              price: productList.price.toString(),
-                              status: productList.status,
-                            );
-                          })),
-                        ),
-                        // ViewPostsWidget(),
+                      SizedBox(
+                        height: 450.h,
+                        child: TabBarView(
+                            children:
+                                List<Widget>.generate(categoryLength, (index) {
+                          final productList = data.products[index];
+                          print("products list : " +
+                              data.category.length.toString());
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: data.products.map((e) {
+                                  return ViewPostsWidget(
+                                    unitId: e.hasUnits.toString(),
+                                    type: e.shopType.toString(),
+                                    shopId: e.shopId.toString(),
+                                    productId: e.id.toString(),
+                                    image: e.image,
+                                    name: e.name,
+                                    price: e.price.toString(),
+                                    status: e.status,
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          );
+                        })),
                       ),
                     ]));
               } else if (snapshot.data!.products.length == 0 ||
@@ -188,12 +200,22 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
 }
 
 class ViewPostsWidget extends StatelessWidget {
+  dynamic unitId;
+  String? type;
+  dynamic shopId;
+  dynamic productId;
+  int? itemCount;
   String? image;
   String name;
   String price;
   String status;
   ViewPostsWidget(
       {Key? key,
+      this.unitId,
+      this.type,
+      this.shopId,
+      this.productId,
+      this.itemCount,
       this.image,
       required this.price,
       required this.name,
@@ -202,81 +224,88 @@ class ViewPostsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: 5,
-        itemBuilder: ((context, index) {
-          return Container(
-              margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
-              width: 300.w,
-              height: 120.h,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey.shade200, width: 2.w)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.only(bottom: 15),
+        width: 350.w,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade200, width: 2.w)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    flex: 3,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.network(
-                          image!.isEmpty || image == null
-                              ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
-                              : "https://ebshosting.co.in/${image.toString()}",
-                          fit: BoxFit.contain,
-                          width: 60,
-                          height: 60,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(name,
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600)),
-                        SizedBox(height: 5.h),
-                        Text("₹$price", style: TextStyle(fontSize: 12)),
-                        SizedBox(height: 5.h),
-                        Text(status,
-                            style: TextStyle(fontSize: 12, color: Colors.red)),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            height: 30.h,
-                            width: 80.w,
-                            decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: <Color>[
-                                      const Color.fromRGBO(166, 206, 57, 1),
-                                      const Color.fromRGBO(72, 170, 152, 1)
-                                    ]),
-                                borderRadius: BorderRadius.circular(8)),
-                            child: const Center(
-                                child: Text("Add Address",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w500)))),
-                      ],
-                    ),
+                  Image.network(
+                    image!.isEmpty || image == null
+                        ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
+                        : "https://ebshosting.co.in/${image.toString()}",
+                    fit: BoxFit.contain,
+                    width: 60,
+                    height: 60,
                   ),
                 ],
-              ));
-        }));
+              ),
+            ),
+            Expanded(
+              flex: 5,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  SizedBox(height: 5.h),
+                  Text("₹$price", style: TextStyle(fontSize: 12)),
+                  SizedBox(height: 5.h),
+                  Text(status,
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: status == "available"
+                              ? Colors.green
+                              : Colors.red)),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      var response = await CartApi.addToCart(
+                          type, productId, shopId, unitId);
+                      print('add to cart');
+                    },
+                    child: Container(
+                        height: 30.h,
+                        width: 80.w,
+                        decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: <Color>[
+                                  const Color.fromRGBO(166, 206, 57, 1),
+                                  const Color.fromRGBO(72, 170, 152, 1)
+                                ]),
+                            borderRadius: BorderRadius.circular(8)),
+                        child: const Center(
+                            child: Text("Add To Cart",
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500)))),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ));
   }
 }

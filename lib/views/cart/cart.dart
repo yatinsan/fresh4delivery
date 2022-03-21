@@ -65,9 +65,10 @@ class Cart extends StatelessWidget {
             FutureBuilder(
                 future: CartApi.getCart(),
                 builder: (context, AsyncSnapshot snapshot) {
-                  print(snapshot.hasData);
+                  print(snapshot);
                   if (snapshot.hasData) {
-                    final data = snapshot.data;
+                    CartModal data = snapshot.data;
+                    int length = data.cart.length;
                     return SizedBox(
                       height: 600.h,
                       child: Column(
@@ -76,9 +77,8 @@ class Cart extends StatelessWidget {
                           SingleChildScrollView(
                             child: ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: data.length,
+                                itemCount: length,
                                 itemBuilder: ((context, index) {
-                                  CartListModal cartList = data[index];
                                   return Container(
                                       margin: const EdgeInsets.only(
                                           top: 15, left: 20, right: 20),
@@ -91,16 +91,18 @@ class Cart extends StatelessWidget {
                                               color: Colors.grey.shade200,
                                               width: 2.w)),
                                       child: CalculateTheTotal(
-                                        quantity: cartList.quantity ?? 1,
+                                        quantity: data.cart[index].quantity,
                                         unitText:
-                                            ' (${cartList.unitname.toString()})',
-                                        cartId: cartList.id.toString(),
+                                            ' (${data.cart[index].unitname.toString()})',
+                                        cartId: data.cart[index].id.toString(),
                                         image:
                                             "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
-                                        title: cartList.productname.toString(),
+                                        title: data.cart[index].productname
+                                            .toString(),
                                         discountprice:
-                                            cartList.price.toString(),
-                                        price: cartList.offerprice.toString(),
+                                            data.cart[index].price.toString(),
+                                        price: data.cart[index].offerprice
+                                            .toString(),
                                       ));
                                 })),
                           ),
@@ -168,6 +170,10 @@ class Cart extends StatelessWidget {
                         ],
                       ),
                     );
+                  } else if (snapshot.data == null) {
+                    return SizedBox(
+                        height: 600.h,
+                        child: Center(child: Text('No data available')));
                   } else {
                     return SizedBox(
                         height: 600.h,
@@ -195,8 +201,8 @@ class CalculateTheTotal extends HookWidget {
       this.image =
           "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
       this.title = "productName",
-      this.discountprice = "discountPrice",
-      this.price = "realPrice"})
+      this.discountprice = "0",
+      this.price = "0"})
       : super(key: key);
 
   @override
@@ -230,8 +236,7 @@ class CalculateTheTotal extends HookWidget {
                       color: Colors.grey.shade600,
                       fontSize: 12)),
               TextSpan(
-                  text:
-                      " ₹${double.parse(price) * (quantity == 0 ? 1 : quantity)}",
+                  text: " ₹${price * (quantity == 0 ? 1 : quantity)}",
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     // fontSize: 12

@@ -397,14 +397,13 @@ class RestaurantApi {
 
   static Future<PostModal?> getOneRestaurant(id) async {
     try {
-      print(id);
       final pincode = await Preference.getPrefs("pincode");
       final userId = await Preference.getPrefs("Id");
-      print(pincode);
       var response = await http.post(
           Uri.parse(Api.restaurant.restaurantOne(id)),
           body: {"user_id": userId, "pincode": pincode});
       Map<String, dynamic> data = json.decode(response.body);
+      var dt = PostModal.fromJson(data);
       return PostModal.fromJson(data);
     } catch (e) {
       print(e);
@@ -449,21 +448,41 @@ class SupermarketApi {
 //**************//
 //Cart api
 class CartApi {
-  static Future<List<CartListModal>?> getCart() async {
+  static Future addToCart(type, productId, shopId, unitId) async {
+    print(type);
+    print(productId);
+    print(shopId);
     final userId = await Preference.getPrefs("Id");
+    var response = await http.post(Uri.parse(Api.cart.addtocart), body: {
+      "type": type,
+      "product_id": productId,
+      "user_id": userId,
+      "shop_id": shopId,
+      "unit_id": unitId,
+      "quantity": "1"
+    });
+    var responseBody = json.decode(response.body);
+    print("response" + responseBody['sts']);
+  }
+
+  static Future<CartModal?> getCart() async {
     try {
+      final userId = await Preference.getPrefs("Id");
       var response = await http
           .post(Uri.parse(Api.cart.getcart), body: {"user_id": userId});
-      var responseBody = json.decode(response.body);
+      // var responseBody = json.decode(response.body);
       // print('cart api');
       // print(responseBody['cart']);
 
-      List<CartListModal> cartList = [];
-      for (var i in responseBody['cart']) {
-        cartList.add(CartListModal.fromJson(i));
-      }
+      // List<CartListModal> cartList = [];
+      // for (var i in responseBody['cart']) {
+      //   cartList.add(CartListModal.fromJson(i));
+      // }
 
-      return cartList;
+      Map<String, dynamic> data = json.decode(response.body);
+      print(data);
+
+      return CartModal.fromJson(data);
     } catch (e) {
       return null;
     }

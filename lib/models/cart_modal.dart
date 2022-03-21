@@ -10,26 +10,25 @@ String cartModalToJson(CartModal data) => json.encode(data.toJson());
 
 class CartModal {
   CartModal({
-    this.sts,
-    this.msg,
-    this.cart,
-    this.deliveryCharge,
-    this.hasTax,
-    this.taxValue,
+    required this.sts,
+    required this.msg,
+    required this.cart,
+    required this.deliveryCharge,
+    required this.hasTax,
+    required this.taxValue,
   });
 
-  String? sts;
-  String? msg;
-  List<CartListModal>? cart;
-  int? deliveryCharge;
-  String? hasTax;
-  int? taxValue;
+  String sts;
+  String msg;
+  List<Cart> cart;
+  int deliveryCharge;
+  String hasTax;
+  int taxValue;
 
   factory CartModal.fromJson(Map<String, dynamic> json) => CartModal(
         sts: json["sts"],
         msg: json["msg"],
-        cart: List<CartListModal>.from(
-            json["cart"].map((x) => CartListModal.fromJson(x))),
+        cart: List<Cart>.from(json["cart"].map((x) => Cart.fromJson(x))),
         deliveryCharge: json["delivery_charge"],
         hasTax: json["has_tax"],
         taxValue: json["tax_value"],
@@ -38,43 +37,43 @@ class CartModal {
   Map<String, dynamic> toJson() => {
         "sts": sts,
         "msg": msg,
-        "cart": List<dynamic>.from(cart!.map((x) => x.toJson())),
+        "cart": List<dynamic>.from(cart.map((x) => x.toJson())),
         "delivery_charge": deliveryCharge,
         "has_tax": hasTax,
         "tax_value": taxValue,
       };
 }
 
-class CartListModal {
-  CartListModal({
-    this.id,
-    this.userId,
-    this.shopType,
-    this.shopId,
-    this.productId,
-    this.unitId,
-    this.quantity,
-    this.createdAt,
-    this.productname,
-    this.unitname,
-    this.price,
-    this.offerprice,
+class Cart {
+  Cart({
+    required this.id,
+    required this.userId,
+    required this.shopType,
+    required this.shopId,
+    required this.productId,
+    required this.unitId,
+    required this.quantity,
+    required this.createdAt,
+    required this.productname,
+    required this.unitname,
+    required this.price,
+    required this.offerprice,
   });
 
-  int? id;
-  int? userId;
-  String? shopType;
-  int? shopId;
-  int? productId;
-  int? unitId;
-  int? quantity;
-  DateTime? createdAt;
-  String? productname;
-  String? unitname;
-  int? price;
-  int? offerprice;
+  int id;
+  int userId;
+  String shopType;
+  int shopId;
+  int productId;
+  int unitId;
+  int quantity;
+  DateTime createdAt;
+  String productname;
+  String unitname;
+  int price;
+  int offerprice;
 
-  factory CartListModal.fromJson(Map<String, dynamic> json) => CartListModal(
+  factory Cart.fromJson(Map<String, dynamic> json) => Cart(
         id: json["id"],
         userId: json["user_id"],
         shopType: json["shop_type"],
@@ -97,7 +96,7 @@ class CartListModal {
         "product_id": productId,
         "unit_id": unitId,
         "quantity": quantity,
-        "created_at": createdAt!.toIso8601String(),
+        "created_at": createdAt.toIso8601String(),
         "productname": productname,
         "unitname": unitname,
         "price": price,
