@@ -9,6 +9,7 @@ import 'package:fresh4delivery/provider/pincode_search_provider.dart';
 import 'package:fresh4delivery/provider/search_all_provider.dart';
 import 'package:fresh4delivery/views/authentication/phone.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'views/main_screen/main_screen.dart';
 
@@ -23,8 +24,20 @@ void main() {
   ], child: const MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  var isLoggedIn = '';
+  void Sharedprefs() async {
+    var prefs = await SharedPreferences.getInstance();
+    isLoggedIn = await prefs.getString('Id') ?? '';
+    print(prefs.getString('Id'));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +46,9 @@ class MyApp extends StatelessWidget {
         builder: () => MaterialApp(
               debugShowCheckedModeBanner: false,
               home: DefaultTabController(length: 4, child: Phone()),
-              initialRoute: '/login',
+              initialRoute: isLoggedIn == null || isLoggedIn.toString().isEmpty
+                  ? '/login'
+                  : '/mainScreen',
               onGenerateRoute: Routes.generateRoute,
             ));
   }

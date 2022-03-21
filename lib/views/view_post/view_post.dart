@@ -157,8 +157,6 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
                             children:
                                 List<Widget>.generate(categoryLength, (index) {
                           final productList = data.products[index];
-                          print("products list : " +
-                              data.category.length.toString());
                           return Padding(
                             padding: const EdgeInsets.only(top: 20),
                             child: SingleChildScrollView(

@@ -17,7 +17,6 @@ class Cart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final watchProvider = context.watch<CartExtraCharges>();
     return Scaffold(
         appBar: AppBar(
             elevation: 0,
@@ -60,128 +59,118 @@ class Cart extends StatelessWidget {
                   ],
                 ),
                 preferredSize: Size.fromHeight(80.h))),
-        body: Column(
+        body: CartBody());
+  }
+}
+
+class CartBody extends HookWidget {
+  const CartBody({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final watchProvider = context.watch<CartExtraCharges>();
+    return Column(
+      children: [
+        FutureBuilder(
+            future: CartApi.getCart(),
+            builder: (context, AsyncSnapshot snapshot) {
+              print(snapshot);
+              if (snapshot.hasData) {
+                CartModal data = snapshot.data;
+                int length = data.cart.length;
+                return SizedBox(
+                  height: 470.h,
+                  child: ListView.builder(
+                      primary: true,
+                      shrinkWrap: true,
+                      itemCount: length,
+                      itemBuilder: ((context, index) {
+                        return Container(
+                            margin: const EdgeInsets.only(
+                                top: 15, left: 20, right: 20),
+                            width: 300.w,
+                            height: 100.h,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: Colors.grey.shade200, width: 2.w)),
+                            child: CalculateTheTotal(
+                              quantity: data.cart[index].quantity,
+                              unitText:
+                                  ' (${data.cart[index].unitname.toString()})',
+                              cartId: data.cart[index].id.toString(),
+                              image:
+                                  "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
+                              title: data.cart[index].productname.toString(),
+                              discountprice: data.cart[index].price.toString(),
+                              price: data.cart[index].offerprice.toString(),
+                            ));
+                      })),
+                );
+              } else if (snapshot.data == null) {
+                return SizedBox(
+                    height: 470.h,
+                    child: Center(child: Text('No data available')));
+              } else {
+                return SizedBox(
+                    height: 470.h,
+                    child: Center(child: CircularProgressIndicator()));
+              }
+            }),
+        Column(
           children: [
-            FutureBuilder(
-                future: CartApi.getCart(),
-                builder: (context, AsyncSnapshot snapshot) {
-                  print(snapshot);
-                  if (snapshot.hasData) {
-                    CartModal data = snapshot.data;
-                    int length = data.cart.length;
-                    return SizedBox(
-                      height: 600.h,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SingleChildScrollView(
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: length,
-                                itemBuilder: ((context, index) {
-                                  return Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 15, left: 20, right: 20),
-                                      width: 300.w,
-                                      height: 100.h,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color: Colors.grey.shade200,
-                                              width: 2.w)),
-                                      child: CalculateTheTotal(
-                                        quantity: data.cart[index].quantity,
-                                        unitText:
-                                            ' (${data.cart[index].unitname.toString()})',
-                                        cartId: data.cart[index].id.toString(),
-                                        image:
-                                            "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
-                                        title: data.cart[index].productname
-                                            .toString(),
-                                        discountprice:
-                                            data.cart[index].price.toString(),
-                                        price: data.cart[index].offerprice
-                                            .toString(),
-                                      ));
-                                })),
-                          ),
-                          Column(
-                            children: [
-                              Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 20),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 5),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                          color: Colors.grey.shade200,
-                                          width: 2.w)),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Delivery charges"),
-                                          Text(
-                                              "₹${watchProvider.deliveryCharges}"),
-                                        ],
-                                      ),
-                                      SizedBox(height: 5),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Taxes and Charges"),
-                                          Text(
-                                              "₹${watchProvider.othercharges}"),
-                                        ],
-                                      ),
-                                      SizedBox(height: 5),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Total Amount",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600)),
-                                          Text(
-                                              "₹${watchProvider.deliveryCharges + watchProvider.othercharges + watchProvider.productTotal}",
-                                              style: TextStyle(
-                                                  color: Colors.green))
-                                        ],
-                                      ),
-                                    ],
-                                  )),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: NamedButton(
-                                  title: "Place Order",
-                                  function: () {
-                                    print('order placed');
-                                  },
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    );
-                  } else if (snapshot.data == null) {
-                    return SizedBox(
-                        height: 600.h,
-                        child: Center(child: Text('No data available')));
-                  } else {
-                    return SizedBox(
-                        height: 600.h,
-                        child: Center(child: CircularProgressIndicator()));
-                  }
-                }),
+            Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border:
+                        Border.all(color: Colors.grey.shade200, width: 2.w)),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Delivery charges"),
+                        Text("₹${watchProvider.deliveryCharges}"),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Taxes and Charges"),
+                        Text("₹${watchProvider.othercharges}"),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Total Amount",
+                            style: TextStyle(fontWeight: FontWeight.w600)),
+                        Text(
+                            "₹${watchProvider.deliveryCharges + watchProvider.othercharges + watchProvider.productTotal}",
+                            style: TextStyle(color: Colors.green))
+                      ],
+                    ),
+                  ],
+                )),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: NamedButton(
+                title: "Place Order",
+                function: () {
+                  print('order placed');
+                },
+              ),
+            )
           ],
-        ));
+        )
+      ],
+    );
   }
 }
 
@@ -210,13 +199,11 @@ class CalculateTheTotal extends HookWidget {
     final readProvider = context.read<CartExtraCharges>();
     final currentNumber = useState(quantity);
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.network(
-          image,
-          fit: BoxFit.cover,
-        ),
+        Image.network(image, fit: BoxFit.cover, width: 100.w),
+        SizedBox(width: 10),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -313,6 +300,7 @@ class CalculateTheTotal extends HookWidget {
             )
           ],
         ),
+        Spacer(),
         IconButton(
             onPressed: () async {
               var response = await CartApi.removeCart(cartId);
@@ -324,7 +312,8 @@ class CalculateTheTotal extends HookWidget {
               print("delete");
             },
             icon: Icon(Icons.delete_forever_outlined,
-                color: Color.fromARGB(255, 180, 51, 42)))
+                color: Color.fromARGB(255, 180, 51, 42))),
+        SizedBox(width: 10),
       ],
     );
   }

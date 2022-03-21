@@ -463,6 +463,12 @@ class CartApi {
     });
     var responseBody = json.decode(response.body);
     print("response" + responseBody['sts']);
+
+    if (responseBody['sts'] == '01') {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   static Future<CartModal?> getCart() async {
