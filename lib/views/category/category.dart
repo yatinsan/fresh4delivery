@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -109,12 +110,18 @@ class Circlewidget extends StatelessWidget {
       child: Column(
         children: [
           Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-              ),
-              clipBehavior: Clip.hardEdge,
-              child: Image.network(image,
-                  fit: BoxFit.cover, width: 70.w, height: 70.h)),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            clipBehavior: Clip.hardEdge,
+            child: CachedNetworkImage(
+              width: 50,
+              height: 50,
+              imageUrl: image,
+              errorWidget: (context, url, error) => Image.network(
+                  "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+            ),
+          ),
           SizedBox(height: 4.h),
           Text(title,
               style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500))

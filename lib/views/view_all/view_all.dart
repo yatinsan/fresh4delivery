@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/models/restaurant_category_modal.dart';
@@ -49,7 +50,7 @@ class ViewAll extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Products List",
+                            "Category List",
                             style: TextStyle(fontWeight: FontWeight.w500),
                           ),
                           // Image.asset("assets/icons/filter.png")
@@ -77,17 +78,26 @@ class ViewAll extends StatelessWidget {
                             border: Border.all(
                                 color: Colors.grey.shade200, width: 2.w)),
                         child: Row(
-                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SizedBox(width: 20),
-                            Image.network(
-                              categoryProducts.image.toString().isEmpty ||
-                                      categoryProducts.image == null
-                                  ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
-                                  : "https://ebshosting.co.in${categoryProducts.image}",
-                              fit: BoxFit.cover,
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
+                                fit: BoxFit.contain,
+                                width: 100,
+                                // height: 50,
+                                imageUrl:
+                                    "https://ebshosting.co.in${categoryProducts.image}",
+                                errorWidget: (context, url, error) => Image.network(
+                                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                              ),
                             ),
+                            // Image.network(
+                            //   categoryProducts.image.toString().isEmpty ||
+                            //           categoryProducts.image == null
+                            //       ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
+                            //       : "https://ebshosting.co.in${categoryProducts.image}",
+                            //   fit: BoxFit.cover,
+                            // ),
                             SizedBox(width: 20),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,

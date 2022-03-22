@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/models/res_model.dart';
@@ -82,13 +83,17 @@ class RestuarantsViewMore extends StatelessWidget {
                           // mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SizedBox(width: 20),
-                            Image.network(
-                              categoryProducts.logo.toString().isEmpty ||
-                                      categoryProducts.logo == null
-                                  ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
-                                  : "https://ebshosting.co.in${categoryProducts.logo}",
-                              fit: BoxFit.cover,
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
+                                fit: BoxFit.contain,
+                                width: 100,
+                                // height: 50,
+                                imageUrl:
+                                    "https://ebshosting.co.in${categoryProducts.logo}",
+                                errorWidget: (context, url, error) => Image.network(
+                                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                              ),
                             ),
                             SizedBox(width: 20),
                             Column(

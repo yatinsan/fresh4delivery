@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  cached_network_image: ^3.2.0
   carousel_slider: ^4.0.0
   cupertino_icons: ^1.0.2
   flutter:
@@ -53,7 +54,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#A6CE39"
-  image: assets/icons/logo.png
+  image: assets/images/splash_logo2.png
   android: true
 
 # For information on the generic Dart part of this file, see the

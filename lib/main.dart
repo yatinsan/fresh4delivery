@@ -7,6 +7,7 @@ import 'package:fresh4delivery/provider/phone_number_provider.dart';
 import 'package:fresh4delivery/provider/pincode_provider.dart';
 import 'package:fresh4delivery/provider/pincode_search_provider.dart';
 import 'package:fresh4delivery/provider/search_all_provider.dart';
+import 'package:fresh4delivery/provider/total_amount_provider.dart';
 import 'package:fresh4delivery/views/authentication/phone.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +21,8 @@ void main() {
     ChangeNotifierProvider(create: (_) => CartExtraCharges()),
     ChangeNotifierProvider(create: (_) => pincodeProvider()),
     ChangeNotifierProvider(create: (_) => PincodeSearchProvider()),
-    ChangeNotifierProvider(create: (_) => SearchAllProvider())
+    ChangeNotifierProvider(create: (_) => SearchAllProvider()),
+    ChangeNotifierProvider(create: (_) => TotalAmount())
   ], child: const MyApp()));
 }
 

@@ -534,7 +534,7 @@ class OrderApi {
       var response = await http
           .post(Uri.parse(Api.order.allorders), body: {"user_id": userId});
       var responseBody = json.decode(response.body);
-      print(responseBody);
+      // print(responseBody);
 
       List<OrderObjectModel> shopList = [];
       print('order start loop');
@@ -554,7 +554,7 @@ class OrderApi {
       var response = await http
           .post(Uri.parse(Api.cart.placeorder), body: {"user_id": userId});
       var responseBody = json.decode(response.body);
-      print(responseBody);
+      // print(responseBody);
     } catch (e) {
       return 'Error';
     }

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -197,7 +198,6 @@ class _HomeState extends State<Home> {
                               child: Text("Restaurants",
                                   style: TextStyle(
                                       fontSize: 10, letterSpacing: .5))),
-                                      
                         )
                       ],
                     ),
@@ -329,10 +329,19 @@ class ImageCarousel extends HookWidget {
                     itemCount: data.length,
                     itemBuilder: (context, index, realIndex) {
                       BannerModel banners = data[index];
-                      return Image.network(
-                          "https://ebshosting.co.in/${banners.image.toString()}",
-                          fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width * 1);
+                      return CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        width: MediaQuery.of(context).size.width * 1,
+                        imageUrl:
+                            "https://ebshosting.co.in/${banners.image.toString()}",
+                        errorWidget: (context, url, error) => Image.network(
+                            "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                      );
+
+                      // Image.network(
+                      //     "https://ebshosting.co.in/${banners.image.toString()}",
+                      //     fit: BoxFit.cover,
+                      //     width: MediaQuery.of(context).size.width * 1);
                     },
                     options: CarouselOptions(
                         aspectRatio: 10 / 4.5,
@@ -359,7 +368,14 @@ class ImageCarousel extends HookWidget {
               ],
             );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return AspectRatio(
+              aspectRatio: 10 / 4.5,
+              child: Image.asset(
+                "assets/images/splash_logo2.png",
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.cover,
+              ),
+            );
           }
         }));
   }
@@ -389,9 +405,17 @@ class CircleWidget extends StatelessWidget {
         child: Column(
           children: [
             ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: Image.network(image,
-                    fit: BoxFit.cover, width: 50.w, height: 50.h)),
+              borderRadius: BorderRadius.circular(100),
+              child: CachedNetworkImage(
+                width: 50,
+                height: 50,
+                imageUrl: image,
+                placeholder: (context, url) => Image.network(
+                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                errorWidget: (context, url, error) => Image.network(
+                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+              ),
+            ),
             SizedBox(height: 4.h),
             Text(title,
                 style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500))
@@ -442,10 +466,17 @@ class Cards extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Image.network(
-                image,
-                fit: BoxFit.cover,
+              child: CachedNetworkImage(
+                imageUrl: image,
+                placeholder: (context, url) => Image.network(
+                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                errorWidget: (context, url, error) => Image.network(
+                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
               ),
+              // Image.network(
+              //   image,
+              //   fit: BoxFit.cover,
+              // ),
             ),
             Column(
               children: [

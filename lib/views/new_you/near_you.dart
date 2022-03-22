@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -91,17 +92,24 @@ class NearYou extends StatelessWidget {
                                 border: Border.all(
                                     color: Colors.grey.shade200, width: 2.w)),
                             child: Row(
-                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(width: 20),
-                                Image.network(
-                                  resturants.logo.toString().isEmpty ||
-                                          resturants.logo == null
-                                      ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
-                                      : "https://ebshosting.co.in${resturants.logo}",
-                                  fit: BoxFit.cover,
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        "https://ebshosting.co.in${resturants.logo}",
+                                    errorWidget: (context, url, error) =>
+                                        Image.network(
+                                            "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                                  ),
                                 ),
+                                // Image.network(
+                                //   resturants.logo.toString().isEmpty ||
+                                //           resturants.logo == null
+                                //       ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
+                                //       : "https://ebshosting.co.in${resturants.logo}",
+                                //   fit: BoxFit.cover,
+                                // ),
                                 SizedBox(width: 20),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.center,

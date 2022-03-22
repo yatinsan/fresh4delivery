@@ -1,8 +1,3 @@
-// To parse this JSON data, do
-//
-//     final postModal = postModalfromJson
-// (jsonString);
-
 import 'package:meta/meta.dart';
 import 'dart:convert';
 

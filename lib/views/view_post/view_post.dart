@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -179,12 +180,14 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
                         })),
                       ),
                     ]));
-              } else if (snapshot.data!.products.length == 0 ||
-                  snapshot.data!.products == null) {
-                return Container(
-                    height: 500.h,
-                    child: Center(child: Text('Not Products Available')));
-              } else {
+              }
+              // else if (snapshot.data!.products.length == 0 ||
+              //     snapshot.data!.products == null) {
+              //   return Container(
+              //       height: 500.h,
+              //       child: Center(child: Text('Not Products Available')));
+              // }
+              else {
                 return Container(
                     height: 500.h,
                     child: Center(child: CircularProgressIndicator()));
@@ -223,14 +226,15 @@ class ViewPostsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        // padding: const EdgeInsets.symmetric(vertical: 10),
         margin: const EdgeInsets.only(bottom: 15),
+        // height: 100.h,
         width: 350.w,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: Colors.grey.shade200, width: 2.w)),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
@@ -238,17 +242,28 @@ class ViewPostsWidget extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.network(
-                    image!.isEmpty || image == null
-                        ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
-                        : "https://ebshosting.co.in/${image.toString()}",
-                    fit: BoxFit.contain,
-                    width: 60,
-                    height: 60,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: CachedNetworkImage(
+                      fit: BoxFit.contain,
+                      height: 100,
+                      width: 100,
+                      imageUrl: "https://ebshosting.co.in/${image.toString()}",
+                      errorWidget: (context, url, error) => Image.network(
+                          "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                    ),
                   ),
+                  // Image.network(W
+                  //   image!.isEmpty || image == null
+                  //       ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
+                  //       : "https://ebshosting.co.in/${image.toString()}",
+                  //   fit: BoxFit.cover,
+
+                  // ),
                 ],
               ),
             ),
+            SizedBox(width: 15),
             Expanded(
               flex: 5,
               child: Column(

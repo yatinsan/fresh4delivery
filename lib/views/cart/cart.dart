@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fresh4delivery/models/cart_modal.dart';
 import 'package:fresh4delivery/provider/cart_charges.dart';
 import 'package:fresh4delivery/provider/pincode_provider.dart';
+import 'package:fresh4delivery/provider/total_amount_provider.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/widgets/named_button.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
@@ -99,11 +100,13 @@ class _CartState extends State<Cart> {
 }
 
 class CartBody extends HookWidget {
-  const CartBody({Key? key}) : super(key: key);
+  CartBody({Key? key}) : super(key: key);
+  List totalAmount = [];
 
   @override
   Widget build(BuildContext context) {
-    final watchProvider = context.watch<CartExtraCharges>();
+    context.read<TotalAmount>().GetAllAmounts();
+    final totalAmount = useState(0);
     return FutureBuilder(
         future: CartApi.getCart(),
         builder: (context, AsyncSnapshot snapshot) {
@@ -124,7 +127,7 @@ class CartBody extends HookWidget {
                             margin: const EdgeInsets.only(
                                 top: 15, left: 20, right: 20, bottom: 10),
                             width: 300.w,
-                            height: 100.h,
+                            height: 110.h,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
@@ -159,7 +162,7 @@ class CartBody extends HookWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Delivery charges"),
-                                Text("₹${watchProvider.deliveryCharges}"),
+                                Text("₹${data.deliveryCharge}"),
                               ],
                             ),
                             SizedBox(height: 5),
@@ -167,7 +170,7 @@ class CartBody extends HookWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Taxes and Charges"),
-                                Text("₹${watchProvider.othercharges}"),
+                                Text("₹${data.taxValue}"),
                               ],
                             ),
                             SizedBox(height: 5),
@@ -178,7 +181,7 @@ class CartBody extends HookWidget {
                                     style:
                                         TextStyle(fontWeight: FontWeight.w600)),
                                 Text(
-                                    "₹${watchProvider.deliveryCharges + watchProvider.othercharges + watchProvider.productTotal}",
+                                    "₹${context.watch<TotalAmount>().totalAmount}",
                                     style: TextStyle(color: Colors.green))
                               ],
                             ),
@@ -197,7 +200,7 @@ class CartBody extends HookWidget {
                 )
               ],
             );
-          } else if (snapshot.data == null) {
+          } else if (snapshot.hasData == false) {
             return SizedBox(
                 height: 470.h, child: Center(child: Text('No data available')));
           } else {
@@ -231,7 +234,6 @@ class CalculateTheTotal extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final readProvider = context.read<CartExtraCharges>();
     final currentNumber = useState(quantity);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -269,7 +271,7 @@ class CalculateTheTotal extends HookWidget {
                       fontSize: 12)),
               TextSpan(
                   text:
-                      " ₹${double.parse(price) * (currentNumber.value == 0 ? 1 : currentNumber.value)}",
+                      " ₹${double.parse(price) * (quantity == 0 ? 1 : currentNumber.value)}",
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     // fontSize: 12
@@ -287,19 +289,17 @@ class CalculateTheTotal extends HookWidget {
                 children: [
                   GestureDetector(
                       onTap: () async {
-                        currentNumber.value =
-                            currentNumber == 0 ? 1 : currentNumber.value - 1;
+                        context.read<TotalAmount>().GetAllAmounts();
+                        currentNumber.value = currentNumber.value - 1;
                         if (currentNumber.value <= 0) currentNumber.value = 1;
 
                         var response = await CartApi.updateCart(
                             cartId.toString(), currentNumber.value.toString());
+                        if (response == true) {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/cart');
+                        }
                         print(response);
-                        // if (response == true) {
-                        //   Navigator.pop(context);
-                        //   Navigator.pushNamed(context, '/cart');
-                        //   print('minus' + response);
-                        // }
-                        // print('minus');
                       },
                       child: Container(
                           // padding: const EdgeInsets.symmetric(horizontal: 1),
@@ -315,22 +315,20 @@ class CalculateTheTotal extends HookWidget {
                             color: Colors.white,
                           ))),
                   SizedBox(width: 10),
-                  Text("${currentNumber.value}"),
+                  Text("${quantity}"),
                   SizedBox(width: 10),
                   GestureDetector(
                       onTap: () async {
-                        currentNumber.value =
-                            currentNumber == 0 ? 1 : currentNumber.value + 1;
+                        context.read<TotalAmount>().GetAllAmounts();
+                        currentNumber.value = currentNumber.value + 1;
                         if (currentNumber.value >= 10) currentNumber.value = 10;
                         var response = await CartApi.updateCart(
                             cartId.toString(), currentNumber.value.toString());
                         print(response);
-                        // if (response == true) {
-                        //   Navigator.pop(context);
-                        //   Navigator.pushNamed(context, '/cart');
-                        //   print('add' + response);
-                        // }
-                        // print('add');
+                        if (response == true) {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/cart');
+                        }
                       },
                       child: Container(
                           width: 15,
