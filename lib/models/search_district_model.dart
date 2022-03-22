@@ -1,16 +1,16 @@
 // To parse this JSON data, do
 //
-//     final stateModel = stateModelFromJson(jsonString);
+//     final districtModel = districtModelFromJson(jsonString);
 
 import 'dart:convert';
 
-StateModel stateModelFromJson(String str) =>
-    StateModel.fromJson(json.decode(str));
+DistrictModel districtModelFromJson(String str) =>
+    DistrictModel.fromJson(json.decode(str));
 
-String stateModelToJson(StateModel data) => json.encode(data.toJson());
+String districtModelToJson(DistrictModel data) => json.encode(data.toJson());
 
-class StateModel {
-  StateModel({
+class DistrictModel {
+  DistrictModel({
     this.sts,
     this.msg,
     this.districts,
@@ -20,7 +20,7 @@ class StateModel {
   String? msg;
   List<District>? districts;
 
-  factory StateModel.fromJson(Map<String, dynamic> json) => StateModel(
+  factory DistrictModel.fromJson(Map<String, dynamic> json) => DistrictModel(
         sts: json["sts"],
         msg: json["msg"],
         districts: List<District>.from(

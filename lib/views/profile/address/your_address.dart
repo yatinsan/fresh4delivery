@@ -6,13 +6,17 @@ import 'package:fresh4delivery/models/address_model.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/views/profile/address/add_new_address.dart';
 
-class YourAddress extends HookWidget {
+class YourAddress extends StatefulWidget {
   static const routeName = '/your-address';
   const YourAddress({Key? key}) : super(key: key);
 
   @override
+  State<YourAddress> createState() => _YourAddressState();
+}
+
+class _YourAddressState extends State<YourAddress> {
+  @override
   Widget build(BuildContext context) {
-    final state = useState(0);
     return Scaffold(
         appBar: AppBar(
             elevation: 0,
@@ -45,79 +49,92 @@ class YourAddress extends HookWidget {
                   ),
                 ),
                 preferredSize: Size.fromHeight(40.h))),
-        body: Stack(clipBehavior: Clip.none, children: [
-          SizedBox(
-              height: MediaQuery.of(context).size.height * .78,
-              child: FutureBuilder(
-                  future: AddressApi.addressList(),
-                  builder: ((context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                      List<AddressListModel> data = snapshot.data;
-                      return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: data.length,
-                          itemBuilder: ((context, index) {
-                            AddressListModel addressList = data[index];
-                            return GestureDetector(
-                              onTap: () {
-                                state.value = index;
-                              },
-                              child: SelectableAddressWidget(
-                                  addresstype: addressList.type.toString(),
-                                  address: addressList.address.toString(),
-                                  phone: addressList.phone.toString(),
-                                  pincode: addressList.pincode.toString(),
-                                  isSelected: state.value == index,
-                                  index: data.length),
-                            );
-                          }));
-                    } else {
-                      return const Center(
-                          child: Text('No Address yet!!',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w600)));
-                    }
-                  }))),
-          Positioned(
-            right: 30,
-            bottom: -10,
-            child: GestureDetector(
-              onTap: () {
-                print('add');
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => AddNewAddress()));
-              },
-              child: Container(
-                  height: 45.h,
-                  width: 115.w,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: <Color>[
-                            Color.fromRGBO(166, 206, 57, 1),
-                            Color.fromRGBO(72, 170, 152, 1)
-                          ]),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Center(child: Text("Add Address"))),
-            ),
-          )
-        ]));
+        body: AddressBody());
+  }
+}
+
+class AddressBody extends HookWidget {
+  const AddressBody({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final state = useState(0);
+    return Stack(clipBehavior: Clip.none, children: [
+      SizedBox(
+          height: MediaQuery.of(context).size.height * .78,
+          child: FutureBuilder(
+              future: AddressApi.addressList(),
+              builder: ((context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<AddressListModel> data = snapshot.data;
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: data.length,
+                      itemBuilder: ((context, index) {
+                        AddressListModel addressList = data[index];
+                        return GestureDetector(
+                          onTap: () async {
+                            await AddressApi.defualtAddress(
+                                addressList.id.toString());
+                            state.value = index;
+                          },
+                          child: SelectableAddressWidget(
+                            defaultAddr: addressList.addressDefault,
+                            id: addressList.id.toString(),
+                            addresstype: addressList.type.toString(),
+                            address: addressList.address.toString(),
+                            phone: addressList.mobile.toString(),
+                            pincode: addressList.pincode.toString(),
+                          ),
+                        );
+                      }));
+                } else {
+                  return const Center(
+                      child: Text('No Address yet!!',
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w600)));
+                }
+              }))),
+      Positioned(
+        right: 30,
+        bottom: -10,
+        child: GestureDetector(
+          onTap: () {
+            print('add');
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => AddNewAddress()));
+          },
+          child: Container(
+              height: 45.h,
+              width: 115.w,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: <Color>[
+                        Color.fromRGBO(166, 206, 57, 1),
+                        Color.fromRGBO(72, 170, 152, 1)
+                      ]),
+                  borderRadius: BorderRadius.circular(8)),
+              child: Center(child: Text("Add Address"))),
+        ),
+      )
+    ]);
   }
 }
 
 class SelectableAddressWidget extends StatelessWidget {
-  bool isSelected;
+  dynamic defaultAddr;
+  String? id;
   String addresstype;
   String address;
   String phone;
   String pincode;
-  int index;
 
   SelectableAddressWidget(
       {Key? key,
-      this.isSelected = false,
-      this.index = 0,
+      this.defaultAddr,
+      this.id,
       this.addresstype = 'Address type',
       this.address = 'address',
       this.phone = "phone",
@@ -139,7 +156,7 @@ class SelectableAddressWidget extends StatelessWidget {
           children: [
             Expanded(
                 flex: 2,
-                child: isSelected
+                child: int.parse(defaultAddr) == 1
                     ? Icon(Icons.radio_button_checked)
                     : Icon(Icons.radio_button_unchecked)),
             Expanded(
@@ -184,8 +201,11 @@ class SelectableAddressWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   IconButton(
-                      onPressed: () {
-                        print("close");
+                      onPressed: () async {
+                        var response = await AddressApi.removeAddress(id);
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/your-address');
+                        print("remove");
                       },
                       icon: Icon(Icons.cancel_rounded,
                           size: 20, color: Colors.grey.shade800)),

@@ -10,10 +10,33 @@ import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/widgets/named_button.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
 import 'package:provider/provider.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-class Cart extends StatelessWidget {
+class Cart extends StatefulWidget {
   static const routeName = '/cart';
-  const Cart({Key? key}) : super(key: key);
+  Cart({Key? key}) : super(key: key);
+
+  @override
+  State<Cart> createState() => _CartState();
+}
+
+final _razorpay = Razorpay();
+
+class _CartState extends State<Cart> {
+  @override
+  void initState() {
+    super.initState();
+
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  @override
+  void dispost() {
+    super.dispose();
+    _razorpay.clear(); // Removes all listeners
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +84,18 @@ class Cart extends StatelessWidget {
                 preferredSize: Size.fromHeight(80.h))),
         body: CartBody());
   }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    // Do something when payment succeeds
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // Do something when payment fails
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // Do something when an external wallet was selected
+  }
 }
 
 class CartBody extends HookWidget {
@@ -69,16 +104,16 @@ class CartBody extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final watchProvider = context.watch<CartExtraCharges>();
-    return Column(
-      children: [
-        FutureBuilder(
-            future: CartApi.getCart(),
-            builder: (context, AsyncSnapshot snapshot) {
-              print(snapshot);
-              if (snapshot.hasData) {
-                CartModal data = snapshot.data;
-                int length = data.cart.length;
-                return SizedBox(
+    return FutureBuilder(
+        future: CartApi.getCart(),
+        builder: (context, AsyncSnapshot snapshot) {
+          print(snapshot);
+          if (snapshot.hasData) {
+            CartModal data = snapshot.data;
+            int length = data.cart.length;
+            return Column(
+              children: [
+                SizedBox(
                   height: 470.h,
                   child: ListView.builder(
                       primary: true,
@@ -87,7 +122,7 @@ class CartBody extends HookWidget {
                       itemBuilder: ((context, index) {
                         return Container(
                             margin: const EdgeInsets.only(
-                                top: 15, left: 20, right: 20),
+                                top: 15, left: 20, right: 20, bottom: 10),
                             width: 300.w,
                             height: 100.h,
                             decoration: BoxDecoration(
@@ -106,71 +141,71 @@ class CartBody extends HookWidget {
                               price: data.cart[index].offerprice.toString(),
                             ));
                       })),
-                );
-              } else if (snapshot.data == null) {
-                return SizedBox(
-                    height: 470.h,
-                    child: Center(child: Text('No data available')));
-              } else {
-                return SizedBox(
-                    height: 470.h,
-                    child: Center(child: CircularProgressIndicator()));
-              }
-            }),
-        Column(
-          children: [
-            Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border:
-                        Border.all(color: Colors.grey.shade200, width: 2.w)),
-                child: Column(
+                ),
+                Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Delivery charges"),
-                        Text("₹${watchProvider.deliveryCharges}"),
-                      ],
-                    ),
-                    SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Taxes and Charges"),
-                        Text("₹${watchProvider.othercharges}"),
-                      ],
-                    ),
-                    SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Total Amount",
-                            style: TextStyle(fontWeight: FontWeight.w600)),
-                        Text(
-                            "₹${watchProvider.deliveryCharges + watchProvider.othercharges + watchProvider.productTotal}",
-                            style: TextStyle(color: Colors.green))
-                      ],
-                    ),
+                    Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 20),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                                color: Colors.grey.shade200, width: 2.w)),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Delivery charges"),
+                                Text("₹${watchProvider.deliveryCharges}"),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Taxes and Charges"),
+                                Text("₹${watchProvider.othercharges}"),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Total Amount",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600)),
+                                Text(
+                                    "₹${watchProvider.deliveryCharges + watchProvider.othercharges + watchProvider.productTotal}",
+                                    style: TextStyle(color: Colors.green))
+                              ],
+                            ),
+                          ],
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: NamedButton(
+                        title: "Place Order",
+                        function: () {
+                          print('order placed');
+                        },
+                      ),
+                    )
                   ],
-                )),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: NamedButton(
-                title: "Place Order",
-                function: () {
-                  print('order placed');
-                },
-              ),
-            )
-          ],
-        )
-      ],
-    );
+                )
+              ],
+            );
+          } else if (snapshot.data == null) {
+            return SizedBox(
+                height: 470.h, child: Center(child: Text('No data available')));
+          } else {
+            return SizedBox(
+                height: 470.h,
+                child: Center(child: CircularProgressIndicator()));
+          }
+        });
   }
 }
 
@@ -202,17 +237,27 @@ class CalculateTheTotal extends HookWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.network(image, fit: BoxFit.cover, width: 100.w),
+        ClipRRect(
+          child: Image.network(
+            image,
+            fit: BoxFit.cover,
+            width: 100.w,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
         SizedBox(width: 10),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RichText(
-                text: TextSpan(
-              style: TextStyle(color: Colors.black),
-              children: [TextSpan(text: title), TextSpan(text: unitText)],
-            )),
+            SizedBox(
+              width: 150.w,
+              child: RichText(
+                  text: TextSpan(
+                style: TextStyle(color: Colors.black),
+                children: [TextSpan(text: title), TextSpan(text: unitText)],
+              )),
+            ),
             SizedBox(height: 5.h),
             RichText(
                 text: TextSpan(children: [
@@ -223,7 +268,8 @@ class CalculateTheTotal extends HookWidget {
                       color: Colors.grey.shade600,
                       fontSize: 12)),
               TextSpan(
-                  text: " ₹${price * (quantity == 0 ? 1 : quantity)}",
+                  text:
+                      " ₹${double.parse(price) * (currentNumber.value == 0 ? 1 : currentNumber.value)}",
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     // fontSize: 12

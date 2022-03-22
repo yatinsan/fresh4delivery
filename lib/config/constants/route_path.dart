@@ -14,4 +14,5 @@ class RoutePath {
   static const String supermarketsViewMore =
       '/supermarketsviewmore'; //searchView
   static const String searchView = '/searchView';
+  static const String yourAddress = '/your-address';
 }

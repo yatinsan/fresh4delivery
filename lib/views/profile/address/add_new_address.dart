@@ -28,37 +28,22 @@ class _AddNewAddressState extends State<AddNewAddress> {
   final _districtController = TextEditingController();
   final _stateController = TextEditingController();
   final _addresstypeController = TextEditingController();
-  static const _dropDownitems1 = <String>[
-    "Kerala",
-    "Karnataka",
-    "Gujarat",
-    "Punjab"
-  ];
 
   static const _dropDownitems2 = <String>["Home", "Work"];
-  List statesList = <String>[];
-
-  Future<String?> searchcatogery() async {
-    List<String> catogerys = [];
-    var data = await http.post(Uri.parse(Api.search.searchState));
-    setState(() {
-      // statesList = data['states'];
-      print(statesList);
-    });
-  }
-
-  final List<DropdownMenuItem<String>> _dropDownButtonItems1 = _dropDownitems1
-      .map((String value) =>
-          DropdownMenuItem<String>(child: Text(value), value: value))
-      .toList();
 
   final List<DropdownMenuItem<String>> _dropDownButtonItems2 = _dropDownitems2
       .map((String value) =>
           DropdownMenuItem<String>(child: Text(value), value: value))
       .toList();
 
-  String? _btnSelectVal1;
-  String? _btnSelectVal2;
+  String? _btnSelectVal;
+
+  @override
+  void initState() {
+    _getStatesList();
+    _getDistrictList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,18 +66,36 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 child: GestureDetector(
                   onTap: () async {
-                    var response = await AddressApi.createAddress(
-                        _nameController.text,
-                        _phoneController.text,
-                        _mobileController.text,
-                        _landmarkController.text,
-                        _cityController.text,
-                        _addressController.text,
-                        _districtController.text,
-                        _stateController.text,
-                        _addresstypeController.text);
-                    print(response);
-                    print('save');
+                    if (_nameController.text.isEmpty ||
+                        _mobileController.text.isEmpty ||
+                        _landmarkController.text.isEmpty ||
+                        _cityController.text.isEmpty ||
+                        _addressController.text.isEmpty ||
+                        _districtController.text.isEmpty ||
+                        _stateController.text.isEmpty ||
+                        _addresstypeController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Please fill the empty fields."),
+                          duration: Duration(seconds: 3)));
+                    } else {
+                      var response = await AddressApi.createAddress(
+                          _nameController.text,
+                          _phoneController.text,
+                          _mobileController.text,
+                          _landmarkController.text,
+                          _cityController.text,
+                          _addressController.text,
+                          _districtController.text,
+                          _stateController.text,
+                          _addresstypeController.text);
+                      if (response == true) {
+                        Navigator.pop(context);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Check the information given."),
+                            duration: Duration(seconds: 1)));
+                      }
+                    }
                   },
                   child: Row(
                     children: [
@@ -147,24 +150,60 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     controller: _cityController, hintText: "city"),
                 SizedBox(height: 20.h),
                 Container(
-                    height: 45,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border:
-                            Border.all(width: 1, color: Colors.grey.shade200)),
-                    child: caatogoryseacrh("District")),
+                  height: 45,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border:
+                          Border.all(width: 1, color: Colors.grey.shade200)),
+                  child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                          hint: Text('Choose District'),
+                          isExpanded: true,
+                          value: _myDistrict,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _myDistrict = newValue;
+                              _districtController.text = newValue.toString();
+                              print(_myDistrict);
+                            });
+                          },
+                          items: districtList?.map((e) {
+                            return DropdownMenuItem(
+                              child: Text(e['name']),
+                              value: e['id'].toString(),
+                            );
+                          }).toList())),
+                ),
                 SizedBox(height: 20.h),
                 Container(
-                    height: 45,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border:
-                            Border.all(width: 1, color: Colors.grey.shade200)),
-                    child: caatogoryseacrh("State")),
+                  height: 45,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border:
+                          Border.all(width: 1, color: Colors.grey.shade200)),
+                  child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                          hint: Text('Choose State'),
+                          isExpanded: true,
+                          value: _myState,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _myState = newValue;
+                              _stateController.text = newValue.toString();
+                              print(_myState);
+                            });
+                          },
+                          items: stateList?.map((e) {
+                            return DropdownMenuItem(
+                              child: Text(e['name']),
+                              value: e['id'].toString(),
+                            );
+                          }).toList())),
+                ),
                 SizedBox(height: 20.h),
                 Container(
                   height: 45,
@@ -178,10 +217,11 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       child: DropdownButton<String>(
                           hint: Text('Choose type'),
                           isExpanded: true,
-                          value: _btnSelectVal2,
+                          value: _btnSelectVal,
                           onChanged: (String? newValue) {
                             setState(() {
-                              _btnSelectVal2 = newValue;
+                              _btnSelectVal = newValue;
+                              _addresstypeController.text = newValue.toString();
                               _addresstypeController.text = newValue as String;
                             });
                           },
@@ -191,6 +231,32 @@ class _AddNewAddressState extends State<AddNewAddress> {
             ),
           ),
         ));
+  }
+
+  List? stateList;
+  String? _myState;
+
+  Future<String?> _getStatesList() async {
+    await http.post(Uri.parse(Api.search.searchState)).then((res) {
+      var data = json.decode(res.body);
+
+      setState(() {
+        stateList = data['states'];
+      });
+    });
+  }
+
+  List? districtList;
+  String? _myDistrict;
+
+  Future<String?> _getDistrictList() async {
+    await http.post(Uri.parse(Api.search.searchDistrict)).then((res) {
+      var data = json.decode(res.body);
+
+      setState(() {
+        districtList = data['districts'];
+      });
+    });
   }
 }
 

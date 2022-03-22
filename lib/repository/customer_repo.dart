@@ -486,7 +486,6 @@ class CartApi {
       // }
 
       Map<String, dynamic> data = json.decode(response.body);
-      print(data);
 
       return CartModal.fromJson(data);
     } catch (e) {
@@ -562,6 +561,8 @@ class OrderApi {
   }
 }
 
+//**************//
+//Address api
 class AddressApi {
   static Future<List<AddressListModel>?> addressList() async {
     try {
@@ -593,45 +594,53 @@ class AddressApi {
       String district,
       String state,
       String type) async {
-    try {
-      var userId = await Preference.getPrefs("Id");
-      var pincode = await Preference.getPrefs("pincode");
-      print(name);
-      print(phone);
-      print(mobile);
-      print(landmark);
-      print(city);
-      print(address);
-      print(district);
-      print(state);
-      print(type);
-      print("response : -");
-      // var response =
-      //     await http.post(Uri.parse(Api.address.createAddress), body: {
-      //   "user_id": userId,
-      //   "name": name,
-      //   "phone": phone,
-      //   "pincode": pincode,
-      //   "mobile": mobile,
-      //   "landmark": landmark,
-      //   "city": city,
-      //   "address": address,
-      //   "district": district,
-      //   "state": state,
-      //   "type": type
-      // });
+    var userId = await Preference.getPrefs("Id");
+    var pincode = await Preference.getPrefs("pincode");
+    print(name);
+    print(phone);
+    print(mobile);
+    print(landmark);
+    print(city);
+    print(address);
+    print(district);
+    print(state);
+    print(type);
+    print("response : -");
+    var response = await http.post(Uri.parse(Api.address.createAddress), body: {
+      "user_id": userId,
+      "name": name,
+      "phone": phone,
+      "pincode": pincode,
+      "mobile": mobile,
+      "landmark": landmark,
+      "city": city,
+      "address": address,
+      "district": district,
+      "state": state,
+      "type": type
+    });
 
-      // var responseBody = json.decode(response.body);
-      // print(responseBody);
-      // print("if and else");
-      // if (responseBody['sts'] == "01") {
-      //   return true;
-      // } else {
-      //   return false;
-      // }
-    } catch (e) {
-      return 'Error';
+    var responseBody = json.decode(response.body);
+    if (responseBody['sts'] == "01") {
+      return true;
+    } else {
+      return false;
     }
+  }
+
+  static Future removeAddress(id) async {
+    print('remove address : ' + id.toString());
+    var response = await http.post(Uri.parse(Api.address.removeAddress(id)));
+    var responseBody = json.decode(response.body);
+    print(responseBody);
+  }
+
+  static Future defualtAddress(addressId) async {
+    var userId = await Preference.getPrefs("Id");
+    var response = await http.post(Uri.parse(Api.address.defaultAddress),
+        body: {"user_id": userId, "addressid": addressId});
+    var responseBody = json.decode(response.body);
+    print(responseBody);
   }
 }
 

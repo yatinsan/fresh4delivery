@@ -79,7 +79,7 @@ class Address {
   String getAddress = _baseUrl;
   String createAddress = _baseUrl + "/create";
   String getOneAddress(String id) => _baseUrl + "/${id}";
-  String removeAddress(String id) => _baseUrl + "/${id}";
+  String removeAddress(String id) => _baseUrl + "/remove/${id}";
   String defaultAddress = _baseUrl + "/default";
 }
 

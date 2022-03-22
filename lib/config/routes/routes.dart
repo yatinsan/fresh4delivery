@@ -8,6 +8,7 @@ import 'package:fresh4delivery/views/cart/cart.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
 import 'package:fresh4delivery/views/new_you/near_you.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
+import 'package:fresh4delivery/views/profile/address/your_address.dart';
 import 'package:fresh4delivery/views/search/search_view.dart';
 import 'package:fresh4delivery/views/view_all/view_all.dart';
 import 'package:fresh4delivery/views/view_more/products_view_more.dart';
@@ -73,6 +74,10 @@ class Routes {
       case RoutePath.searchView:
         {
           return _route(routeSettings, SearchView());
+        }
+      case RoutePath.yourAddress:
+        {
+          return _route(routeSettings, YourAddress());
         }
       default:
         {
