@@ -60,8 +60,7 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.circular(8),
                 color: const Color.fromARGB(171, 255, 255, 255),
               ),
-              child: const Icon(Icons.keyboard_arrow_left_rounded,
-                  color: Colors.black, size: 28)),
+              child: const Icon(Icons.keyboard_arrow_left_rounded, color: Colors.black, size: 28)),
         ),
       ),
       body: Column(
@@ -81,26 +80,21 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
             Positioned(
               bottom: 0,
               child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
                   width: MediaQuery.of(context).size.width,
                   height: 50,
                   decoration: const BoxDecoration(
                       gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: <Color>[
-                        const Color.fromARGB(218, 166, 206, 57),
-                        Color.fromARGB(195, 72, 170, 152)
-                      ])),
+                          colors: <Color>[const Color.fromARGB(218, 166, 206, 57), Color.fromARGB(195, 72, 170, 152)])),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(children: [
                         const Text(
                           "Meat & fish",
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 16),
+                          style: const TextStyle(color: Colors.white, fontSize: 16),
                         ),
                         Expanded(
                           child: ListView.builder(
@@ -108,14 +102,11 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
                               shrinkWrap: true,
                               itemCount: 5,
                               itemBuilder: ((context, index) {
-                                return const Icon(Icons.star,
-                                    color: Colors.yellow, size: 14);
+                                return const Icon(Icons.star, color: Colors.yellow, size: 14);
                               })),
                         )
                       ]),
-                      const Text("30 minutes",
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 12))
+                      const Text("30 minutes", style: const TextStyle(color: Colors.white, fontSize: 12))
                     ],
                   )),
             )
@@ -131,14 +122,12 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
                     length: categoryLength,
                     child: Column(children: [
                       Container(
-                        margin:
-                            const EdgeInsets.only(top: 20, left: 20, right: 20),
+                        margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
                         // height: 40,
                         decoration: BoxDecoration(
                             color: Colors.grey.shade300,
                             borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                                color: Colors.grey.shade400, width: 0)),
+                            border: Border.all(color: Colors.grey.shade400, width: 0)),
                         child: TabBar(
                           indicator: BoxDecoration(
                               color: Colors.grey.shade400,
@@ -155,24 +144,27 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
                       SizedBox(
                         height: 450.h,
                         child: TabBarView(
-                            children:
-                                List<Widget>.generate(categoryLength, (index) {
+                            children: List<Widget>.generate(categoryLength, (index) {
                           final productList = data.products[index];
                           return Padding(
                             padding: const EdgeInsets.only(top: 20),
                             child: SingleChildScrollView(
                               child: Column(
                                 children: data.products.map((e) {
-                                  return ViewPostsWidget(
-                                    unitId: e.hasUnits.toString(),
-                                    type: e.shopType.toString(),
-                                    shopId: e.shopId.toString(),
-                                    productId: e.id.toString(),
-                                    image: e.image,
-                                    name: e.name,
-                                    price: e.price.toString(),
-                                    status: e.status,
-                                  );
+                                  if (data.category.keys.elementAt(index) == e.catId.toString()) {
+                                    return ViewPostsWidget(
+                                      unitId: e.hasUnits.toString(),
+                                      type: e.shopType.toString(),
+                                      shopId: e.shopId.toString(),
+                                      productId: e.id.toString(),
+                                      image: e.image,
+                                      name: e.name,
+                                      price: e.price.toString(),
+                                      status: e.status,
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
                                 }).toList(),
                               ),
                             ),
@@ -188,9 +180,7 @@ class _ViewPostState extends State<ViewPost> with TickerProviderStateMixin {
               //       child: Center(child: Text('Not Products Available')));
               // }
               else {
-                return Container(
-                    height: 500.h,
-                    child: Center(child: CircularProgressIndicator()));
+                return Container(height: 500.h, child: Center(child: CircularProgressIndicator()));
               }
             }),
           ),
@@ -231,8 +221,7 @@ class ViewPostsWidget extends StatelessWidget {
         // height: 100.h,
         width: 350.w,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.grey.shade200, width: 2.w)),
+            borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.grey.shade200, width: 2.w)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -249,8 +238,8 @@ class ViewPostsWidget extends StatelessWidget {
                       height: 100,
                       width: 100,
                       imageUrl: "https://ebshosting.co.in/${image.toString()}",
-                      errorWidget: (context, url, error) => Image.network(
-                          "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                      errorWidget: (context, url, error) =>
+                          Image.network("https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
                     ),
                   ),
                   // Image.network(W
@@ -270,18 +259,12 @@ class ViewPostsWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  Text(name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   SizedBox(height: 5.h),
                   Text("₹$price", style: TextStyle(fontSize: 12)),
                   SizedBox(height: 5.h),
                   Text(status,
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: status == "available"
-                              ? Colors.green
-                              : Colors.red)),
+                      style: TextStyle(fontSize: 12, color: status == "available" ? Colors.green : Colors.red)),
                 ],
               ),
             ),
@@ -292,8 +275,7 @@ class ViewPostsWidget extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      var response = await CartApi.addToCart(
-                          type, productId, shopId, unitId);
+                      var response = await CartApi.addToCart(type, productId, shopId, unitId);
                       print('add to cart');
                     },
                     child: Container(
@@ -310,10 +292,8 @@ class ViewPostsWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8)),
                         child: const Center(
                             child: Text("Add To Cart",
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500)))),
+                                style:
+                                    const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500)))),
                   ),
                 ],
               ),
