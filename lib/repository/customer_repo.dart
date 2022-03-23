@@ -4,6 +4,7 @@ import 'package:fresh4delivery/config/constants/api_configurations.dart';
 import 'package:fresh4delivery/models/address_model.dart';
 import 'package:fresh4delivery/models/cart_modal.dart';
 import 'package:fresh4delivery/models/home_model.dart';
+import 'package:fresh4delivery/models/order_list_model.dart';
 import 'package:fresh4delivery/models/orders_model.dart';
 import 'package:fresh4delivery/models/pincode_model.dart';
 import 'package:fresh4delivery/models/post_model.dart';
@@ -554,29 +555,17 @@ class CartApi {
 //**************//
 //Order api
 class OrderApi {
-  static Future<List<OrderListModel>?> allOrder() async {
+  static Future<OrderListModel?> allOrder() async {
     // try {
     var userId = await Preference.getPrefs('Id');
     var response = await http
         .post(Uri.parse(Api.order.allorders), body: {"user_id": userId});
     var responseBody = json.decode(response.body);
     print(responseBody);
-    List<OrderListModel> data = [];
-    for (var i in responseBody['orders']) {
-      data.add(OrderListModel.fromJson(i));
-      print('working');
-    } //
+    Map<String, dynamic> data = json.decode(response.body);
+    print('working');
 
-    // responseBody['orders'].map((e) {
-    //   print(e);
-    //   data.add(OrderListModel.fromJson(e));
-    // });
-    print(data);
-
-    return data;
-    // } catch (e) {
-    //   return null;
-    // }
+    return OrderListModel.fromJson(data);
   }
 
   static Future addOrder() async {

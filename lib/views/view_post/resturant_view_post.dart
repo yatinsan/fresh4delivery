@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -192,15 +194,22 @@ class _ViewPostState extends State<RestuarantViewPost>
               ],
             );
           }
-          // else if (snapshot.data!.products.length == 0 ||
-          //     snapshot.data!.products == null) {
+          // else if (snapshot.data == null) {
           //   return Container(
           //       height: 500.h,
           //       child: Center(child: Text('Not Products Available')));
           // }
           else {
-            return Container(
-                height: 500.h, child: Center(child: Text('Not Available')));
+            var isTimedOut = true;
+            // new Timer(const Duration(seconds: 5), () {
+            //   isTimedOut = false;
+            //   print(isTimedOut);
+            // });
+            return isTimedOut == true
+                ? SizedBox(
+                    height: 500.h,
+                    child: Center(child: CircularProgressIndicator()))
+                : Text('texxt');
           }
         }),
       ),

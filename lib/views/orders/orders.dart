@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/models/order_list_model.dart';
 import 'package:fresh4delivery/models/orders_model.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
 import 'package:fresh4delivery/views/cart/cart.dart';
@@ -71,16 +72,16 @@ class Orders extends StatelessWidget {
                   ],
                 ),
                 preferredSize: Size.fromHeight(80.h))),
-        body: FutureBuilder<List<OrderListModel>?>(
+        body: FutureBuilder(
           future: OrderApi.allOrder(),
           builder: (context, AsyncSnapshot snapshot) {
             print(snapshot.data);
             if (snapshot.hasData) {
-              List<OrderListModel> data = snapshot.data;
+              OrderListModel data = snapshot.data;
               return ListView.builder(
-                  itemCount: data.length,
+                  itemCount: data.orders.length,
                   itemBuilder: ((context, index) {
-                    final orders = data[index];
+                    final orders = data.orders[index];
                     return Container(
                         margin:
                             const EdgeInsets.only(top: 15, left: 20, right: 20),
