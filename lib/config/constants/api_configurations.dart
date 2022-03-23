@@ -69,7 +69,7 @@ class Order {
   String orderupdate = _baseUrl + "/update";
   String allorders = Api._baseUrl + "/customer/orders";
   String getoneorder(String id) => _baseUrl + "/${id}";
-  String placeOrder = Api._baseUrl + '/placeorder';
+  String placeOrder = Api._baseUrl + '/customer/placeorder';
 }
 
 class Address {

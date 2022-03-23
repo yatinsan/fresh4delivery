@@ -225,6 +225,10 @@ class _HomeState extends State<Home> {
                             itemBuilder: ((context, index) {
                               Nrestaurants restaurant = data[index];
                               return Cards(
+                                  status: restaurant.status == "Active" ||
+                                          restaurant.status == null
+                                      ? true
+                                      : false,
                                   route: '/restuarant-view-post',
                                   itemId: restaurant.id.toString(),
                                   title: restaurant.name.toString(),
@@ -258,6 +262,9 @@ class _HomeState extends State<Home> {
                             itemBuilder: ((context, index) {
                               Nrestaurants supermarket = data[index];
                               return Cards(
+                                  status: supermarket.status == 'Available'
+                                      ? true
+                                      : false,
                                   itemId: supermarket.id.toString(),
                                   route: '/supermarket-view-post',
                                   title: supermarket.name ?? "",
@@ -431,6 +438,7 @@ class CircleWidget extends StatelessWidget {
 }
 
 class Cards extends StatelessWidget {
+  bool status;
   String route;
   String? itemId;
   String title;
@@ -440,6 +448,7 @@ class Cards extends StatelessWidget {
   bool isRating;
   Cards(
       {Key? key,
+      this.status = true,
       required this.route,
       this.itemId,
       this.title = "not available",
@@ -454,7 +463,13 @@ class Cards extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, route, arguments: itemId);
+        if (status == true) {
+          Navigator.pushNamed(context, route, arguments: itemId);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("This restaurant is unavailable!!"),
+              duration: Duration(seconds: 3)));
+        }
       },
       child: Container(
         margin: const EdgeInsets.only(right: 5, left: 5),

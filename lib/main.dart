@@ -32,7 +32,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String isLoggedIn = '';
+  var userId = false;
   @override
   void initState() {
     super.initState();
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
         builder: () => MaterialApp(
               debugShowCheckedModeBanner: false,
               home: DefaultTabController(length: 4, child: Phone()),
-              initialRoute: isLoggedIn.isEmpty ? '/login' : '/mainScreen',
+              initialRoute: '/authScreen',
               onGenerateRoute: Routes.generateRoute,
             ));
   }
@@ -53,7 +53,8 @@ class _MyAppState extends State<MyApp> {
   Future loggedIn() async {
     WidgetsFlutterBinding.ensureInitialized();
     var prefs = await SharedPreferences.getInstance();
-    isLoggedIn = prefs.getString('Id').toString();
-    print(prefs.getString('Id'));
+    print(prefs.getString('Id') == null);
+    // print(prefs.getString('Id'));
+    userId = prefs.getString('Id') == null ? true : false;
   }
 }

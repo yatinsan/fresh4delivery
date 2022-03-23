@@ -200,8 +200,7 @@ class _ViewPostState extends State<RestuarantViewPost>
           // }
           else {
             return Container(
-                height: 500.h,
-                child: Center(child: CircularProgressIndicator()));
+                height: 500.h, child: Center(child: Text('Not Available')));
           }
         }),
       ),

@@ -543,23 +543,29 @@ class CartApi {
 //**************//
 //Order api
 class OrderApi {
-  static Future<OrderListModel?> allOrder() async {
-    try {
-      var userId = await Preference.getPrefs('Id');
-      var response = await http
-          .post(Uri.parse(Api.order.allorders), body: {"user_id": userId});
-      var responseBody = json.decode(response.body);
-      print(responseBody);
-      Map<String, dynamic> data = json.decode(response.body);
-      // List<OrderListModel> data = [];
-      // for (var i in responseBody['orders']) {
-      //   data.add(OrderListModel.fromJson(i));
-      // }
-      // print(data);
-      return OrderListModel.fromJson(data);
-    } catch (e) {
-      return null;
-    }
+  static Future<List<OrderListModel>?> allOrder() async {
+    // try {
+    var userId = await Preference.getPrefs('Id');
+    var response = await http
+        .post(Uri.parse(Api.order.allorders), body: {"user_id": userId});
+    var responseBody = json.decode(response.body);
+    print(responseBody);
+    List<OrderListModel> data = [];
+    for (var i in responseBody['orders']) {
+      data.add(OrderListModel.fromJson(i));
+      print('working');
+    } //
+
+    // responseBody['orders'].map((e) {
+    //   print(e);
+    //   data.add(OrderListModel.fromJson(e));
+    // });
+    print(data);
+
+    return data;
+    // } catch (e) {
+    //   return null;
+    // }
   }
 
   static Future addOrder() async {
@@ -579,8 +585,6 @@ class OrderApi {
     var response = await http.post(Uri.parse(Api.order.placeOrder), body: {
       "user_id": userId,
       "paytype": paytype.toString(),
-      "notes": 'as soon as possible',
-      "promocode": ''
     });
     var responseBody = json.decode(response.body);
     print(responseBody);

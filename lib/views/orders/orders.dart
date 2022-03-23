@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,7 @@ class Orders extends StatelessWidget {
                   ],
                 ),
                 preferredSize: Size.fromHeight(80.h))),
-        body: FutureBuilder<OrderListModel?>(
+        body: FutureBuilder<List<OrderListModel>?>(
           future: OrderApi.allOrder(),
           builder: (context, AsyncSnapshot snapshot) {
             print(snapshot.data);
@@ -95,14 +96,22 @@ class Orders extends StatelessWidget {
                           children: [
                             Expanded(
                               flex: 3,
-                              child: Image.network(
-                                "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
-                                // 'https://ebshosting.co.in/${orders.shop?.logo}'
-                                ,
-                                fit: BoxFit.contain,
-                                width: 60,
-                                height: 60,
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
+                                placeholder: (context, url) => Image.network(
+                                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                                errorWidget: (context, url, error) => Image.network(
+                                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
                               ),
+                              // Image.network(
+                              //   "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
+                              //   // 'https://ebshosting.co.in/${orders.shop?.logo}'
+                              //   ,
+                              //   fit: BoxFit.contain,
+                              //   width: 60,
+                              //   height: 60,
+                              // ),
                             ),
                             Expanded(
                               flex: 5,
