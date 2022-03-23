@@ -366,6 +366,70 @@ class CalculateTheTotal extends HookWidget {
   }
 }
 
+void selectpayment(BuildContext context) async {
+  showModalBottomSheet(
+      isDismissible: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: .2,
+          minChildSize: 0.2,
+          maxChildSize: 0.2,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return SingleChildScrollView(child: SelectPayment());
+          }));
+}
+
+class SelectPayment extends StatelessWidget {
+  const SelectPayment({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+          child: Text('Payment Method',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+        ),
+        GestureDetector(
+          onTap: () async {
+            await OrderApi.placeOrder('CoD');
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Order placed successfully"),
+                duration: Duration(seconds: 2)));
+            Navigator.pushNamed(context, '/mainScreen');
+          },
+          child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 2, color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('Cash On Delivery',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.lightGreen)),
+                  Text('pay cash when deliver items doorsteps',
+                      style: TextStyle(
+                        fontSize: 14,
+                      ))
+                ],
+              )),
+        ),
+      ],
+    );
+  }
+}
+
 void show(BuildContext context) async {
   showModalBottomSheet(
       isDismissible: true,
@@ -399,6 +463,7 @@ class AddressBody extends HookWidget {
               Spacer(),
               GestureDetector(
                 onTap: () {
+                  Navigator.pushNamed(context, '/add-new-address');
                   print("add");
                 },
                 child: Row(
@@ -412,7 +477,7 @@ class AddressBody extends HookWidget {
           ),
         ),
         SizedBox(
-            height: MediaQuery.of(context).size.height,
+            height: 380.h,
             child: FutureBuilder(
                 future: AddressApi.addressList(),
                 builder: ((context, AsyncSnapshot snapshot) {
@@ -447,11 +512,12 @@ class AddressBody extends HookWidget {
                   }
                 }))),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           child: NamedButton(
-            title: "Place Order",
+            title: "Deliver here",
             function: () {
-              show(context);
+              Navigator.pop(context);
+              selectpayment(context);
               print('order placed');
             },
           ),

@@ -543,7 +543,7 @@ class CartApi {
 //**************//
 //Order api
 class OrderApi {
-  static Future<OrdersModel?> allOrder() async {
+  static Future<OrderListModel?> allOrder() async {
     try {
       var userId = await Preference.getPrefs('Id');
       var response = await http
@@ -551,8 +551,12 @@ class OrderApi {
       var responseBody = json.decode(response.body);
       print(responseBody);
       Map<String, dynamic> data = json.decode(response.body);
-
-      return OrdersModel.fromJson(data);
+      // List<OrderListModel> data = [];
+      // for (var i in responseBody['orders']) {
+      //   data.add(OrderListModel.fromJson(i));
+      // }
+      // print(data);
+      return OrderListModel.fromJson(data);
     } catch (e) {
       return null;
     }
@@ -568,6 +572,18 @@ class OrderApi {
     } catch (e) {
       return 'Error';
     }
+  }
+
+  static Future placeOrder(paytype) async {
+    var userId = await Preference.getPrefs('Id');
+    var response = await http.post(Uri.parse(Api.order.placeOrder), body: {
+      "user_id": userId,
+      "paytype": paytype.toString(),
+      "notes": 'as soon as possible',
+      "promocode": ''
+    });
+    var responseBody = json.decode(response.body);
+    print(responseBody);
   }
 }
 
