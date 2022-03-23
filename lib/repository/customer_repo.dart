@@ -178,6 +178,17 @@ class HomeApi {
       return null;
     }
   }
+
+  static Future<SupermarketModel?> allData() async {
+    final pincode = await Preference.getPrefs("pincode");
+    final userId = await Preference.getPrefs("Id");
+    var response = await http.post(Uri.parse(Api.user.home),
+        body: {"user_id": userId, "pincode": pincode});
+
+    Map<String, dynamic> responseBody = json.decode(response.body);
+
+    return SupermarketModel.fromJson(responseBody);
+  }
 }
 
 //**************//

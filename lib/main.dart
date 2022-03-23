@@ -13,48 +13,76 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => PhoneProvider()),
-    ChangeNotifierProvider(create: (_) => GetOtpDetails()),
-    ChangeNotifierProvider(create: (_) => CartExtraCharges()),
-    ChangeNotifierProvider(create: (_) => pincodeProvider()),
-    ChangeNotifierProvider(create: (_) => PincodeSearchProvider()),
-    ChangeNotifierProvider(create: (_) => SearchAllProvider()),
-    ChangeNotifierProvider(create: (_) => TotalAmount())
-  ], child: const MyApp()));
+  // String userId;
+  WidgetsFlutterBinding.ensureInitialized();
+  var prefs = await SharedPreferences.getInstance();
+  print(prefs.getString('Id').toString().isNotEmpty);
+  print(prefs.getString('Id'));
+  var userId = prefs.getString('Id');
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PhoneProvider()),
+        ChangeNotifierProvider(create: (_) => GetOtpDetails()),
+        ChangeNotifierProvider(create: (_) => CartExtraCharges()),
+        ChangeNotifierProvider(create: (_) => pincodeProvider()),
+        ChangeNotifierProvider(create: (_) => PincodeSearchProvider()),
+        ChangeNotifierProvider(create: (_) => SearchAllProvider()),
+        ChangeNotifierProvider(create: (_) => TotalAmount())
+      ],
+      builder: (context, child) {
+        // var userId = Provider.of<LoggedIn>(context).userId;
+        // Future loggedIn() async {
+        //   WidgetsFlutterBinding.ensureInitialized();
+        //   var prefs = await SharedPreferences.getInstance();
+        //   print(prefs.getString('Id') == null);
+        //   // print(prefs.getString('Id'));
+        //   userId = prefs.getString('Id').toString();
+        // }
+
+        return ScreenUtilInit(
+            designSize: const Size(393, 830),
+            builder: () => MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  home: DefaultTabController(length: 4, child: Phone()),
+                  initialRoute: userId.toString().isEmpty || userId == null
+                      ? '/login'
+                      : '/mainScreen',
+                  onGenerateRoute: Routes.generateRoute,
+                ));
+      }));
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+// class MyApp extends StatefulWidget {
+//   const MyApp({Key? key}) : super(key: key);
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
+//   @override
+//   State<MyApp> createState() => _MyAppState();
+// }
 
-class _MyAppState extends State<MyApp> {
-  var userId = false;
-  @override
-  void initState() {
-    super.initState();
-    loggedIn();
-  }
+// class _MyAppState extends State<MyApp> {
+//   var userId;
+//   @override
+//   void initState() {
+//     super.initState();
+//     loggedIn();
+//   }
 
-  Widget build(BuildContext context) {
-    return ScreenUtilInit(
-        designSize: const Size(393, 830),
-        builder: () => MaterialApp(
-              debugShowCheckedModeBanner: false,
-              home: DefaultTabController(length: 4, child: Phone()),
-              initialRoute: '/authScreen',
-              onGenerateRoute: Routes.generateRoute,
-            ));
-  }
+//   Future loggedIn() async {
+//     WidgetsFlutterBinding.ensureInitialized();
+//     var prefs = await SharedPreferences.getInstance();
+//     print(prefs.getString('Id') == null);
+//     // print(prefs.getString('Id'));
+//     userId = prefs.getString('Id') == null ? true : false;
+//   }
 
-  Future loggedIn() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    var prefs = await SharedPreferences.getInstance();
-    print(prefs.getString('Id') == null);
-    // print(prefs.getString('Id'));
-    userId = prefs.getString('Id') == null ? true : false;
-  }
-}
+//   Widget build(BuildContext context) {
+//     return ScreenUtilInit(
+//         designSize: const Size(393, 830),
+//         builder: () => MaterialApp(
+//               debugShowCheckedModeBanner: false,
+//               home: DefaultTabController(length: 4, child: Phone()),
+//               initialRoute: userId == null ? '/login' : 'mainScreen',
+//               onGenerateRoute: Routes.generateRoute,
+//             ));
+//   }
+// }

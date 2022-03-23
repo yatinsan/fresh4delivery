@@ -20,6 +20,7 @@ import 'package:fresh4delivery/views/notification/notification.dart';
 import 'package:fresh4delivery/views/search/search.dart';
 import 'package:fresh4delivery/views/view_post/resturant_view_post.dart';
 import 'package:fresh4delivery/widgets/header.dart';
+import 'package:fresh4delivery/widgets/named_button.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -104,7 +105,7 @@ class _HomeState extends State<Home> {
                                   id: category.id.toString(),
                                   title: category.name ?? '',
                                   image:
-                                      "https://ebshosting.co.in/${category.image}");
+                                      "https://ebshosting.co.in${category.image}");
                             }));
                       } else {
                         return Center(child: CircularProgressIndicator());
@@ -234,9 +235,8 @@ class _HomeState extends State<Home> {
                                   title: restaurant.name.toString(),
                                   time: restaurant.deliveryTime.toString(),
                                   ratings: restaurant.rating ?? 0,
-                                  image: restaurant.logo.toString().isEmpty
-                                      ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
-                                      : "https://ebshosting.co.in/${restaurant.logo}");
+                                  image:
+                                      "https://ebshosting.co.in${restaurant.logo}");
                             }));
                       } else {
                         return Center(child: CircularProgressIndicator());
@@ -282,26 +282,54 @@ class _HomeState extends State<Home> {
                 route: '/productsviewmore',
                 type: "Products"),
             SizedBox(height: 20),
+            // Container(
+            //     constraints: BoxConstraints(maxHeight: 230, minHeight: 160),
+            //     child: FutureBuilder(
+            //         future: HomeApi.restProducts(),
+            //         builder: (context, AsyncSnapshot snapshot) {
+            //           if (snapshot.hasData) {
+            //             final data = snapshot.data;
+            //             return ListView.builder(
+            //                 scrollDirection: Axis.horizontal,
+            //                 shrinkWrap: true,
+            //                 itemCount: data.length,
+            //                 itemBuilder: ((context, index) {
+            //                   RestproductModel products = data[index];
+            //                   return Cards(
+            //                       cartButton: true,
+            //                       route: '/restuarant-view-post',
+            //                       title: products.name ?? "",
+            //                       time: " ₹${products.price.toString()}",
+            //                       image:
+            //                           "https://ebshosting.co.in${products.image}");
+            //                 }));
+            //           } else {
+            //             return Center(child: CircularProgressIndicator());
+            //           }
+            //         })),
+            ///////////////////////////////////////////////////////////
             Container(
-                constraints: BoxConstraints(maxHeight: 175, minHeight: 160),
-                child: FutureBuilder(
-                    future: HomeApi.restProducts(),
+                constraints: BoxConstraints(maxHeight: 230, minHeight: 160),
+                child: FutureBuilder<SupermarketModel?>(
+                    future: HomeApi.allData(),
                     builder: (context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
-                        final data = snapshot.data;
+                        SupermarketModel data = snapshot.data;
                         return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
-                            itemCount: data.length,
+                            itemCount: data.restproducts!.length,
                             itemBuilder: ((context, index) {
-                              RestproductModel products = data[index];
+                              RestproductModel products =
+                                  data.restproducts![index];
                               return Cards(
+                                  type: products.type.toString(),
+                                  cartButton: true,
                                   route: '/restuarant-view-post',
                                   title: products.name ?? "",
-                                  time: products.price.toString(),
-                                  image: products.image.toString().isEmpty
-                                      ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
-                                      : "https://ebshosting.co.in/${products.image}");
+                                  time: " ₹${products.price.toString()}",
+                                  image:
+                                      "https://ebshosting.co.in${products.image}");
                             }));
                       } else {
                         return Center(child: CircularProgressIndicator());
@@ -438,6 +466,10 @@ class CircleWidget extends StatelessWidget {
 }
 
 class Cards extends StatelessWidget {
+  String? type;
+  String? shopId;
+  String? unitId;
+  bool cartButton;
   bool status;
   String route;
   String? itemId;
@@ -448,6 +480,10 @@ class Cards extends StatelessWidget {
   bool isRating;
   Cards(
       {Key? key,
+      this.type,
+      this.shopId,
+      this.unitId,
+      this.cartButton = false,
       this.status = true,
       required this.route,
       this.itemId,
@@ -480,6 +516,7 @@ class Cards extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               height: 110.h,
@@ -489,8 +526,6 @@ class Cards extends StatelessWidget {
               ),
               child: CachedNetworkImage(
                 imageUrl: image,
-                placeholder: (context, url) => Image.network(
-                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
                 errorWidget: (context, url, error) => Image.network(
                     "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
               ),
@@ -500,6 +535,7 @@ class Cards extends StatelessWidget {
               // ),
             ),
             Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(height: 10),
                 Row(
@@ -533,9 +569,22 @@ class Cards extends StatelessWidget {
                               color: Color.fromRGBO(100, 120, 47, 1)))
                     ],
                   ),
-                )
+                ),
               ],
-            )
+            ),
+            cartButton == true
+                ? Container(
+                    padding:
+                        const EdgeInsets.only(left: 4, right: 4, bottom: 5),
+                    height: 40,
+                    child: NamedButton(
+                      size: 10,
+                      title: 'add to cart',
+                      function: () async {
+                        await CartApi.addToCart("Restaurant", itemId, '', '');
+                      },
+                    ))
+                : const SizedBox(),
           ],
         ),
       ),

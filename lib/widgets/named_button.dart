@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class NamedButton extends StatelessWidget {
   final Function? function;
   final String title;
-  const NamedButton({Key? key, this.function, required this.title})
+  final double size;
+  NamedButton({Key? key, this.size = 14, this.function, required this.title})
       : super(key: key);
 
   @override
@@ -18,7 +19,7 @@ class NamedButton extends StatelessWidget {
             child: Text(title,
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: size,
                     fontWeight: FontWeight.w600,
                     letterSpacing: .5))));
   }
