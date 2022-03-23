@@ -45,7 +45,7 @@ class SuperMarket {
   static const String _baseUrl = Api._baseUrl + "/customer/supermarkets";
 
   String viewAll = _baseUrl + "/view/all";
-  String viewOne(String id) => _baseUrl + "/${id}";
+  String viewOne(String id) => Api._baseUrl + "/customer/supermarket/${id}";
 }
 
 class Cart {

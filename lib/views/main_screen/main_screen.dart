@@ -7,7 +7,7 @@ import 'package:fresh4delivery/views/category/category.dart';
 import 'package:fresh4delivery/views/home/home.dart';
 import 'package:fresh4delivery/views/orders/orders.dart';
 import 'package:fresh4delivery/views/profile/profile.dart';
-import 'package:fresh4delivery/views/view_post/view_post.dart';
+import 'package:fresh4delivery/views/view_post/resturant_view_post.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class MainScreen extends StatelessWidget {

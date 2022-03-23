@@ -3,11 +3,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fresh4delivery/models/address_model.dart';
 import 'package:fresh4delivery/models/cart_modal.dart';
 import 'package:fresh4delivery/provider/cart_charges.dart';
 import 'package:fresh4delivery/provider/pincode_provider.dart';
 import 'package:fresh4delivery/provider/total_amount_provider.dart';
 import 'package:fresh4delivery/repository/customer_repo.dart';
+import 'package:fresh4delivery/views/profile/address/your_address.dart';
 import 'package:fresh4delivery/widgets/named_button.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
 import 'package:provider/provider.dart';
@@ -192,6 +194,7 @@ class CartBody extends HookWidget {
                       child: NamedButton(
                         title: "Place Order",
                         function: () {
+                          show(context);
                           print('order placed');
                         },
                       ),
@@ -358,6 +361,101 @@ class CalculateTheTotal extends HookWidget {
             icon: Icon(Icons.delete_forever_outlined,
                 color: Color.fromARGB(255, 180, 51, 42))),
         SizedBox(width: 10),
+      ],
+    );
+  }
+}
+
+void show(BuildContext context) async {
+  showModalBottomSheet(
+      isDismissible: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: .6,
+          minChildSize: 0.6,
+          maxChildSize: 0.6,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return SingleChildScrollView(child: AddressBody());
+          }));
+}
+
+class AddressBody extends HookWidget {
+  const AddressBody({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final state = useState(0);
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+          child: Row(
+            children: [
+              Text('Select Address For Delivery',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              SizedBox(width: 10),
+              Spacer(),
+              GestureDetector(
+                onTap: () {
+                  print("add");
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.add, color: Colors.lightGreen),
+                    Text('Add new', style: TextStyle(color: Colors.lightGreen))
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: FutureBuilder(
+                future: AddressApi.addressList(),
+                builder: ((context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    List<AddressListModel> data = snapshot.data;
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: data.length,
+                        itemBuilder: ((context, index) {
+                          AddressListModel addressList = data[index];
+                          return GestureDetector(
+                            onTap: () async {
+                              await AddressApi.defualtAddress(
+                                  addressList.id.toString());
+                              state.value = index;
+                            },
+                            child: SelectableAddressWidget(
+                              defaultAddr: addressList.addressDefault,
+                              id: addressList.id.toString(),
+                              addresstype: addressList.type.toString(),
+                              address: addressList.address.toString(),
+                              phone: addressList.mobile.toString(),
+                              pincode: addressList.pincode.toString(),
+                            ),
+                          );
+                        }));
+                  } else {
+                    return const Center(
+                        child: Text('No Address yet!!',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w600)));
+                  }
+                }))),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: NamedButton(
+            title: "Place Order",
+            function: () {
+              show(context);
+              print('order placed');
+            },
+          ),
+        )
       ],
     );
   }

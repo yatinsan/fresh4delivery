@@ -128,6 +128,7 @@ class _ShimmerWidgetState extends State<ShimmerWidget> {
                           baseColor: Colors.grey.shade300,
                           highlightColor: Colors.grey.shade100,
                           child: Cards(
+                            route: '',
                             isRating: false,
                           ),
                         );
@@ -150,6 +151,7 @@ class _ShimmerWidgetState extends State<ShimmerWidget> {
                           baseColor: Colors.grey.shade300,
                           highlightColor: Colors.grey.shade100,
                           child: Cards(
+                            route: '',
                             isRating: false,
                           ),
                         );

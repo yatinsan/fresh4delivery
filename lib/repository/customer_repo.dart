@@ -350,7 +350,7 @@ class RestaurantApi {
       final userId = await Preference.getPrefs("Id");
       var response = await http.post(Uri.parse(Api.restaurant.viewAll), body: {
         "user_id": userId,
-        "pincode": pincode.toString().isEmpty ? "679577" : pincode,
+        "pincode": pincode,
       });
       var responseBody = json.decode(response.body);
       List<Nrestaurants> resList1 = [];
@@ -397,6 +397,7 @@ class RestaurantApi {
 
   static Future<PostModal?> getOneRestaurant(id) async {
     try {
+      print(id);
       final pincode = await Preference.getPrefs("pincode");
       final userId = await Preference.getPrefs("Id");
       var response = await http.post(
@@ -422,8 +423,8 @@ class SupermarketApi {
       print('userid  ' + userId);
       print('pincode  ' + pincode);
       var response = await http.post(Uri.parse(Api.supermarket.viewAll), body: {
-        "user_id": userId,
-        "pincode": pincode.toString().isEmpty ? "679577" : pincode,
+        "user_id": userId.toString(),
+        "pincode": pincode.toString(),
       });
       var responseBody = json.decode(response.body);
 
@@ -436,12 +437,26 @@ class SupermarketApi {
       for (var i in responseBody['nsupermarkets']) {
         i['status'] = false;
         supermarketList.add(Nrestaurants.fromJson(i));
-      }
-
+      } // as now i am going for out shot so see u soon ok by by ''
+      print('suc');
       return supermarketList;
     } catch (e) {
+      print(e);
       return null;
     }
+  }
+
+  static Future<SuperMarketModel?> getOne(id) async {
+    print(id);
+    final pincode = await Preference.getPrefs("pincode");
+    final userId = await Preference.getPrefs("Id");
+    var response = await http.post(Uri.parse(Api.supermarket.viewOne(id)),
+        body: {'user_id': userId, "pincode": pincode});
+    var responseBody = json.decode(response.body);
+    Map<String, dynamic> data = json.decode(response.body);
+    var dt = json.decode(response.body);
+    print(dt);
+    return SuperMarketModel.fromJson(data);
   }
 }
 
@@ -528,21 +543,16 @@ class CartApi {
 //**************//
 //Order api
 class OrderApi {
-  static Future<dynamic> allOrder() async {
+  static Future<OrdersModel?> allOrder() async {
     try {
       var userId = await Preference.getPrefs('Id');
       var response = await http
           .post(Uri.parse(Api.order.allorders), body: {"user_id": userId});
       var responseBody = json.decode(response.body);
-      // print(responseBody);
+      print(responseBody);
+      Map<String, dynamic> data = json.decode(response.body);
 
-      List<OrderObjectModel> shopList = [];
-      print('order start loop');
-      for (var i in responseBody["orders"]) {
-        shopList.add(OrderObjectModel.fromJson(i));
-      }
-
-      return shopList;
+      return OrdersModel.fromJson(data);
     } catch (e) {
       return null;
     }

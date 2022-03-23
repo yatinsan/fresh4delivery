@@ -18,7 +18,7 @@ import 'package:fresh4delivery/views/main_screen/main_screen.dart';
 import 'package:fresh4delivery/views/new_you/near_you.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
 import 'package:fresh4delivery/views/search/search.dart';
-import 'package:fresh4delivery/views/view_post/view_post.dart';
+import 'package:fresh4delivery/views/view_post/resturant_view_post.dart';
 import 'package:fresh4delivery/widgets/header.dart';
 import 'package:fresh4delivery/widgets/search_button.dart';
 import 'package:provider/provider.dart';
@@ -225,6 +225,7 @@ class _HomeState extends State<Home> {
                             itemBuilder: ((context, index) {
                               Nrestaurants restaurant = data[index];
                               return Cards(
+                                  route: '/restuarant-view-post',
                                   itemId: restaurant.id.toString(),
                                   title: restaurant.name.toString(),
                                   time: restaurant.deliveryTime.toString(),
@@ -255,12 +256,14 @@ class _HomeState extends State<Home> {
                             shrinkWrap: true,
                             itemCount: data.length,
                             itemBuilder: ((context, index) {
-                              Nrestaurants restaurant = data[index];
+                              Nrestaurants supermarket = data[index];
                               return Cards(
-                                  title: restaurant.name ?? "",
-                                  time: restaurant.deliveryTime ?? "",
+                                  itemId: supermarket.id.toString(),
+                                  route: '/supermarket-view-post',
+                                  title: supermarket.name ?? "",
+                                  time: supermarket.deliveryTime ?? "",
                                   image:
-                                      "https://ebshosting.co.in/${restaurant.logo}");
+                                      "https://ebshosting.co.in/${supermarket.logo}");
                             }));
                       } else {
                         return Center(child: CircularProgressIndicator());
@@ -286,6 +289,7 @@ class _HomeState extends State<Home> {
                             itemBuilder: ((context, index) {
                               RestproductModel products = data[index];
                               return Cards(
+                                  route: '/restuarant-view-post',
                                   title: products.name ?? "",
                                   time: products.price.toString(),
                                   image: products.image.toString().isEmpty
@@ -427,6 +431,7 @@ class CircleWidget extends StatelessWidget {
 }
 
 class Cards extends StatelessWidget {
+  String route;
   String? itemId;
   String title;
   String time;
@@ -435,6 +440,7 @@ class Cards extends StatelessWidget {
   bool isRating;
   Cards(
       {Key? key,
+      required this.route,
       this.itemId,
       this.title = "not available",
       this.time = "!!",
@@ -448,7 +454,7 @@ class Cards extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/view-post', arguments: itemId);
+        Navigator.pushNamed(context, route, arguments: itemId);
       },
       child: Container(
         margin: const EdgeInsets.only(right: 5, left: 5),

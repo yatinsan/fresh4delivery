@@ -8,13 +8,15 @@ import 'package:fresh4delivery/views/cart/cart.dart';
 import 'package:fresh4delivery/views/main_screen/main_screen.dart';
 import 'package:fresh4delivery/views/new_you/near_you.dart';
 import 'package:fresh4delivery/views/notification/notification.dart';
+import 'package:fresh4delivery/views/profile/address/add_new_address.dart';
 import 'package:fresh4delivery/views/profile/address/your_address.dart';
 import 'package:fresh4delivery/views/search/search_view.dart';
 import 'package:fresh4delivery/views/view_all/view_all.dart';
 import 'package:fresh4delivery/views/view_more/products_view_more.dart';
 import 'package:fresh4delivery/views/view_more/restaurants_view_more.dart';
 import 'package:fresh4delivery/views/view_more/supermarkets_view_more.dart';
-import 'package:fresh4delivery/views/view_post/view_post.dart';
+import 'package:fresh4delivery/views/view_post/resturant_view_post.dart';
+import 'package:fresh4delivery/views/view_post/supermarket_view_post.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -55,9 +57,13 @@ class Routes {
         {
           return _route(routeSettings, NotificationScreen());
         }
-      case RoutePath.viewPost:
+      case RoutePath.restuarantViewPost:
         {
-          return _route(routeSettings, ViewPost());
+          return _route(routeSettings, RestuarantViewPost());
+        }
+      case RoutePath.supermarketViewPost:
+        {
+          return _route(routeSettings, SupermarketViewPost());
         }
       case RoutePath.productsViewMore:
         {
@@ -78,6 +84,10 @@ class Routes {
       case RoutePath.yourAddress:
         {
           return _route(routeSettings, YourAddress());
+        }
+      case RoutePath.addNewAddress:
+        {
+          return _route(routeSettings, AddNewAddress());
         }
       default:
         {

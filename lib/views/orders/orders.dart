@@ -70,15 +70,16 @@ class Orders extends StatelessWidget {
                   ],
                 ),
                 preferredSize: Size.fromHeight(80.h))),
-        body: FutureBuilder(
+        body: FutureBuilder<OrdersModel?>(
           future: OrderApi.allOrder(),
           builder: (context, AsyncSnapshot snapshot) {
+            print(snapshot.data);
             if (snapshot.hasData) {
-              List<OrderModel> data = snapshot.data;
+              OrdersModel data = snapshot.data;
               return ListView.builder(
-                  itemCount: 2,
+                  itemCount: data.orders!.length,
                   itemBuilder: ((context, index) {
-                    OrderModel orders = data[index];
+                    final orders = data.orders![index];
                     return Container(
                         margin:
                             const EdgeInsets.only(top: 15, left: 20, right: 20),
@@ -152,10 +153,11 @@ class Orders extends StatelessWidget {
                         ));
                   }));
             } else {
-              return Center(
-                  child: Text('No orders yet!!',
-                      style: TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w600)));
+              return Center(child: CircularProgressIndicator());
+              //  Center(
+              //     child: Text('No orders yet!!',
+              //         style: TextStyle(
+              //             fontSize: 14, fontWeight: FontWeight.w600)));
             }
           },
         ));

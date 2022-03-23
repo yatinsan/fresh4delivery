@@ -12,9 +12,7 @@ import 'package:fresh4delivery/views/authentication/phone.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'views/main_screen/main_screen.dart';
-
-void main() {
+Future<void> main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => PhoneProvider()),
     ChangeNotifierProvider(create: (_) => GetOtpDetails()),
@@ -34,24 +32,28 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var isLoggedIn = '';
-  void Sharedprefs() async {
-    var prefs = await SharedPreferences.getInstance();
-    isLoggedIn = await prefs.getString('Id') ?? '';
-    print(prefs.getString('Id'));
+  String isLoggedIn = '';
+  @override
+  void initState() {
+    super.initState();
+    loggedIn();
   }
 
-  @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
         designSize: const Size(393, 830),
         builder: () => MaterialApp(
               debugShowCheckedModeBanner: false,
               home: DefaultTabController(length: 4, child: Phone()),
-              initialRoute: isLoggedIn == null || isLoggedIn.toString().isEmpty
-                  ? '/login'
-                  : '/mainScreen',
+              initialRoute: isLoggedIn.isEmpty ? '/login' : '/mainScreen',
               onGenerateRoute: Routes.generateRoute,
             ));
+  }
+
+  Future loggedIn() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    var prefs = await SharedPreferences.getInstance();
+    isLoggedIn = prefs.getString('Id').toString();
+    print(prefs.getString('Id'));
   }
 }

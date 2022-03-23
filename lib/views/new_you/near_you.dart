@@ -63,7 +63,9 @@ class NearYou extends StatelessWidget {
                         width: double.infinity,
                         color: Color.fromRGBO(201, 228, 125, 1),
                         child: Text(
-                          "Supermarket near you",
+                          arguments == true
+                              ? 'Restuarants near you'
+                              : "Supermarkets near you",
                           style: TextStyle(fontWeight: FontWeight.w500),
                         ))
                   ],
@@ -82,60 +84,71 @@ class NearYou extends StatelessWidget {
                       itemCount: data.length,
                       itemBuilder: ((context, index) {
                         Nrestaurants resturants = data[index];
-                        return Container(
-                            margin: const EdgeInsets.only(
-                                top: 15, left: 20, right: 20),
-                            width: 300.w,
-                            height: 100.h,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                    color: Colors.grey.shade200, width: 2.w)),
-                            child: Row(
-                              children: [
-                                ClipRRect(
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context,
+                                arguments == true
+                                    ? '/restuarant-view-post'
+                                    : '/supermarket-view-post',
+                                arguments: resturants.id.toString());
+                          },
+                          child: Container(
+                              margin: const EdgeInsets.only(
+                                  top: 15, left: 20, right: 20),
+                              width: 300.w,
+                              height: 100.h,
+                              decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        "https://ebshosting.co.in${resturants.logo}",
-                                    errorWidget: (context, url, error) =>
-                                        Image.network(
-                                            "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
-                                  ),
-                                ),
-                                // Image.network(
-                                //   resturants.logo.toString().isEmpty ||
-                                //           resturants.logo == null
-                                //       ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
-                                //       : "https://ebshosting.co.in${resturants.logo}",
-                                //   fit: BoxFit.cover,
-                                // ),
-                                SizedBox(width: 20),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: 150,
-                                      child: Text(resturants.name.toString(),
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600)),
+                                  border: Border.all(
+                                      color: Colors.grey.shade200, width: 2.w)),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "https://ebshosting.co.in${resturants.logo}",
+                                      errorWidget: (context, url, error) =>
+                                          Image.network(
+                                              "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
                                     ),
-                                    SizedBox(height: 5.h),
-                                    Text(resturants.deliveryTime.toString(),
-                                        style: TextStyle(fontSize: 12)),
-                                    SizedBox(height: 5.h),
-                                    // StarRating(
-                                    //   rating: resturants.rating!.toDouble(),
-                                    // )
-                                  ],
-                                ),
-                              ],
-                            ));
+                                  ),
+                                  // Image.network(
+                                  //   resturants.logo.toString().isEmpty ||
+                                  //           resturants.logo == null
+                                  //       ? "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
+                                  //       : "https://ebshosting.co.in${resturants.logo}",
+                                  //   fit: BoxFit.cover,
+                                  // ),
+                                  SizedBox(width: 20),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 150,
+                                        child: Text(resturants.name.toString(),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600)),
+                                      ),
+                                      SizedBox(height: 5.h),
+                                      Text(resturants.deliveryTime.toString(),
+                                          style: TextStyle(fontSize: 12)),
+                                      SizedBox(height: 5.h),
+                                      // StarRating(
+                                      //   rating: resturants.rating!.toDouble(),
+                                      // )
+                                    ],
+                                  ),
+                                ],
+                              )),
+                        );
                       }));
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: Text('No Data Available'));
                 }
               })),
         ));
