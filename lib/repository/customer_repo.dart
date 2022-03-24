@@ -147,6 +147,7 @@ class HomeApi {
         i["status"] = false;
         restaurantList.add(Nrestaurants.fromJson(i));
       }
+      print(restaurantList);
 
       return restaurantList;
     } catch (e) {
@@ -562,10 +563,14 @@ class OrderApi {
         .post(Uri.parse(Api.order.allorders), body: {"user_id": userId});
     var responseBody = json.decode(response.body);
     print(responseBody);
-    Map<String, dynamic> data = json.decode(response.body);
+    // Map<String, dynamic> data = json.decode(response.body);
+    var data = json.decode(response.body);
+    print('data::: $data');
     print('working');
-
-    return OrderListModel.fromJson(data);
+    var aa = OrderListModel.fromMap(data);
+    // aa = OrderListModel(sts: 'sts', msg: 'msg', orders: []);
+    print('aa ::::: ${aa.toString()}');
+    return aa;
   }
 
   static Future addOrder() async {

@@ -62,7 +62,7 @@ class Nrestaurants {
     if (json["delivery_time"] is String) deliveryTime = json["delivery_time"];
     if (json["promoted"] is String) promoted = json["promoted"];
     if (json["rating"] is double) rating = json["rating"];
-    if (json["status"] is String) status = false;
+    if (json["status"] is bool) status = json['status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -73,7 +73,7 @@ class Nrestaurants {
     data["delivery_time"] = deliveryTime;
     data["promoted"] = promoted;
     data["rating"] = rating;
-    data["status"] = 'unavailable';
+    data["status"] = false;
     return data;
   }
 }

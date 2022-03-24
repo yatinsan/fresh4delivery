@@ -75,18 +75,20 @@ class Orders extends StatelessWidget {
         body: FutureBuilder(
           future: OrderApi.allOrder(),
           builder: (context, AsyncSnapshot snapshot) {
-            print(snapshot.data);
             if (snapshot.hasData) {
+              print('snapshot');
+              print(snapshot.data);
               OrderListModel data = snapshot.data;
               return ListView.builder(
                   itemCount: data.orders.length,
                   itemBuilder: ((context, index) {
                     final orders = data.orders[index];
                     return Container(
-                        margin:
-                            const EdgeInsets.only(top: 15, left: 20, right: 20),
+                        margin: const EdgeInsets.only(
+                            top: 5, left: 20, right: 20, bottom: 15),
                         width: 300.w,
-                        height: 100.h,
+                        // height: 100.h,
+                        // constraints: BoxC,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
@@ -97,13 +99,21 @@ class Orders extends StatelessWidget {
                           children: [
                             Expanded(
                               flex: 3,
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
-                                placeholder: (context, url) => Image.network(
-                                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
-                                errorWidget: (context, url, error) => Image.network(
-                                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      "https://ebshosting.co.in/${orders.shop?.logo}",
+                                  placeholder: (context, url) => Image.network(
+                                      "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
+                                      fit: BoxFit.cover,
+                                      height: 120.h),
+                                  errorWidget: (context, url, error) =>
+                                      Image.network(
+                                          "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
+                                          fit: BoxFit.cover,
+                                          height: 120.h),
+                                ),
                               ),
                               // Image.network(
                               //   "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
@@ -114,24 +124,22 @@ class Orders extends StatelessWidget {
                               //   height: 60,
                               // ),
                             ),
+                            SizedBox(width: 10),
                             Expanded(
                               flex: 5,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Fresh chicken",
+                                  Text(orders.shop!.name ?? '',
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600)),
                                   SizedBox(height: 5.h),
-                                  Text("Delivery in 30 min",
+                                  Text(orders.shop!.deliveryTime ?? '',
                                       style: TextStyle(fontSize: 12)),
-                                  SizedBox(height: 5.h),
-                                  Text("04/02/2022 | 4:30",
-                                      style: TextStyle(fontSize: 12)),
-                                  SizedBox(height: 5.h),
-                                  Text("Processing",
+                                  SizedBox(height: 8.h),
+                                  Text(orders.status ?? 'pending',
                                       style: TextStyle(
                                           fontSize: 12, color: Colors.red)),
                                 ],
@@ -139,7 +147,7 @@ class Orders extends StatelessWidget {
                             ),
                             Expanded(
                                 flex: 2,
-                                child: Text("₹140",
+                                child: Text("₹${orders.amount ?? 'N/A'}",
                                     style: TextStyle(
                                         color: Colors.green,
                                         fontWeight: FontWeight.w600))),

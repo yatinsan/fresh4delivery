@@ -67,7 +67,7 @@ class _CartState extends State<Cart> {
                               Navigator.pop(context);
                             },
                             icon: Icon(Icons.arrow_back)),
-                        SearchButton(width: 330)
+                        SearchButton(width: 330.w)
                       ],
                     ),
                     Container(
@@ -118,8 +118,10 @@ class CartBody extends HookWidget {
             int length = data.cart.length;
             return Column(
               children: [
-                SizedBox(
-                  height: 470.h,
+                Container(
+                  constraints:
+                      BoxConstraints(maxHeight: 470.h, minHeight: 420.h),
+                  // height: 470.h,
                   child: ListView.builder(
                       primary: true,
                       shrinkWrap: true,
@@ -250,7 +252,7 @@ class CalculateTheTotal extends HookWidget {
           ),
           borderRadius: BorderRadius.circular(10),
         ),
-        SizedBox(width: 10),
+        SizedBox(width: 10.w),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,8 +308,8 @@ class CalculateTheTotal extends HookWidget {
                       },
                       child: Container(
                           // padding: const EdgeInsets.symmetric(horizontal: 1),
-                          width: 15,
-                          height: 15,
+                          width: 15.w,
+                          height: 15.h,
                           padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
                             color: Colors.black,
@@ -334,8 +336,8 @@ class CalculateTheTotal extends HookWidget {
                         }
                       },
                       child: Container(
-                          width: 15,
-                          height: 15,
+                          width: 15.w,
+                          height: 15.h,
                           decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(100),
@@ -360,7 +362,7 @@ class CalculateTheTotal extends HookWidget {
             },
             icon: Icon(Icons.delete_forever_outlined,
                 color: Color.fromARGB(255, 180, 51, 42))),
-        SizedBox(width: 10),
+        SizedBox(width: 10.w),
       ],
     );
   }

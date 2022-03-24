@@ -226,10 +226,7 @@ class _HomeState extends State<Home> {
                             itemBuilder: ((context, index) {
                               Nrestaurants restaurant = data[index];
                               return Cards(
-                                  status: restaurant.status == "Active" ||
-                                          restaurant.status == null
-                                      ? true
-                                      : false,
+                                  status: restaurant.status ?? false,
                                   route: '/restuarant-view-post',
                                   itemId: restaurant.id.toString(),
                                   title: restaurant.name.toString(),
@@ -470,7 +467,7 @@ class Cards extends StatelessWidget {
   String? shopId;
   String? unitId;
   bool cartButton;
-  bool status;
+  bool? status;
   String route;
   String? itemId;
   String title;
@@ -484,7 +481,7 @@ class Cards extends StatelessWidget {
       this.shopId,
       this.unitId,
       this.cartButton = false,
-      this.status = true,
+      this.status,
       required this.route,
       this.itemId,
       this.title = "not available",
