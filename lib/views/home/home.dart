@@ -279,48 +279,20 @@ class _HomeState extends State<Home> {
                 route: '/productsviewmore',
                 type: "Products"),
             SizedBox(height: 20),
-            // Container(
-            //     constraints: BoxConstraints(maxHeight: 230, minHeight: 160),
-            //     child: FutureBuilder(
-            //         future: HomeApi.restProducts(),
-            //         builder: (context, AsyncSnapshot snapshot) {
-            //           if (snapshot.hasData) {
-            //             final data = snapshot.data;
-            //             return ListView.builder(
-            //                 scrollDirection: Axis.horizontal,
-            //                 shrinkWrap: true,
-            //                 itemCount: data.length,
-            //                 itemBuilder: ((context, index) {
-            //                   RestproductModel products = data[index];
-            //                   return Cards(
-            //                       cartButton: true,
-            //                       route: '/restuarant-view-post',
-            //                       title: products.name ?? "",
-            //                       time: " ₹${products.price.toString()}",
-            //                       image:
-            //                           "https://ebshosting.co.in${products.image}");
-            //                 }));
-            //           } else {
-            //             return Center(child: CircularProgressIndicator());
-            //           }
-            //         })),
-            ///////////////////////////////////////////////////////////
             Container(
                 constraints: BoxConstraints(maxHeight: 230, minHeight: 160),
-                child: FutureBuilder<SupermarketModel?>(
-                    future: HomeApi.allData(),
+                child: FutureBuilder(
+                    future: HomeApi.restProducts(),
                     builder: (context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
-                        SupermarketModel data = snapshot.data;
+                        final data = snapshot.data;
                         return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
-                            itemCount: data.restproducts!.length,
+                            itemCount: data.length,
                             itemBuilder: ((context, index) {
-                              RestproductModel products =
-                                  data.restproducts![index];
+                              RestproductModel products = data[index];
                               return Cards(
-                                  type: products.type.toString(),
                                   cartButton: true,
                                   route: '/restuarant-view-post',
                                   title: products.name ?? "",
@@ -332,6 +304,34 @@ class _HomeState extends State<Home> {
                         return Center(child: CircularProgressIndicator());
                       }
                     })),
+            ///////////////////////////////////////////////////////////
+            // Container(
+            //     constraints: BoxConstraints(maxHeight: 230, minHeight: 160),
+            //     child: FutureBuilder<SupermarketModel?>(
+            //         future: HomeApi.allData(),
+            //         builder: (context, AsyncSnapshot snapshot) {
+            //           if (snapshot.hasData) {
+            //             SupermarketModel data = snapshot.data;
+            //             return ListView.builder(
+            //                 scrollDirection: Axis.horizontal,
+            //                 shrinkWrap: true,
+            //                 itemCount: data.restproducts!.length,
+            //                 itemBuilder: ((context, index) {
+            //                   RestproductModel products =
+            //                       data.restproducts![index];
+            //                   return Cards(
+            //                       type: products.type.toString(),
+            //                       cartButton: true,
+            //                       route: '/restuarant-view-post',
+            //                       title: products.name ?? "",
+            //                       time: " ₹${products.price.toString()}",
+            //                       image:
+            //                           "https://ebshosting.co.in${products.image}");
+            //                 }));
+            //           } else {
+            //             return Center(child: CircularProgressIndicator());
+            //           }
+            //         })),
             SizedBox(height: 20),
             ImageCarousel(
               sorf: false,

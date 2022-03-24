@@ -72,126 +72,123 @@ class _ViewPostState extends State<RestuarantViewPost>
             int categoryLength = data?.category.values.length ?? 0;
             final shop = data!.shop;
             print('banner pic' + data.shop.banner);
-            return Column(
-              children: [
-                Stack(children: [
-                  Container(
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
                     height: 300.h,
-                    // decoration: BoxDecoration(
-                    //     image: DecorationImage(
-                    //         image: AssetImage("assets/images/carousal1.png"),
-                    //         fit: BoxFit.cover)),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      // height: 100,
-                      width: MediaQuery.of(context).size.width,
-                      imageUrl: "https://ebshosting.co.in${shop.banner}",
-                      errorWidget: (context, url, error) => Image.network(
-                          "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
-                    ),
-                    // Image.asset(
-                    //   "assets/images/carousal1.png",
-                    //   fit: BoxFit.cover,
-                    // ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 7),
+                    child: Stack(children: [
+                      CachedNetworkImage(
+                        fit: BoxFit.fill,
+                        // height: 100,
                         width: MediaQuery.of(context).size.width,
-                        height: 60,
-                        decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: <Color>[
-                              const Color.fromARGB(218, 166, 206, 57),
-                              Color.fromARGB(195, 72, 170, 152)
-                            ])),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    shop.name.toString(),
+                        imageUrl: "https://ebshosting.co.in${shop.banner}",
+                        errorWidget: (context, url, error) => Image.network(
+                            "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 7),
+                            width: MediaQuery.of(context).size.width,
+                            height: 80.h,
+                            decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: <Color>[
+                                  const Color.fromARGB(218, 166, 206, 57),
+                                  Color.fromARGB(195, 72, 170, 152)
+                                ])),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        shop.name.toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                      ),
+                                      StarRating(
+                                        iconsize: 13,
+                                        rating: shop.rating.toDouble(),
+                                      )
+                                    ]),
+                                Text(shop.city.toUpperCase(),
                                     style: const TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
-                                  StarRating(
-                                    iconsize: 13,
-                                    rating: shop.rating.toDouble(),
-                                  )
-                                ]),
-                            Text(shop.city.toUpperCase(),
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 12))
-                          ],
-                        )),
-                  )
-                ]),
-                DefaultTabController(
-                    length: categoryLength,
-                    child: Column(children: [
-                      Container(
-                        margin:
-                            const EdgeInsets.only(top: 20, left: 20, right: 20),
-                        // height: 40,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                                color: Colors.grey.shade400, width: 0)),
-                        child: TabBar(
-                          indicator: BoxDecoration(
-                              color: Colors.grey.shade400,
+                                        color: Colors.white, fontSize: 12))
+                              ],
+                            )),
+                      )
+                    ]),
+                  ),
+                  DefaultTabController(
+                      length: categoryLength,
+                      child: Column(children: [
+                        Container(
+                          margin: const EdgeInsets.only(
+                              top: 20, left: 20, right: 20),
+                          // height: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(50),
-                              border: Border.all(color: Colors.grey.shade400)),
-                          isScrollable: true,
-                          labelColor: Colors.black,
-                          unselectedLabelColor: Colors.black,
-                          tabs: data.category.values.map((e) {
-                            return Tab(text: e);
-                          }).toList(),
+                              border: Border.all(
+                                  color: Colors.grey.shade400, width: 0)),
+                          child: TabBar(
+                            indicator: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.circular(50),
+                                border:
+                                    Border.all(color: Colors.grey.shade400)),
+                            isScrollable: true,
+                            labelColor: Colors.black,
+                            unselectedLabelColor: Colors.black,
+                            tabs: data.category.values.map((e) {
+                              return Tab(text: e);
+                            }).toList(),
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 450.h,
-                        child: TabBarView(
-                            children:
-                                List<Widget>.generate(categoryLength, (index) {
-                          final productList = data.products[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: data.products.map((e) {
-                                  if (data.category.keys.elementAt(index) ==
-                                      e.catId.toString()) {
-                                    return ViewPostsWidget(
-                                      unitId: e.hasUnits.toString(),
-                                      type: e.shopType.toString(),
-                                      shopId: e.shopId.toString(),
-                                      productId: e.id.toString(),
-                                      image: e.image,
-                                      name: e.name,
-                                      price: e.price.toString(),
-                                      status: e.status,
-                                    );
-                                  } else {
-                                    return Container();
-                                  }
-                                }).toList(),
+                        Container(
+                          constraints: BoxConstraints(
+                              maxHeight: 440.h, minHeight: 400.h),
+                          child: TabBarView(
+                              children: List<Widget>.generate(categoryLength,
+                                  (index) {
+                            final productList = data.products[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: data.products.map((e) {
+                                    if (data.category.keys.elementAt(index) ==
+                                        e.catId.toString()) {
+                                      return ViewPostsWidget(
+                                        unitId: e.hasUnits.toString(),
+                                        type: e.shopType.toString(),
+                                        shopId: e.shopId.toString(),
+                                        productId: e.id.toString(),
+                                        image: e.image,
+                                        name: e.name,
+                                        price: e.price.toString(),
+                                        status: e.status,
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  }).toList(),
+                                ),
                               ),
-                            ),
-                          );
-                        })),
-                      ),
-                    ])),
-              ],
+                            );
+                          })),
+                        ),
+                      ])),
+                ],
+              ),
             );
           }
           // else if (snapshot.data == null) {
@@ -207,7 +204,7 @@ class _ViewPostState extends State<RestuarantViewPost>
             // });
             return isTimedOut == true
                 ? SizedBox(
-                    height: 500.h,
+                    height: 400.h,
                     child: Center(child: CircularProgressIndicator()))
                 : Text('texxt');
           }
@@ -263,11 +260,13 @@ class ViewPostsWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     child: CachedNetworkImage(
                       fit: BoxFit.contain,
-                      height: 100,
-                      width: 100,
+                      height: 100.h,
+                      width: 100.w,
                       imageUrl: "https://ebshosting.co.in/${image.toString()}",
                       errorWidget: (context, url, error) => Image.network(
-                          "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                        "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   // Image.network(W
@@ -280,7 +279,7 @@ class ViewPostsWidget extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 15),
+            SizedBox(width: 15.w),
             Expanded(
               flex: 5,
               child: Column(
@@ -296,7 +295,7 @@ class ViewPostsWidget extends StatelessWidget {
                   Text(status,
                       style: TextStyle(
                           fontSize: 12,
-                          color: status == "available"
+                          color: status == "Available"
                               ? Colors.green
                               : Colors.red)),
                 ],

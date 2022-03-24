@@ -85,7 +85,7 @@ class Orders extends StatelessWidget {
                     final orders = data.orders[index];
                     return Container(
                         margin: const EdgeInsets.only(
-                            top: 5, left: 20, right: 20, bottom: 15),
+                            top: 5, left: 20, right: 20, bottom: 5),
                         width: 300.w,
                         // height: 100.h,
                         // constraints: BoxC,
