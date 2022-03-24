@@ -35,308 +35,286 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  var currentBackPressTime;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          elevation: 0,
-          flexibleSpace: Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: <Color>[
-                Color.fromRGBO(166, 206, 57, 1),
-                Color.fromRGBO(72, 170, 152, 1)
-              ]))),
-          automaticallyImplyLeading: false,
-          title: Image.asset("assets/icons/logo1.png"),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  print('notification');
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => NotificationScreen()));
-                },
-                icon: Icon(Icons.notifications_none, color: Colors.black)),
-            IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/cart');
-                },
-                icon: Icon(Icons.local_grocery_store_outlined,
-                    color: Colors.black)),
-          ],
-          bottom: PreferredSize(
-              child: Column(
-                children: [
-                  SearchButton(),
-                  // TypeAheadField(
-                  //   suggestionsCallback: suggestionsCallback,
-                  //   itemBuilder: itemBuilder,
-                  //   onSuggestionSelected: onSuggestionSelected),
-                  Container(
-                      padding:
-                          const EdgeInsets.only(left: 40, top: 5, bottom: 5),
-                      width: double.infinity,
-                      color: Color.fromRGBO(201, 228, 125, 1),
-                      child: const BottomPincodeSheet())
-                ],
-              ),
-              preferredSize: Size.fromHeight(80.h))),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ImageCarousel(),
-            SizedBox(height: 20.h),
-            Container(
-                height: 80.h,
-                child: FutureBuilder(
-                    future: HomeApi.categories(),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        List<CategoryModel> data = snapshot.data;
-                        return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: data.length,
-                            itemBuilder: ((context, index) {
-                              CategoryModel category = data[index];
-                              return CircleWidget(
-                                  id: category.id.toString(),
-                                  title: category.name ?? '',
-                                  image:
-                                      "https://ebshosting.co.in${category.image}");
-                            }));
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    })),
-            SizedBox(height: 15.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/near-you', arguments: false);
+    return WillPopScope(
+      onWillPop: () async {
+        DateTime now = DateTime.now();
+        if (currentBackPressTime == null || now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+          currentBackPressTime = now;
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+            elevation: 0,
+            flexibleSpace: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: <Color>[Color.fromRGBO(166, 206, 57, 1), Color.fromRGBO(72, 170, 152, 1)]))),
+            automaticallyImplyLeading: false,
+            title: Image.asset("assets/icons/logo1.png"),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    print('notification');
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => NotificationScreen()));
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
+                  icon: Icon(Icons.notifications_none, color: Colors.black)),
+              IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/cart');
+                  },
+                  icon: Icon(Icons.local_grocery_store_outlined, color: Colors.black)),
+            ],
+            bottom: PreferredSize(
+                child: Column(
+                  children: [
+                    SearchButton(),
+                    // TypeAheadField(
+                    //   suggestionsCallback: suggestionsCallback,
+                    //   itemBuilder: itemBuilder,
+                    //   onSuggestionSelected: onSuggestionSelected),
+                    Container(
+                        padding: const EdgeInsets.only(left: 40, top: 5, bottom: 5),
+                        width: double.infinity,
+                        color: Color.fromRGBO(201, 228, 125, 1),
+                        child: const BottomPincodeSheet())
+                  ],
+                ),
+                preferredSize: Size.fromHeight(80.h))),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ImageCarousel(),
+              SizedBox(height: 20.h),
+              Container(
+                  height: 80.h,
+                  child: FutureBuilder(
+                      future: HomeApi.categories(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List<CategoryModel> data = snapshot.data;
+                          return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: data.length,
+                              itemBuilder: ((context, index) {
+                                CategoryModel category = data[index];
+                                return CircleWidget(
+                                    id: category.id.toString(),
+                                    title: category.name ?? '',
+                                    image: "https://ebshosting.co.in${category.image}");
+                              }));
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      })),
+              SizedBox(height: 15.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/near-you', arguments: false);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(width: 2, color: Color.fromRGBO(166, 206, 57, 1)),
+                          gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: <Color>[Color.fromRGBO(166, 206, 57, 1), Color.fromRGBO(72, 170, 152, 1)])),
+                      clipBehavior: Clip.hardEdge,
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.asset("assets/images/carousal1.png",
+                                  width: 180.w, height: 100.h, fit: BoxFit.cover)),
+                          Positioned(
+                            left: -10,
+                            bottom: -10,
+                            child: Container(
+                                padding: const EdgeInsets.only(top: 5, left: 15, right: 5, bottom: 15),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: <Color>[
+                                          Color.fromRGBO(166, 206, 57, 1),
+                                          Color.fromRGBO(72, 170, 152, 1)
+                                        ])),
+                                child: Text("SuperMarkets", style: TextStyle(fontSize: 10, letterSpacing: .5))),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/near-you', arguments: true);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: Color.fromRGBO(166, 206, 57, 1)),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                            width: 2, color: Color.fromRGBO(166, 206, 57, 1)),
-                        gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: <Color>[
-                              Color.fromRGBO(166, 206, 57, 1),
-                              Color.fromRGBO(72, 170, 152, 1)
-                            ])),
-                    clipBehavior: Clip.hardEdge,
-                    child: Stack(
-                      children: [
-                        ClipRRect(
+                      ),
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: Stack(
+                        children: [
+                          ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Image.asset("assets/images/carousal1.png",
-                                width: 180.w,
-                                height: 100.h,
-                                fit: BoxFit.cover)),
-                        Positioned(
-                          left: -10,
-                          bottom: -10,
-                          child: Container(
-                              padding: const EdgeInsets.only(
-                                  top: 5, left: 15, right: 5, bottom: 15),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: <Color>[
-                                        Color.fromRGBO(166, 206, 57, 1),
-                                        Color.fromRGBO(72, 170, 152, 1)
-                                      ])),
-                              child: Text("SuperMarkets",
-                                  style: TextStyle(
-                                      fontSize: 10, letterSpacing: .5))),
-                        )
-                      ],
+                                width: 180.w, height: 100.h, fit: BoxFit.fill),
+                          ),
+                          Positioned(
+                            right: -10,
+                            bottom: -10,
+                            child: Container(
+                                padding: const EdgeInsets.only(top: 5, left: 5, right: 15, bottom: 15),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: <Color>[
+                                          Color.fromRGBO(166, 206, 57, 1),
+                                          Color.fromRGBO(72, 170, 152, 1)
+                                        ])),
+                                child: Text("Restaurants", style: TextStyle(fontSize: 10, letterSpacing: .5))),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/near-you', arguments: true);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          width: 2, color: Color.fromRGBO(166, 206, 57, 1)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset("assets/images/carousal1.png",
-                              width: 180.w, height: 100.h, fit: BoxFit.fill),
-                        ),
-                        Positioned(
-                          right: -10,
-                          bottom: -10,
-                          child: Container(
-                              padding: const EdgeInsets.only(
-                                  top: 5, left: 5, right: 15, bottom: 15),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: <Color>[
-                                        Color.fromRGBO(166, 206, 57, 1),
-                                        Color.fromRGBO(72, 170, 152, 1)
-                                      ])),
-                              child: Text("Restaurants",
-                                  style: TextStyle(
-                                      fontSize: 10, letterSpacing: .5))),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Headerwidget(
-                title: "Top Restaurants",
-                route: '/restaurantsviewmore',
-                type: "Restaurants"),
-            SizedBox(height: 20),
-            Container(
-                constraints: BoxConstraints(maxHeight: 175, minHeight: 160),
-                child: FutureBuilder(
-                    future: HomeApi.restaurants(),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        final data = snapshot.data;
-                        return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            itemCount: data.length,
-                            itemBuilder: ((context, index) {
-                              Nrestaurants restaurant = data[index];
-                              return Cards(
-                                  status: restaurant.status ?? false,
-                                  route: '/restuarant-view-post',
-                                  itemId: restaurant.id.toString(),
-                                  title: restaurant.name.toString(),
-                                  time: restaurant.deliveryTime.toString(),
-                                  ratings: restaurant.rating ?? 0,
-                                  image:
-                                      "https://ebshosting.co.in${restaurant.logo}");
-                            }));
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    })),
-            SizedBox(height: 20),
-            Headerwidget(
-                title: "Top Super Markets",
-                route: '/supermarketsviewmore',
-                type: "Supermarkets"),
-            SizedBox(height: 20),
-            Container(
-                constraints: BoxConstraints(maxHeight: 175, minHeight: 160),
-                child: FutureBuilder(
-                    future: HomeApi.supermarket(),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        final data = snapshot.data;
-                        return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            itemCount: data.length,
-                            itemBuilder: ((context, index) {
-                              Nrestaurants supermarket = data[index];
-                              return Cards(
-                                  status: supermarket.status == 'Available'
-                                      ? true
-                                      : false,
-                                  itemId: supermarket.id.toString(),
-                                  route: '/supermarket-view-post',
-                                  title: supermarket.name ?? "",
-                                  time: supermarket.deliveryTime ?? "",
-                                  image:
-                                      "https://ebshosting.co.in/${supermarket.logo}");
-                            }));
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    })),
-            SizedBox(height: 20),
-            Headerwidget(
-                title: "Top Products",
-                route: '/productsviewmore',
-                type: "Products"),
-            SizedBox(height: 20),
-            Container(
-                constraints: BoxConstraints(maxHeight: 230, minHeight: 160),
-                child: FutureBuilder(
-                    future: HomeApi.restProducts(),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        final data = snapshot.data;
-                        return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            itemCount: data.length,
-                            itemBuilder: ((context, index) {
-                              RestproductModel products = data[index];
-                              return Cards(
-                                  cartButton: true,
-                                  route: '/restuarant-view-post',
-                                  title: products.name ?? "",
-                                  time: " ₹${products.price.toString()}",
-                                  image:
-                                      "https://ebshosting.co.in${products.image}");
-                            }));
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    })),
-            ///////////////////////////////////////////////////////////
-            // Container(
-            //     constraints: BoxConstraints(maxHeight: 230, minHeight: 160),
-            //     child: FutureBuilder<SupermarketModel?>(
-            //         future: HomeApi.allData(),
-            //         builder: (context, AsyncSnapshot snapshot) {
-            //           if (snapshot.hasData) {
-            //             SupermarketModel data = snapshot.data;
-            //             return ListView.builder(
-            //                 scrollDirection: Axis.horizontal,
-            //                 shrinkWrap: true,
-            //                 itemCount: data.restproducts!.length,
-            //                 itemBuilder: ((context, index) {
-            //                   RestproductModel products =
-            //                       data.restproducts![index];
-            //                   return Cards(
-            //                       type: products.type.toString(),
-            //                       cartButton: true,
-            //                       route: '/restuarant-view-post',
-            //                       title: products.name ?? "",
-            //                       time: " ₹${products.price.toString()}",
-            //                       image:
-            //                           "https://ebshosting.co.in${products.image}");
-            //                 }));
-            //           } else {
-            //             return Center(child: CircularProgressIndicator());
-            //           }
-            //         })),
-            SizedBox(height: 20),
-            ImageCarousel(
-              sorf: false,
-            )
-          ],
+                ],
+              ),
+              SizedBox(height: 20),
+              Headerwidget(title: "Top Restaurants", route: '/restaurantsviewmore', type: "Restaurants"),
+              SizedBox(height: 20),
+              Container(
+                  constraints: BoxConstraints(maxHeight: 175, minHeight: 160),
+                  child: FutureBuilder(
+                      future: HomeApi.restaurants(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          final data = snapshot.data;
+                          return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: data.length,
+                              itemBuilder: ((context, index) {
+                                Nrestaurants restaurant = data[index];
+                                return Cards(
+                                    status: restaurant.status ?? false,
+                                    route: '/restuarant-view-post',
+                                    itemId: restaurant.id.toString(),
+                                    title: restaurant.name.toString(),
+                                    time: restaurant.deliveryTime.toString(),
+                                    ratings: restaurant.rating ?? 0,
+                                    image: "https://ebshosting.co.in${restaurant.logo}");
+                              }));
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      })),
+              SizedBox(height: 20),
+              Headerwidget(title: "Top Super Markets", route: '/supermarketsviewmore', type: "Supermarkets"),
+              SizedBox(height: 20),
+              Container(
+                  constraints: BoxConstraints(maxHeight: 175, minHeight: 160),
+                  child: FutureBuilder(
+                      future: HomeApi.supermarket(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          final data = snapshot.data;
+                          return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: data.length,
+                              itemBuilder: ((context, index) {
+                                Nrestaurants supermarket = data[index];
+                                return Cards(
+                                    status: supermarket.status == 'Available' ? true : false,
+                                    itemId: supermarket.id.toString(),
+                                    route: '/supermarket-view-post',
+                                    title: supermarket.name ?? "",
+                                    time: supermarket.deliveryTime ?? "",
+                                    image: "https://ebshosting.co.in/${supermarket.logo}");
+                              }));
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      })),
+              SizedBox(height: 20),
+              Headerwidget(title: "Top Products", route: '/productsviewmore', type: "Products"),
+              SizedBox(height: 20),
+              Container(
+                  constraints: BoxConstraints(maxHeight: 230, minHeight: 160),
+                  child: FutureBuilder(
+                      future: HomeApi.restProducts(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          final data = snapshot.data;
+                          return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: data.length,
+                              itemBuilder: ((context, index) {
+                                RestproductModel products = data[index];
+                                return Cards(
+                                    cartButton: true,
+                                    route: '/restuarant-view-post',
+                                    title: products.name ?? "",
+                                    time: " ₹${products.price.toString()}",
+                                    image: "https://ebshosting.co.in${products.image}");
+                              }));
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      })),
+              ///////////////////////////////////////////////////////////
+              // Container(
+              //     constraints: BoxConstraints(maxHeight: 230, minHeight: 160),
+              //     child: FutureBuilder<SupermarketModel?>(
+              //         future: HomeApi.allData(),
+              //         builder: (context, AsyncSnapshot snapshot) {
+              //           if (snapshot.hasData) {
+              //             SupermarketModel data = snapshot.data;
+              //             return ListView.builder(
+              //                 scrollDirection: Axis.horizontal,
+              //                 shrinkWrap: true,
+              //                 itemCount: data.restproducts!.length,
+              //                 itemBuilder: ((context, index) {
+              //                   RestproductModel products =
+              //                       data.restproducts![index];
+              //                   return Cards(
+              //                       type: products.type.toString(),
+              //                       cartButton: true,
+              //                       route: '/restuarant-view-post',
+              //                       title: products.name ?? "",
+              //                       time: " ₹${products.price.toString()}",
+              //                       image:
+              //                           "https://ebshosting.co.in${products.image}");
+              //                 }));
+              //           } else {
+              //             return Center(child: CircularProgressIndicator());
+              //           }
+              //         })),
+              SizedBox(height: 20),
+              ImageCarousel(
+                sorf: false,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -368,10 +346,9 @@ class ImageCarousel extends HookWidget {
                       return CachedNetworkImage(
                         fit: BoxFit.cover,
                         width: MediaQuery.of(context).size.width * 1,
-                        imageUrl:
-                            "https://ebshosting.co.in/${banners.image.toString()}",
-                        errorWidget: (context, url, error) => Image.network(
-                            "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                        imageUrl: "https://ebshosting.co.in/${banners.image.toString()}",
+                        errorWidget: (context, url, error) =>
+                            Image.network("https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
                       );
 
                       // Image.network(
@@ -398,8 +375,7 @@ class ImageCarousel extends HookWidget {
                                 dotWidth: 10.w,
                                 dotHeight: 5.h,
                                 dotColor: Colors.grey.shade300,
-                                activeDotColor:
-                                    Color.fromRGBO(201, 228, 125, 1),
+                                activeDotColor: Color.fromRGBO(201, 228, 125, 1),
                                 strokeWidth: 1)))
               ],
             );
@@ -425,8 +401,7 @@ class CircleWidget extends StatelessWidget {
       {Key? key,
       this.title = 'not available',
       this.id,
-      this.image =
-          "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"})
+      this.image = "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"})
       : super(key: key);
 
   @override
@@ -446,15 +421,14 @@ class CircleWidget extends StatelessWidget {
                 width: 50,
                 height: 50,
                 imageUrl: image,
-                placeholder: (context, url) => Image.network(
-                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
-                errorWidget: (context, url, error) => Image.network(
-                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                placeholder: (context, url) =>
+                    Image.network("https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                errorWidget: (context, url, error) =>
+                    Image.network("https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
               ),
             ),
             SizedBox(height: 4.h),
-            Text(title,
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500))
+            Text(title, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500))
           ],
         ),
       ),
@@ -486,8 +460,7 @@ class Cards extends StatelessWidget {
       this.itemId,
       this.title = "not available",
       this.time = "!!",
-      this.image =
-          "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
+      this.image = "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png",
       this.ratings = 4.5,
       this.isRating = true})
       : super(key: key);
@@ -499,9 +472,8 @@ class Cards extends StatelessWidget {
         if (status == true) {
           Navigator.pushNamed(context, route, arguments: itemId);
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("This restaurant is unavailable!!"),
-              duration: Duration(seconds: 3)));
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("This restaurant is unavailable!!"), duration: Duration(seconds: 3)));
         }
       },
       child: Container(
@@ -523,8 +495,8 @@ class Cards extends StatelessWidget {
               ),
               child: CachedNetworkImage(
                 imageUrl: image,
-                errorWidget: (context, url, error) => Image.network(
-                    "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                errorWidget: (context, url, error) =>
+                    Image.network("https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
               ),
               // Image.network(
               //   image,
@@ -542,9 +514,7 @@ class Cards extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 5),
                       constraints: BoxConstraints(maxHeight: 30, minHeight: 10),
                       width: 110,
-                      child: Text(title,
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w600)),
+                      child: Text(title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
                     ),
                   ],
                 ),
@@ -560,10 +530,7 @@ class Cards extends StatelessWidget {
                               iconsize: 12,
                             )
                           : SizedBox(),
-                      Text(time,
-                          style: TextStyle(
-                              fontSize: 8,
-                              color: Color.fromRGBO(100, 120, 47, 1)))
+                      Text(time, style: TextStyle(fontSize: 8, color: Color.fromRGBO(100, 120, 47, 1)))
                     ],
                   ),
                 ),
@@ -571,8 +538,7 @@ class Cards extends StatelessWidget {
             ),
             cartButton == true
                 ? Container(
-                    padding:
-                        const EdgeInsets.only(left: 4, right: 4, bottom: 5),
+                    padding: const EdgeInsets.only(left: 4, right: 4, bottom: 5),
                     height: 40,
                     child: NamedButton(
                       size: 10,
@@ -596,8 +562,7 @@ class BottomPincodeSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return RichText(
         text: TextSpan(children: [
-      TextSpan(
-          text: "Delivery to :", style: TextStyle(color: Colors.grey.shade600)),
+      TextSpan(text: "Delivery to :", style: TextStyle(color: Colors.grey.shade600)),
       TextSpan(
           text: " ${context.watch<pincodeProvider>().pincode}",
           style: TextStyle(color: Colors.grey.shade600),
@@ -617,8 +582,7 @@ class BottomPincodeSheet extends StatelessWidget {
                       initialChildSize: .5,
                       minChildSize: 0.5,
                       maxChildSize: 0.5,
-                      builder: (BuildContext context,
-                          ScrollController scrollController) {
+                      builder: (BuildContext context, ScrollController scrollController) {
                         return SingleChildScrollView(
                           child: Column(
                             children: [
@@ -628,29 +592,21 @@ class BottomPincodeSheet extends StatelessWidget {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("Select pincode",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600)),
+                                    Text("Select pincode", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                                   ],
                                 ),
                               ),
                               Container(
                                   height: 65,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0, horizontal: 20),
+                                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
                                   child: TextField(
                                     keyboardType: TextInputType.number,
                                     onChanged: (val) {
-                                      context
-                                          .read<PincodeSearchProvider>()
-                                          .getPincode(val);
+                                      context.read<PincodeSearchProvider>().getPincode(val);
                                     },
                                   )),
                               FutureBuilder(
-                                  future: context
-                                      .watch<PincodeSearchProvider>()
-                                      .searchResults(),
+                                  future: context.watch<PincodeSearchProvider>().searchResults(),
                                   builder: ((context, AsyncSnapshot snapshot) {
                                     if (snapshot.hasData) {
                                       List<String> data = snapshot.data;
@@ -663,40 +619,22 @@ class BottomPincodeSheet extends StatelessWidget {
                                             return GestureDetector(
                                               onTap: () async {
                                                 Navigator.pop(context);
-                                                final prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                var pin = prefs.setString(
-                                                    "pincode", pincodes);
-                                                context
-                                                    .read<pincodeProvider>()
-                                                    .getPincode(pincodes);
-                                                print(await prefs
-                                                    .getString("pincode"));
+                                                final prefs = await SharedPreferences.getInstance();
+                                                var pin = prefs.setString("pincode", pincodes);
+                                                context.read<pincodeProvider>().getPincode(pincodes);
+                                                print(await prefs.getString("pincode"));
                                                 print('pincode received');
                                               },
                                               child: Container(
                                                   height: 50,
-                                                  margin: const EdgeInsets.only(
-                                                      left: 20,
-                                                      right: 20,
-                                                      top: 5),
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 5),
+                                                  margin: const EdgeInsets.only(left: 20, right: 20, top: 5),
+                                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                                   decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      border: Border.all(
-                                                          width: 2,
-                                                          color: Colors
-                                                              .grey.shade300)),
+                                                      borderRadius: BorderRadius.circular(10),
+                                                      border: Border.all(width: 2, color: Colors.grey.shade300)),
                                                   child: Row(
                                                     children: [
-                                                      Icon(Icons
-                                                          .location_on_outlined),
+                                                      Icon(Icons.location_on_outlined),
                                                       SizedBox(width: 20),
                                                       Text(pincodes.toString()),
                                                     ],
@@ -704,8 +642,7 @@ class BottomPincodeSheet extends StatelessWidget {
                                             );
                                           }));
                                     } else {
-                                      return const Center(
-                                          child: CircularProgressIndicator());
+                                      return const Center(child: CircularProgressIndicator());
                                     }
                                   }))
                             ],

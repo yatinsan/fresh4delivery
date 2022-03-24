@@ -34,11 +34,8 @@ class HomeApi {
     try {
       final pincode = await Preference.getPrefs("pincode");
       final userId = await Preference.getPrefs("Id");
-      var response = await http.post(Uri.parse(Api.user.home), body: {
-        "user_id": userId,
-        "pincode": pincode.toString().isEmpty ? "679577" : pincode,
-        "limit": "10"
-      });
+      var response = await http.post(Uri.parse(Api.user.home),
+          body: {"user_id": userId, "pincode": pincode.toString().isEmpty ? "679577" : pincode, "limit": "10"});
 
       var responseBody = json.decode(response.body);
       // print(responseBody['categories']);
@@ -58,11 +55,8 @@ class HomeApi {
     try {
       final pincode = await Preference.getPrefs("pincode");
       final userId = await Preference.getPrefs("Id");
-      var response = await http.post(Uri.parse(Api.user.home), body: {
-        "user_id": userId,
-        "pincode": pincode.toString().isEmpty ? "679577" : pincode,
-        "limit": "10"
-      });
+      var response = await http.post(Uri.parse(Api.user.home),
+          body: {"user_id": userId, "pincode": pincode.toString().isEmpty ? "679577" : pincode, "limit": "10"});
 
       var responseBody = json.decode(response.body);
 
@@ -81,11 +75,8 @@ class HomeApi {
     try {
       final pincode = await Preference.getPrefs("pincode");
       final userId = await Preference.getPrefs("Id");
-      var response = await http.post(Uri.parse(Api.user.home), body: {
-        "user_id": userId,
-        "pincode": pincode.toString().isEmpty ? "679577" : pincode,
-        "limit": "10"
-      });
+      var response = await http.post(Uri.parse(Api.user.home),
+          body: {"user_id": userId, "pincode": pincode.toString().isEmpty ? "679577" : pincode, "limit": "10"});
 
       var responseBody = json.decode(response.body);
 
@@ -104,11 +95,8 @@ class HomeApi {
     try {
       final pincode = await Preference.getPrefs("pincode");
       final userId = await Preference.getPrefs("Id");
-      var response = await http.post(Uri.parse(Api.user.home), body: {
-        "user_id": userId,
-        "pincode": pincode.toString().isEmpty ? "679577" : pincode,
-        "limit": "10"
-      });
+      var response = await http.post(Uri.parse(Api.user.home),
+          body: {"user_id": userId, "pincode": pincode.toString().isEmpty ? "679577" : pincode, "limit": "10"});
 
       var responseBody = json.decode(response.body);
 
@@ -184,8 +172,7 @@ class HomeApi {
   static Future<SupermarketModel?> allData() async {
     final pincode = await Preference.getPrefs("pincode");
     final userId = await Preference.getPrefs("Id");
-    var response = await http.post(Uri.parse(Api.user.home),
-        body: {"user_id": userId, "pincode": pincode});
+    var response = await http.post(Uri.parse(Api.user.home), body: {"user_id": userId, "pincode": pincode});
 
     Map<String, dynamic> responseBody = json.decode(response.body);
 
@@ -198,8 +185,7 @@ class HomeApi {
 class AuthCustomer {
   static Future phoneCheck(phone) async {
     try {
-      var response = await http
-          .post(Uri.parse(Api.user.checkNumber), body: {"number": phone});
+      var response = await http.post(Uri.parse(Api.user.checkNumber), body: {"number": phone});
 
       var responseBody = json.decode(response.body);
       print(responseBody);
@@ -216,15 +202,11 @@ class AuthCustomer {
 
   static Future signUp(name, email, phone, password) async {
     try {
-      var response = await http.post(Uri.parse(Api.user.register), body: {
-        "name": name,
-        "email": email,
-        "number": phone,
-        "password": password
-      });
+      var response = await http.post(Uri.parse(Api.user.register),
+          body: {"name": name, "email": email, "number": phone, "password": password});
 
       var responseBody = json.decode(response.body);
-      cookie = responseBody["user"]["id"];
+      cookie = responseBody["user"]["id"].toString();
       _saveCooke();
       print(responseBody["user"]["id"]);
 
@@ -242,8 +224,8 @@ class AuthCustomer {
     try {
       print(emailormobile);
       print(password);
-      var response = await http.post(Uri.parse(Api.user.login),
-          body: {"emailormobile": emailormobile, "password": password});
+      var response =
+          await http.post(Uri.parse(Api.user.login), body: {"emailormobile": emailormobile, "password": password});
 
       var responseBody = json.decode(response.body);
       cookie = "${responseBody["user"]["id"]}";
@@ -262,8 +244,8 @@ class AuthCustomer {
 
   static Future registerOtp(name, email, phone) async {
     try {
-      var response = await http.post(Uri.parse(Api.user.sendregisterotp),
-          body: {"email": email, "number": phone, "name": name});
+      var response =
+          await http.post(Uri.parse(Api.user.sendregisterotp), body: {"email": email, "number": phone, "name": name});
 
       var responseBody = json.decode(response.body);
       print(responseBody);
@@ -315,9 +297,7 @@ class SearchApi {
     print(responseBody['results']);
 
     if (response.statusCode == 200) {
-      return responseBody['results']
-          .map((e) => PincodeModel.fromJson(e))
-          .where((pincode) {
+      return responseBody['results'].map((e) => PincodeModel.fromJson(e)).where((pincode) {
         final nameLower = pincode.toLowerCase();
         final queryLower = query.toLowerCase();
 
@@ -388,12 +368,8 @@ class RestaurantApi {
       print(id);
       final pincode = await Preference.getPrefs("pincode");
       final userId = await Preference.getPrefs("Id");
-      var response = await http
-          .post(Uri.parse(Api.restaurant.restaurantCagegory(id)), body: {
-        "user_id": userId,
-        "pincode": pincode.toString().isEmpty ? "679577" : pincode,
-        "limit": "10"
-      });
+      var response = await http.post(Uri.parse(Api.restaurant.restaurantCagegory(id)),
+          body: {"user_id": userId, "pincode": pincode.toString().isEmpty ? "679577" : pincode, "limit": "10"});
 
       var responseBody = json.decode(response.body);
 
@@ -413,9 +389,8 @@ class RestaurantApi {
       print(id);
       final pincode = await Preference.getPrefs("pincode");
       final userId = await Preference.getPrefs("Id");
-      var response = await http.post(
-          Uri.parse(Api.restaurant.restaurantOne(id)),
-          body: {"user_id": userId, "pincode": pincode});
+      var response =
+          await http.post(Uri.parse(Api.restaurant.restaurantOne(id)), body: {"user_id": userId, "pincode": pincode});
       Map<String, dynamic> data = json.decode(response.body);
       var dt = PostModal.fromJson(data);
       return PostModal.fromJson(data);
@@ -463,8 +438,8 @@ class SupermarketApi {
     print(id);
     final pincode = await Preference.getPrefs("pincode");
     final userId = await Preference.getPrefs("Id");
-    var response = await http.post(Uri.parse(Api.supermarket.viewOne(id)),
-        body: {'user_id': userId, "pincode": pincode});
+    var response =
+        await http.post(Uri.parse(Api.supermarket.viewOne(id)), body: {'user_id': userId, "pincode": pincode});
     var responseBody = json.decode(response.body);
     Map<String, dynamic> data = json.decode(response.body);
     var dt = json.decode(response.body);
@@ -502,8 +477,7 @@ class CartApi {
   static Future<CartModal?> getCart() async {
     try {
       final userId = await Preference.getPrefs("Id");
-      var response = await http
-          .post(Uri.parse(Api.cart.getcart), body: {"user_id": userId});
+      var response = await http.post(Uri.parse(Api.cart.getcart), body: {"user_id": userId});
       // var responseBody = json.decode(response.body);
       // print('cart api');
       // print(responseBody['cart']);
@@ -513,6 +487,7 @@ class CartApi {
       //   cartList.add(CartListModal.fromJson(i));
       // }
 
+      print('cart respons :::: ${response.body}');
       Map<String, dynamic> data = json.decode(response.body);
 
       return CartModal.fromJson(data);
@@ -523,8 +498,7 @@ class CartApi {
 
   static Future removeCart(cartId) async {
     try {
-      var response =
-          await http.post(Uri.parse(Api.cart.remove), body: {"cartid": cartId});
+      var response = await http.post(Uri.parse(Api.cart.remove), body: {"cartid": cartId});
       var responseBody = json.decode(response.body);
       print(responseBody);
       if (responseBody['sts'] == "00") {
@@ -540,8 +514,7 @@ class CartApi {
   static Future updateCart(cartId, quantity) async {
     print(cartId);
     print(quantity);
-    var response = await http.post(Uri.parse(Api.cart.changeQuantity),
-        body: {"cartid": cartId, "quantity": quantity});
+    var response = await http.post(Uri.parse(Api.cart.changeQuantity), body: {"cartid": cartId, "quantity": quantity});
     print('working0');
     var responseBody = json.decode(response.body);
     print(responseBody);
@@ -559,8 +532,7 @@ class OrderApi {
   static Future<OrderListModel?> allOrder() async {
     // try {
     var userId = await Preference.getPrefs('Id');
-    var response = await http
-        .post(Uri.parse(Api.order.allorders), body: {"user_id": userId});
+    var response = await http.post(Uri.parse(Api.order.allorders), body: {"user_id": userId});
     var responseBody = json.decode(response.body);
     print(responseBody);
     // Map<String, dynamic> data = json.decode(response.body);
@@ -576,8 +548,7 @@ class OrderApi {
   static Future addOrder() async {
     try {
       var userId = await Preference.getPrefs('Id');
-      var response = await http
-          .post(Uri.parse(Api.cart.placeorder), body: {"user_id": userId});
+      var response = await http.post(Uri.parse(Api.cart.placeorder), body: {"user_id": userId});
       var responseBody = json.decode(response.body);
       // print(responseBody);
     } catch (e) {
@@ -602,8 +573,7 @@ class AddressApi {
   static Future<List<AddressListModel>?> addressList() async {
     try {
       var userId = await Preference.getPrefs("Id");
-      var response = await http
-          .post(Uri.parse(Api.address.getAddress), body: {"user_id": userId});
+      var response = await http.post(Uri.parse(Api.address.getAddress), body: {"user_id": userId});
       var responseBody = json.decode(response.body);
 
       // print(responseBody['address']);
@@ -619,16 +589,8 @@ class AddressApi {
     }
   }
 
-  static Future createAddress(
-      String name,
-      String phone,
-      String mobile,
-      String landmark,
-      String city,
-      String address,
-      String district,
-      String state,
-      String type) async {
+  static Future createAddress(String name, String phone, String mobile, String landmark, String city, String address,
+      String district, String state, String type) async {
     var userId = await Preference.getPrefs("Id");
     var pincode = await Preference.getPrefs("pincode");
     print(name);
@@ -672,8 +634,8 @@ class AddressApi {
 
   static Future defualtAddress(addressId) async {
     var userId = await Preference.getPrefs("Id");
-    var response = await http.post(Uri.parse(Api.address.defaultAddress),
-        body: {"user_id": userId, "addressid": addressId});
+    var response =
+        await http.post(Uri.parse(Api.address.defaultAddress), body: {"user_id": userId, "addressid": addressId});
     var responseBody = json.decode(response.body);
     print(responseBody);
   }

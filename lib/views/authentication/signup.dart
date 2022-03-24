@@ -27,8 +27,7 @@ class SignUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final phoneController =
-        TextEditingController(text: "${context.watch<PhoneProvider>().phone}");
+    final phoneController = TextEditingController(text: "${context.watch<PhoneProvider>().phone}");
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -52,62 +51,40 @@ class SignUp extends StatelessWidget {
               Column(
                 children: [
                   SizedBox(height: 40.h),
-                  Text("Hello!",
-                      style:
-                          TextStyle(fontSize: 25, color: Colors.grey.shade500)),
+                  Text("Hello!", style: TextStyle(fontSize: 25, color: Colors.grey.shade500)),
                   SizedBox(height: 10),
                   SizedBox(
                     width: 200.w,
-                    child: Text(
-                        "Enter your informations below to join out family!",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 16, color: Colors.grey.shade500)),
+                    child: Text("Enter your informations below to join out family!",
+                        textAlign: TextAlign.center, style: TextStyle(fontSize: 16, color: Colors.grey.shade500)),
                   ),
                   SizedBox(height: 47.h),
-                  FormFieldWidget(
-                      controller: _nameController, hintText: "Enter your name"),
+                  FormFieldWidget(controller: _nameController, hintText: "Enter your name"),
+                  SizedBox(height: 20.h),
+                  FormFieldWidget(controller: _emailController, hintText: "Enter your mail"),
                   SizedBox(height: 20.h),
                   FormFieldWidget(
-                      controller: _emailController,
-                      hintText: "Enter your mail"),
-                  SizedBox(height: 20.h),
-                  FormFieldWidget(
-                      controller: context
-                              .watch<PhoneProvider>()
-                              .phone
-                              .toString()
-                              .isEmpty
-                          ? _phoneController
-                          : phoneController,
+                      controller:
+                          context.watch<PhoneProvider>().phone.toString().isEmpty ? _phoneController : phoneController,
                       hintText: "Enter your phone number"),
                   SizedBox(height: 20.h),
-                  FormFieldWidget(
-                      controller: _passwordController,
-                      hintText: "Enter your password"),
+                  FormFieldWidget(controller: _passwordController, hintText: "Enter your password"),
                   SizedBox(height: 20.h),
-                  FormFieldWidget(
-                      controller: _confirmpassController,
-                      hintText: "re-enter your password"),
+                  FormFieldWidget(controller: _confirmpassController, hintText: "re-enter your password"),
                   SizedBox(height: 40.h),
                   RegisterButton(
                       _nameController,
                       _emailController,
-                      context.watch<PhoneProvider>().phone.toString().isEmpty
-                          ? _phoneController
-                          : phoneController,
+                      context.watch<PhoneProvider>().phone.toString().isEmpty ? _phoneController : phoneController,
                       _passwordController,
                       _confirmpassController),
                   SizedBox(height: 20.h),
                   RichText(
                       text: TextSpan(children: [
-                    TextSpan(
-                        text: "Already have an account.?",
-                        style: TextStyle(color: Colors.grey.shade600)),
+                    TextSpan(text: "Already have an account.?", style: TextStyle(color: Colors.grey.shade600)),
                     TextSpan(
                         text: "Login",
-                        style:
-                            TextStyle(color: Color.fromARGB(150, 139, 195, 74)),
+                        style: TextStyle(color: Color.fromARGB(150, 139, 195, 74)),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             Navigator.pushNamed(context, '/login');
@@ -123,13 +100,10 @@ class SignUp extends StatelessWidget {
                   textAlign: TextAlign.center,
                   text: TextSpan(
                     children: [
-                      TextSpan(
-                          text: "By continuing, you agree to our ",
-                          style: TextStyle(color: Colors.grey.shade600)),
+                      TextSpan(text: "By continuing, you agree to our ", style: TextStyle(color: Colors.grey.shade600)),
                       TextSpan(
                           text: "Terms of Services and Privacy Policy",
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 135, 167, 48)),
+                          style: TextStyle(color: Color.fromARGB(255, 135, 167, 48)),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () async {
                               print("redirect to url");
@@ -170,8 +144,7 @@ class RegisterButton extends HookWidget {
       padding: const EdgeInsets.symmetric(vertical: 5),
       width: double.infinity,
       height: 50,
-      decoration: BoxDecoration(
-          color: Colors.lightGreen, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(color: Colors.lightGreen, borderRadius: BorderRadius.circular(10)),
       child: state.value
           ? TextButton(
               onPressed: () async {
@@ -182,47 +155,40 @@ class RegisterButton extends HookWidget {
                     password.text.isNotEmpty &&
                     confirmPassword.text.isNotEmpty) {
                   if (password.text == confirmPassword.text) {
-                    var response = await AuthCustomer.signUp(
-                        name.text, email.text, phone.text, password.text);
+                    var response = await AuthCustomer.signUp(name.text, email.text, phone.text, password.text);
 
-                    var otp = await AuthCustomer.registerOtp(
-                        name.text, email.text, phone.text);
-                    context
-                        .read<GetOtpDetails>()
-                        .getDetails(name.text, email.text, phone.text);
+                    var otp = await AuthCustomer.registerOtp(name.text, email.text, phone.text);
+                    context.read<GetOtpDetails>().getDetails(name.text, email.text, phone.text);
                     print(response);
                     print(otp);
-                    if (response && otp["sts"] == "01") {
+                    if (response == true && otp["sts"] == "01") {
+                      print('sign up success');
                       state.value = true;
                       print(response);
                       print("done");
-                      Navigator.pushNamed(context, '/otp-verify',
-                          arguments: otp["otp"]);
+                      Navigator.pushNamed(context, '/otp-verify', arguments: otp["otp"]);
                       state.value = true;
+                    } else if (response == 'Error') {
+                      state.value = true;
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text('Something went wrong. Check the information if correct and try again.')));
                     } else {
                       state.value = true;
                       Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              'Something went wrong. Check the information if correct and try again.')));
+                          content: Text('Something went wrong. Check the information if correct and try again.')));
                     }
                   } else {
                     state.value = true;
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                        content:
-                            Text('confirm password does not match password')));
+                    Scaffold.of(context)
+                        .showSnackBar(SnackBar(content: Text('confirm password does not match password')));
                   }
                 } else {
                   state.value = true;
-                  Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('Please fill the empty fields')));
+                  Scaffold.of(context).showSnackBar(SnackBar(content: Text('Please fill the empty fields')));
                 }
               },
               child: Text("Sign Up",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: .5)))
+                  style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600, letterSpacing: .5)))
           : FittedBox(
               child: CircularProgressIndicator(
                 color: Colors.white,

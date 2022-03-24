@@ -27,8 +27,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final emailOrMobile =
-        TextEditingController(text: "${context.watch<PhoneProvider>().phone}");
+    final emailOrMobile = TextEditingController(text: "${context.watch<PhoneProvider>().phone}");
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -52,32 +51,20 @@ class _LoginState extends State<Login> {
               Column(
                 children: [
                   SizedBox(height: 120.h),
-                  Text("Hello Again!",
-                      style:
-                          TextStyle(fontSize: 25, color: Colors.grey.shade500)),
+                  Text("Hello Again!", style: TextStyle(fontSize: 25, color: Colors.grey.shade500)),
                   SizedBox(height: 10),
                   SizedBox(
                     width: 200.w,
                     child: Text("Welcome back you've been missed !",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 16, color: Colors.grey.shade500)),
+                        textAlign: TextAlign.center, style: TextStyle(fontSize: 16, color: Colors.grey.shade500)),
                   ),
                   SizedBox(height: 47.h),
                   FormFieldWidget(
-                      controller: context
-                              .watch<PhoneProvider>()
-                              .phone
-                              .toString()
-                              .isEmpty
-                          ? _emailController
-                          : emailOrMobile,
+                      controller:
+                          context.watch<PhoneProvider>().phone.toString().isEmpty ? _emailController : emailOrMobile,
                       hintText: "Enter your mobile number"),
                   SizedBox(height: 20.h),
-                  FormFieldWidget(
-                      obscureText: true,
-                      controller: _passwordController,
-                      hintText: "Enter your password"),
+                  FormFieldWidget(obscureText: true, controller: _passwordController, hintText: "Enter your password"),
                   SizedBox(height: 20.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -86,8 +73,7 @@ class _LoginState extends State<Login> {
                           text: TextSpan(children: [
                         TextSpan(
                             text: "reset password",
-                            style: TextStyle(
-                                color: Color.fromARGB(150, 139, 195, 74)),
+                            style: TextStyle(color: Color.fromARGB(150, 139, 195, 74)),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 print('reset password');
@@ -97,9 +83,7 @@ class _LoginState extends State<Login> {
                   ),
                   SizedBox(height: 40.h),
                   LoginButton(
-                      context.watch<PhoneProvider>().phone.toString().isEmpty
-                          ? _emailController
-                          : emailOrMobile,
+                      context.watch<PhoneProvider>().phone.toString().isEmpty ? _emailController : emailOrMobile,
                       _passwordController)
                 ],
               ),
@@ -110,13 +94,10 @@ class _LoginState extends State<Login> {
                   textAlign: TextAlign.center,
                   text: TextSpan(
                     children: [
-                      TextSpan(
-                          text: "By continuing, you agree to our ",
-                          style: TextStyle(color: Colors.grey.shade600)),
+                      TextSpan(text: "By continuing, you agree to our ", style: TextStyle(color: Colors.grey.shade600)),
                       TextSpan(
                           text: "Terms of Services and Privacy Policy",
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 135, 167, 48)),
+                          style: TextStyle(color: Color.fromARGB(255, 135, 167, 48)),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () async {
                               print("redirect to url");
@@ -151,44 +132,37 @@ class LoginButton extends HookWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       width: double.infinity,
       height: 50,
-      decoration: BoxDecoration(
-          color: Colors.lightGreen, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(color: Colors.lightGreen, borderRadius: BorderRadius.circular(10)),
       child: state.value
           ? TextButton(
               onPressed: () async {
                 final prefs = await SharedPreferences.getInstance();
                 state.value = false;
-                var response =
-                    await AuthCustomer.login(emailormobile.text, password.text);
+                var response = await AuthCustomer.login(emailormobile.text, password.text);
                 print(response);
                 if (emailormobile.text.isNotEmpty && password.text.isNotEmpty) {
                   if (response == true) {
                     state.value = true;
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (_) =>
-                                prefs.getString("pincode").toString().isEmpty ||
-                                        prefs.getString("pincode") == null
+                                prefs.getString("pincode").toString().isEmpty || prefs.getString("pincode") == null
                                     ? ShimmerWidget()
                                     : MainScreen()));
                   } else if (response == "Error") {
                     state.value = true;
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text('Please check the information.')));
+                    Scaffold.of(context).showSnackBar(SnackBar(content: Text('Please check the information.')));
                   }
                 } else {
                   state.value = true;
-                  Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('Please fill the form')));
+                  Scaffold.of(context).showSnackBar(SnackBar(content: Text('Please fill the form')));
                 }
               },
               child: Text("Continue",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: .5)))
+                  style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600, letterSpacing: .5)))
           : FittedBox(
               child: CircularProgressIndicator(
                 color: Colors.white,

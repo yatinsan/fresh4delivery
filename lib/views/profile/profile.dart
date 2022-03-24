@@ -22,15 +22,12 @@ class Profile extends StatelessWidget {
             elevation: 0,
             flexibleSpace: Container(
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: <Color>[
-                    Color.fromRGBO(166, 206, 57, 1),
-                    Color.fromARGB(255, 160, 224, 203),
-                    Color.fromARGB(255, 255, 255, 255),
-                    Color.fromARGB(255, 255, 255, 255),
-                  ])),
+                  gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: <Color>[
+                Color.fromRGBO(166, 206, 57, 1),
+                Color.fromARGB(255, 160, 224, 203),
+                Color.fromARGB(255, 255, 255, 255),
+                Color.fromARGB(255, 255, 255, 255),
+              ])),
             ),
             automaticallyImplyLeading: false,
             title: Image.asset("assets/icons/logo1.png"),
@@ -38,28 +35,19 @@ class Profile extends StatelessWidget {
               IconButton(
                   onPressed: () {
                     print('notification');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => NotificationScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => NotificationScreen()));
                   },
                   icon: Icon(Icons.notifications_none, color: Colors.black)),
               IconButton(
                   onPressed: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => Cart()));
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => Cart()));
                   },
-                  icon: Icon(Icons.local_grocery_store_outlined,
-                      color: Colors.black)),
+                  icon: Icon(Icons.local_grocery_store_outlined, color: Colors.black)),
             ],
             bottom: PreferredSize(
               child: Column(children: [
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Image.asset("assets/images/profile.png")),
-                Text("Janvi",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                ClipRRect(borderRadius: BorderRadius.circular(100), child: Image.asset("assets/images/profile.png")),
+                Text("Janvi", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 SizedBox(height: 5),
                 Text("janvi@gmail.com", style: TextStyle(fontSize: 12)),
                 SizedBox(height: 5),
@@ -84,8 +72,7 @@ class Profile extends StatelessWidget {
                           image: 'assets/icons/order_history.png',
                           function: () {
                             print("your orders");
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => Cart()));
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => Cart()));
                           }),
                       ProfileButtons(
                           title: "address book",
@@ -94,20 +81,14 @@ class Profile extends StatelessWidget {
                             var states = await SearchApi.searchState();
                             var district = await SearchApi.searchDistrict();
                             print("address book");
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => YourAddress()));
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => YourAddress()));
                           }),
                       ProfileButtons(
                           title: "notification",
                           image: 'assets/icons/notification.png',
                           function: () {
                             print("notification");
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => NotificationScreen()));
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => NotificationScreen()));
                           }),
                     ],
                   ),
@@ -143,8 +124,12 @@ class Profile extends StatelessWidget {
                           title: "logout",
                           image: 'assets/icons/logout.png',
                           function: () async {
+                            Navigator.pushNamedAndRemoveUntil(context, '/authScreen', (route) {
+                              print('rout name  ${route.settings.name}');
+                              return false;
+                            });
                             await AuthCustomer.logout();
-                            Navigator.pushNamed(context, '/authScreen');
+                            // Navigator.pushNamed(context, '/authScreen');
                             print("logout");
                           }),
                     ],
@@ -161,12 +146,7 @@ class ProfileButtons extends StatelessWidget {
   final String image;
   final String title;
   final Function function;
-  const ProfileButtons(
-      {Key? key,
-      required this.title,
-      required this.image,
-      required this.function})
-      : super(key: key);
+  const ProfileButtons({Key? key, required this.title, required this.image, required this.function}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -179,14 +159,10 @@ class ProfileButtons extends StatelessWidget {
           children: [
             Container(
                 padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(5)),
+                decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(5)),
                 child: Image.asset(image, height: 25, width: 25)),
             SizedBox(width: 10),
-            Container(
-                child:
-                    Text(title, style: TextStyle(fontWeight: FontWeight.w600))),
+            Container(child: Text(title, style: TextStyle(fontWeight: FontWeight.w600))),
           ],
         ),
       ),

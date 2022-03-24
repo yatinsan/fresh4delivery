@@ -18,8 +18,7 @@ class RestuarantViewPost extends StatefulWidget {
   State<RestuarantViewPost> createState() => _ViewPostState();
 }
 
-class _ViewPostState extends State<RestuarantViewPost>
-    with TickerProviderStateMixin {
+class _ViewPostState extends State<RestuarantViewPost> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)?.settings.arguments;
@@ -60,8 +59,7 @@ class _ViewPostState extends State<RestuarantViewPost>
                 borderRadius: BorderRadius.circular(8),
                 color: const Color.fromARGB(171, 255, 255, 255),
               ),
-              child: const Icon(Icons.keyboard_arrow_left_rounded,
-                  color: Colors.black, size: 28)),
+              child: const Icon(Icons.keyboard_arrow_left_rounded, color: Colors.black, size: 28)),
         ),
       ),
       body: FutureBuilder<PostModal?>(
@@ -83,14 +81,13 @@ class _ViewPostState extends State<RestuarantViewPost>
                         // height: 100,
                         width: MediaQuery.of(context).size.width,
                         imageUrl: "https://ebshosting.co.in${shop.banner}",
-                        errorWidget: (context, url, error) => Image.network(
-                            "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
+                        errorWidget: (context, url, error) =>
+                            Image.network("https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"),
                       ),
                       Positioned(
                         bottom: 0,
                         child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 7),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
                             width: MediaQuery.of(context).size.width,
                             height: 80.h,
                             decoration: const BoxDecoration(
@@ -105,23 +102,19 @@ class _ViewPostState extends State<RestuarantViewPost>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
                                         shop.name.toString(),
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 16),
+                                        style: const TextStyle(color: Colors.white, fontSize: 16),
                                       ),
                                       StarRating(
                                         iconsize: 13,
                                         rating: shop.rating.toDouble(),
                                       )
                                     ]),
-                                Text(shop.city.toUpperCase(),
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 12))
+                                Text(shop.city.toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 12))
                               ],
                             )),
                       )
@@ -131,20 +124,17 @@ class _ViewPostState extends State<RestuarantViewPost>
                       length: categoryLength,
                       child: Column(children: [
                         Container(
-                          margin: const EdgeInsets.only(
-                              top: 20, left: 20, right: 20),
+                          margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
                           // height: 40,
                           decoration: BoxDecoration(
                               color: Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                  color: Colors.grey.shade400, width: 0)),
+                              border: Border.all(color: Colors.grey.shade400, width: 0)),
                           child: TabBar(
                             indicator: BoxDecoration(
                                 color: Colors.grey.shade400,
                                 borderRadius: BorderRadius.circular(50),
-                                border:
-                                    Border.all(color: Colors.grey.shade400)),
+                                border: Border.all(color: Colors.grey.shade400)),
                             isScrollable: true,
                             labelColor: Colors.black,
                             unselectedLabelColor: Colors.black,
@@ -154,19 +144,16 @@ class _ViewPostState extends State<RestuarantViewPost>
                           ),
                         ),
                         Container(
-                          constraints: BoxConstraints(
-                              maxHeight: 440.h, minHeight: 400.h),
+                          constraints: BoxConstraints(maxHeight: 440.h, minHeight: 400.h),
                           child: TabBarView(
-                              children: List<Widget>.generate(categoryLength,
-                                  (index) {
+                              children: List<Widget>.generate(categoryLength, (index) {
                             final productList = data.products[index];
                             return Padding(
                               padding: const EdgeInsets.only(top: 20),
                               child: SingleChildScrollView(
                                 child: Column(
                                   children: data.products.map((e) {
-                                    if (data.category.keys.elementAt(index) ==
-                                        e.catId.toString()) {
+                                    if (data.category.keys.elementAt(index) == e.catId.toString()) {
                                       return ViewPostsWidget(
                                         unitId: e.hasUnits.toString(),
                                         type: e.shopType.toString(),
@@ -203,9 +190,7 @@ class _ViewPostState extends State<RestuarantViewPost>
             //   print(isTimedOut);
             // });
             return isTimedOut == true
-                ? SizedBox(
-                    height: 400.h,
-                    child: Center(child: CircularProgressIndicator()))
+                ? SizedBox(height: 400.h, child: Center(child: CircularProgressIndicator()))
                 : Text('texxt');
           }
         }),
@@ -245,8 +230,7 @@ class ViewPostsWidget extends StatelessWidget {
         // height: 100.h,
         width: 350.w,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.grey.shade200, width: 2.w)),
+            borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.grey.shade200, width: 2.w)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -286,18 +270,12 @@ class ViewPostsWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  Text(name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   SizedBox(height: 5.h),
                   Text("₹$price", style: TextStyle(fontSize: 12)),
                   SizedBox(height: 5.h),
                   Text(status,
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: status == "Available"
-                              ? Colors.green
-                              : Colors.red)),
+                      style: TextStyle(fontSize: 12, color: status == "Available" ? Colors.green : Colors.red)),
                 ],
               ),
             ),
@@ -308,8 +286,13 @@ class ViewPostsWidget extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      var response = await CartApi.addToCart(
-                          type, productId, shopId, unitId);
+                      var response = await CartApi.addToCart(type, productId, shopId, unitId);
+                      if (response == true) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("product added to cart"), duration: Duration(seconds: 2)));
+                      }
+                      print('add to cart:::::::' + response);
+
                       print('add to cart');
                     },
                     child: Container(
@@ -326,10 +309,8 @@ class ViewPostsWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8)),
                         child: const Center(
                             child: Text("Add To Cart",
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500)))),
+                                style:
+                                    const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500)))),
                   ),
                 ],
               ),
